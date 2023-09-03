@@ -1,15 +1,39 @@
 \section{Introduction}
+Everyone trusts the timestamps recorded on the
+blockchain are accurate. But why?
+
 In the original Bitcoin paper~\cite{bitcoin}, Nakamoto refers to the
-blockchain as a distributed timestamping server. However, when talking about
-\emph{distributed} ledgers, we often neglect that, and only focus on the ordering
-of transactions.
-A ledger, namely a sequence of transactions, does not contain any information
-about the time that each transaction was recorded. However, it might be useful
-if each transaction was accompanied by a timestamp, representing the moment
-that it was recorded on the ledger. We call this a \emph{temporal ledger};
-namely a sequence of pairs $(\timestamp,\tx)$.
+blockchain as a distributed timestamping server.
+Applications rely on the precision of these recorded timestamps.
+However, timestamps in adversarially produced blocks may be fabricated.
+And yet, empirical evidence suggests reported timestamps roughly correspond
+to real world time.
 
-Blockchain applications like Bitcoin, Ethereum and Cardano
-can all output temporal ledgers instead of regular ones. Only
-minor client changes are required.
+In this paper, we put forth the notion of \emph{timeliness}, formalizing the folklore
+understanding that timestamps recorded on the blockchain cannot deviate arbitrarily
+from real world time. In particular we define a timeliness parameter $v$ which bounds
+this potential deviation. Under honest majority, we prove this virtue materializes in all three flavors of
+permissionless blockchains, namely proof-of-work,
+longest chain proof-of-stake, and quorum-based proof-of-stake, and calculate the
+timeliness parameter.
 
+Blockchain systems executed in networks with delay, even when assuming a global clock and
+a synchronous network, allow honest parties to reach consensus, but not at exactly
+the same time. We observe that any timely blockchain can be modified to achieve
+consensus at the same exact global time, a property we call \emph{supersafety},
+albeit with the introduction of a small confirmation delay.
+
+\noindent
+\textbf{Our contributions.}
+
+\begin{enumerate}
+  \item We define the notion of \emph{timeliness} of a blockchain system.
+  \item We prove that three exemplary cases of blockchain protocols (Bitcoin, Streamlet, and Ouroboros)
+        are timely and calculate their timeliness parameter.
+  \item We prove that timeliness cannot be achieved in partial synchrony.
+  \item We present a black-box reduction from \emph{timeliness} to \emph{supersafety} and back,
+        remaining mindful of late-joining clients.
+\end{enumerate}
+
+\noindent
+\textbf{Related work.}
