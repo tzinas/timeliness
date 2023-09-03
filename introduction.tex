@@ -1,0 +1,15 @@
+\section{Introduction}
+In the original Bitcoin paper~\cite{bitcoin}, Nakamoto refers to the
+blockchain as a distributed timestamping server. However, when talking about
+\emph{distributed} ledgers, we often neglect that, and only focus on the ordering
+of transactions.
+A ledger, namely a sequence of transactions, does not contain any information
+about the time that each transaction was recorded. However, it might be useful
+if each transaction was accompanied by a timestamp, representing the moment
+that it was recorded on the ledger. We call this a \emph{temporal ledger};
+namely a sequence of pairs $(\timestamp,\tx)$.
+
+Blockchain applications like Bitcoin, Ethereum and Cardano
+can all output temporal ledgers instead of regular ones. Only
+minor client changes are required.
+
