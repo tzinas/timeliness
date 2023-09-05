@@ -18,10 +18,14 @@
 \usepackage[table,xcdraw,dvipsnames]{xcolor}
 \usepackage{tikz}
 
-\usepackage{amsmath}
 % \let\proof\relax
 % \let\endproof\relax
 \usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{xargs}
+\usepackage{amsfonts}
+
 \iflncs
   \usepackage{amssymb}
 \fi
@@ -173,21 +177,23 @@
 % \iftwocolumn
 %     \newtheorem{theorem}{Theorem}[section]
 %     \newtheorem{corollary}{Corollary}[theorem]
-%     \newtheorem{lemma}[theorem]{Lemma}
+     \newtheorem{lemma}[theorem]{Lemma}
 %
      \theoremstyle{remark}
      \newtheorem*{remark}{Remark}
 
      \newtheorem*{theorem*}{Theorem}
 %
-%     \theoremstyle{definition}
-%     \newtheorem{definition}{Definition}[section]
+    \theoremstyle{definition}
+    \newtheorem{definition}{Definition}[section]
 % \fi
 \fi
+
 
 \pagestyle{plain}
 
 \iflncs
+  \newtheorem{Lemma}{lemma}{lemma}
   \newenvironment{Claim}{claim}{claim}
   \newenvironment{Definition}{definition}{definition}
 \fi

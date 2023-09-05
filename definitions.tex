@@ -3,3 +3,39 @@
 \dznote{Define model: synchronous time, global clocks}
 \dznote{Define timeliness.}
 \dznote{Define supersafety.}
+
+First, we note a few preliminary definitions.
+
+\begin{definition}[Liveness in Partial Synchrony]
+  A distributed ledger protocol, in a partially synchronous network,
+  is \emph{live}$(u)$ when a transaction written to any honest party
+  at round $r$ appears in the ledgers of all honest parties by round %TODO (tzinas): by?
+  $\max{(r,\gst)} + u$.
+\end{definition}
+
+\atnote{Make it more formal? Talk about execution maybe}
+
+The following definitions are first introduced in this work.
+
+\begin{definition}[Temporal Ledger]
+  A \emph{temporal ledger} is a finite sequence of pairs $(r, \tx)$ where $\tx$ is
+  a transaction, and $r$ is a \emph{round} indicating the time at which
+  the transaction in question is recorded on the ledger.
+\end{definition}
+
+\begin{definition}[Distributed Temporal Ledger Protocol]
+  A \emph{distributed temporal ledger protocol} is a distributed ledger protocol
+  that when read, honest parties output temporal ledgers instead of traditional ledgers.
+\end{definition}
+
+\begin{definition}[Timely]\label{def:timely}
+  A distributed temporal ledger protocol is \emph{timely}$(v)$
+  if for all honest parties $P$ and rounds $r_1$ it holds that:
+
+  \begin{enumerate}
+    \item The rounds recorded in $\Ledger[P][][r_1]$ are non-decreasing.\label{def:timely-increasing}
+    \item The round recorded at $\Ledger[P][][r_1][-1]$ is at most $r_1$.\label{def:timely-past}
+    \item For all $r_2 \geq r_1$, the rounds recorded in $\Ledger[P][][r_2][|\Ledger[P][][r_1]|{:}]$ are
+          newer than $r_1 - v$.\label{def:timely-chunk}
+  \end{enumerate}
+\end{definition}
