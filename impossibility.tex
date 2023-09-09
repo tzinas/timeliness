@@ -1,19 +1,19 @@
 \section{Impossibility}
 
-\begin{lemma}[Timeliness is Impossible in Partial Synchrony]
+\begin{theorem}[Timeliness is Impossible in Partial Synchrony]
   In a partially synchronous communication network, a distributed temporal ledger protocol
-  which is safe and live$(u)$, cannot be timely.
-\end{lemma}
+  which is safe and live$(u)$, cannot be timely at all times.
+\end{theorem}
 \begin{proof}
-  Suppose, towards a contradiction, a safe, live$(u)$, and timely$(v)$ distributed temporal ledger protocol.
+  Suppose, towards a contradiction, there is a safe, live$(u)$, and timely$(v)$ distributed temporal ledger protocol.
   There is a fixed number of $n$ parties.
   Consider the following two worlds:
 
   \noindent
   \underline{World A}
   There are $n-1$ honest parties and one adversarial party. The adversary remains silent and
-  does not disrupt the synchrony of the network.
-  At round $r$, a transaction $\tx$ is introduced to the honest parties. We are in a
+  does not disrupt the synchrony of the network ($\gst = 0$).
+  The adversary chooses any round $r$ and introduces a high entropy transaction $\tx$ to the honest parties. We are in a
   synchronous network, hence, because of liveness, $\tx$ appears in the ledgers of all honest parties
   by round $r + u$. The transaction is recorded with round $r^* \leq r + u$ because of
   timeliness requirement \ref{def:timely-past}.
@@ -21,18 +21,18 @@
   \noindent
   \underline{World B}
   All parties are honest. We are under partial synchrony, and the adversary partitions the network such that
-  one honest party is isolated from the other $n-1$ honest parties.
-  Before \gst, at round $r$, a transaction $\tx$ is introduced to the $n-1$ connected
+  one honest party $P$ is isolated from the other $n-1$ honest parties.
+  The adversary sets \gst to  $r + u + v + 1$.
+  Before \gst, at round $r$, the transaction $\tx$ is introduced to the $n-1$ connected
   honest parties. In the view of these parties,
   World 1 and World 2 are identical up to now. Hence, like in World 1,
   they report $\tx$ in their ledgers by round $r + u$, with recorded round $r^* \leq r + u$.
 
-  The adversary sets \gst to  $r + u + v + 1$.
-  After \gst, the transaction will eventually be included in $\Ledger[P]$ due to liveness,
-  with recorded round $r^*$, due to safety.
-  Hence, $(r^*, \tx) \in \Ledger[P][][r_2][|\Ledger[P][][r_1]]$,
-  where $\gst \leq r_1 \leq r_2$.
+  Only after \gst, the transaction will eventually be included in $\Ledger[P]$ due to liveness.
+  Consider the earliest round $r_2$, when $\tx$ appears in $\Ledger[P]$.
+  The transaction will have recorded round $r^*$, due to safety.
+  Hence, $(r^*, \tx) \in \Ledger[P][][r_2][|\Ledger[P][][\gst - 1]]$.
   From the timeliness requirement \ref{def:timely-increasing}, we
-  get $r^* > r_1 - v \geq \gst - v$, which calculates to $r^* > r + u$.
+  get $r^* > \gst - v - 1$. Therefore, $r^* > r + u$.
   This is a contradiction, since $r^* \leq r + u$.
 \end{proof}
