@@ -27,11 +27,10 @@ Therefore the temporal ledger reported by the Bitcoin Backbone protocol is safe 
     \item The block format is changed to include a round number and looks like this:
 
     \[
-      B = (s, \textsf{ctr}, x, r)
+      B = (h, \textsf{ctr}, x, r)
     \]
 
-    where $s$ is the hash of the previous block, \textsf{ctr} is the nonce, $x$ is the
-    % TODO: Use some other letter for s
+    where $h$ is the hash of the previous block, \textsf{ctr} is the nonce, $x$ is the
     payload of transactions, and $r$ is a round number.
 
     \item The genesis block is augmented with the round $0$.
