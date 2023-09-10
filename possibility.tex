@@ -60,7 +60,7 @@ Backbone paper.
 
 \begin{theorem}[Bitcoin Timeliness]
   A typical execution of the Temporal Bitcoin Backbone protocol is timely
-  with timeliness $v = \max(s, \frac{k + \ell}{\tau})$.
+  with timeliness $v = \max(s + 1, \frac{k + \ell}{\tau} + 1)$.
 \end{theorem}
 \begin{proof}
   Requirements (1) and (2) of timeliness are satisfied due to the new chain validity rules.
@@ -69,19 +69,17 @@ Backbone paper.
   Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
   the ledgers $L^P_{r_1}, L^P_{r_2}$ reported by $P$ at the end of rounds $r_1, r_2$ respectively.
   Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
-  $\tx$ with recorded round $r < r_1 - v$.
+  $\tx$ with recorded round $r \leq r_1 - v$.
 
   % TODO(dionyziz): figure
-  Let $\chain_1, \chain_2$ be the chains of $P$ after the conclusion of rounds $r_1$
+  Let $\chain_1, \chain_2$ be the chains that $P$ adopts at rounds $r_1$
   and $r_2$ respectively.
-  Due to Common Prefix, $\chain_2$ will extend a block in $\chain_1[{-k-2}{:}]$.
-  % TODO Note: Maybe this need to be -k-1
-  The transaction $\tx$ is contained in some block $B$ of $\chain_2[{|\chain_1[{:}{-k-1}]|}{:}]$.
-  % TODO Note: Maybe this need to be -k, else the transaction could be in C1 as well
+  Due to Common Prefix, $\chain_2$ will extend a block in $\chain_1[-k-1{:}]$.
+  The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1[{:} -k]| {:} -k]$.
 
   Let $B^*$ be the most recent
-  honestly generated block in $\chain_1[{:}{-k-1}][-\ell{:}]$
-  (or let $B^*$ be the genesis block if $|\chain_1| < \ell + k + 1$).
+  honestly generated block in $\chain_1[{:} -k][-\ell {:}]$
+  (or let $B^*$ be the genesis block if $|\chain_1| \leq \ell + k$).
   This block will exist by
   Chain Quality because we are looking at a chain chunk of length at least $\ell$ and
   $\mu\ell \geq 1$.
@@ -90,45 +88,39 @@ Backbone paper.
   Let $P^*$ be the party who mined $B^*$ at round $r^*$ (or $P^* = P, r^* = 0$ if $B^*$ is
   the genesis block).
 
-  The block $B$ extends a chain that contains $B^*$, so $r > r^*$,
-  % TODO Note: $r \geq r^*$ since recorded rounds are not decreasing
-  therefore $r^* < r_1 - v - 1$.
-  % TODO Note: $r^* \geq r_1 - v + 1$ since recorded rounds are not decreasing
+  The block $B$ extends a chain that contains $B^*$, so $r \geq r^*$,
+  therefore $r^* \leq r_1 - v$.
 
-  Let $\chain^{P^*}_{r^*}$ be the chain that $B^*$ extends (this will be the empty chain if
-  $B^*$ is the genesis block). If $B^*$ is not genesis, then $\chain^{P^*}_{r^*}$ is the chain
-  that $P^*$ adopts in round $r^*$. Let $\chain^P_{r^* + 1}$ be the chain that $P$ adopts
-  at the beginning of round $r^* + 1$. We observe
+  Let $\chain^{P^*}_{r^*}$ be the chain that $P^*$ adopts at the beginning of
+  round $r^*$ (this will be the empty chain if $B^*$ is the genesis block).
+  Party $P^*$ extends $\chain^{P^*}_{r^*}$, at round $r^*$, with block $B^*$,
+  creating a chain of length $|\chain^{P^*}_{r^*}| + 1$.
+  This newly generated chain is broadcasted to the network and
+  received by party $P$ at the beginning of round $r^* + 1$.
+  Let $\chain^P_{r^* + 1}$ be the chain that $P$ adopts at the
+  beginning of round $r^* + 1$. We observe that, at round $r^* + 1$, due to the
+  longest chain rule, party $P$ adopts a chain of greater or equal
+  length to the one broadcasted by party $P^*$. Hence
+  $\chain^P_{r^* + 1} \geq |\chain^{P^*}_{r^*}| + 1$. This equates to
 
   \[
      |\chain_1| - |\chain^P_{r^* + 1}| \leq
-     |\chain_1| - |\chain^{P^*}_{r^*}| - 1 \leq
-     k + \ell\,.
+     |\chain_1| - |\chain^{P^*}_{r^*}| - 1 <
+     k + \ell\, \label{eq:bitcoin-contradiction}\tag{$\ast$}.
   \]
-  %TODO This could be < k + \ell if we closed the bounds
 
-  The first inequality stems from the fact that, at the end of round
-  $r^*$, the honest party $P^*$ will broadcast the newly mined block $B^*$
-  and this block will be received by $P$ at the beginning of round $r^* + 1$.
-  Due to the longest chain rule, the party $P$ at the beginning of round $r^* + 1$ will
-  adopt a chain of the same or larger length than
-  $|\chain^{P^*}_{r^*}| + |B^*| = |\chain^{P^*}_{r^*}| + 1$,
-  hence
-  $|\chain^P_{r^* + 1}| \geq |\chain^{P^*}_{r^*}| + 1$.
   For the second inequality, observe that
-  $\chain_1$ is the chain of $P$ after the conclusion
-  of round $r_1$, whereas $\chain^{P^*}_{r^*}$ is
-  the parent chain of $B^*$ and those are spaced at most $k + \ell + 1$ blocks apart by the definition
-  %TODO at most $k + \ell$ blocks apart
-  of $B^*$.
+  $\chain_1$ is the chain of $P$ adopted at round $r_1$,
+  whereas $\chain^{P^*}_{r^*}$ is
+  the parent chain of $B^*$ and those are spaced at most $k + \ell$ blocks
+  apart by the definition of $B^*$.
 
-  On the other hand, because $r_1 - (r^* + 1) > v \geq s$ we can apply Chain Growth
+  On the other hand, because $r_1 - (r^* + 1) \geq v - 1 \geq s$ we can apply Chain Growth
   between rounds $r^* + 1$ and $r_1$
-  with parameters
-  $s, \tau$ to obtain
-  $|\chain_1| - |\chain^P_{r^*}| \geq \tau(r_1 - r^* - 1) > \tau v \geq
-  \tau (\frac{k + \ell}{\tau}) \geq k + \ell$,
-  which is a contradiction.
+  with parameters $s, \tau$ to obtain
+  $|\chain_1| - |\chain^P_{r^* + 1}| \geq \tau(r_1 - (r^* + 1)) \geq \tau (v - 1) \geq
+  \tau (\frac{k + \ell}{\tau} + 1 - 1) \geq k + \ell$,
+  which is a contradiction because of Equation~(\ref{eq:bitcoin-contradiction}).
 
   \Qed
 \end{proof}
