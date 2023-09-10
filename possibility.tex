@@ -59,14 +59,17 @@ Backbone paper.
 
 \begin{theorem}[Bitcoin Timeliness]
   A typical execution of the Temporal Bitcoin Backbone protocol is timely
-  with timeliness $v = \max(s, \frac{k + \ell}{\tau})$.
+  with timeliness $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
 \end{theorem}
 \begin{proof}
   Requirements (1) and (2) of timeliness are satisfied due to the new chain validity rules.
   We will prove (3).
 
   Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
-  the ledgers $L^P_{r_1}, L^P_{r_2}$ reported by $P$ at the end of rounds $r_1, r_2$ respectively.
+  the ledgers $L^P_{r_1}, L^P_{r_2}$ reported\footnote{
+    Recall that the ledger reported at a round is obtained by inspecting the
+    chain \emph{adopted} at that round.
+  } by $P$ at rounds $r_1, r_2$ respectively.
   Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
   $\tx$ with recorded round $r \leq r_1 - v$.
 
@@ -100,14 +103,17 @@ Backbone paper.
   creating a chain of length $|\chain^{P^*}_{r^*}| + 1$.
   This newly generated chain is broadcasted to the network and
   received by party $P$ at the beginning of round $r^* + 1$.
-  Let $\chain^P_{r^* + 1}$ be the chain that $P$ adopts at
-  round $r^* + 1$. We observe that, at round $r^* + 1$, due to the
-  longest chain rule, party $P$ adopts a chain of greater or equal
+  Let $\bar \chain^P_{r^* + 2}$ be the chain
+  that $P$ \emph{has} at round $r^* + 2$.
+  We observe that, at round $r^* + 2$, due to the
+  longest chain rule, party $P$ \emph{has} a chain of greater or equal
   length to the one broadcasted by party $P^*$. Hence
-  $\chain^P_{r^* + 1} \geq |\chain^{P^*}_{r^*}| + 1$. This equates to
+  $|\bar \chain^P_{r^* + 2}| \geq |\chain^{P^*}_{r^*}| + 1$. Therefore
+
+   % This is also the chain that $P$ \emph{has} at round $r^* + 2$.
 
   \[
-     |\chain_1| - |\chain^P_{r^* + 1}| \leq
+     |\chain_1| - |\bar \chain^P_{r^* + 2}| \leq
      |\chain_1| - |\chain^{P^*}_{r^*}| - 1 <
      k + \ell\, \label{eq:bitcoin-contradiction}\tag{$\ast$}.
   \]
@@ -118,11 +124,11 @@ Backbone paper.
   the parent chain of $B^*$ and those are spaced at most $k + \ell$ blocks
   apart by the definition of $B^*$.
 
-  On the other hand, by Equation~\ref{eq:bitcoin-r-bound}, $r_1 - (r^* + 1) \geq v \geq s$ and
-  we can apply Chain Growth between rounds $r^* + 1$ and $r_1$
+  On the other hand, by Equation~\ref{eq:bitcoin-r-bound}, $r_1 - (r^* + 2) \geq v - 1 \geq s$ and
+  we can apply Chain Growth between rounds $r^* + 2$ and $r_1$
   with parameters $s, \tau$ to obtain
-  $|\chain_1| - |\chain^P_{r^* + 1}| \geq \tau(r_1 - (r^* + 1)) \geq \tau v \geq
-  \tau \frac{k + \ell}{\tau} \geq k + \ell$,
+  $|\chain_1| - |\bar \chain^P_{r^* + 2}| \geq \tau(r_1 - (r^* + 2)) \geq \tau (v - 1) \geq
+  \tau (\frac{k + \ell}{\tau} + 1 - 1) \geq k + \ell$,
   which is a contradiction because of Equation~(\ref{eq:bitcoin-contradiction}).
 
   \Qed
