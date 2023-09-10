@@ -59,7 +59,7 @@ Backbone paper.
 
 \begin{theorem}[Bitcoin Timeliness]
   A typical execution of the Temporal Bitcoin Backbone protocol is timely
-  with timeliness $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
+  with timeliness $v = \max(s, \frac{k + \ell}{\tau})$.
 \end{theorem}
 \begin{proof}
   Requirements (1) and (2) of timeliness are satisfied due to the new chain validity rules.
@@ -88,8 +88,11 @@ Backbone paper.
   Let $P^*$ be the party who mined $B^*$ at round $r^*$ (or $P^* = P, r^* = 0$ if $B^*$ is
   the genesis block).
 
-  The block $B$ extends a chain that contains $B^*$, so $r \geq r^*$,
-  therefore $r^* \leq r_1 - v$.
+  The block $B$ extends a chain that contains $B^*$, so $r > r^*$,
+  therefore
+  \begin{equation}
+    r^* < r_1 - v\label{eq:bitcoin-r-bound}.
+  \end{equation}
 
   Let $\chain^{P^*}_{r^*}$ be the chain that $P^*$ adopts at
   round $r^*$ (this will be the empty chain if $B^*$ is genesis).
@@ -115,11 +118,11 @@ Backbone paper.
   the parent chain of $B^*$ and those are spaced at most $k + \ell$ blocks
   apart by the definition of $B^*$.
 
-  On the other hand, because $r_1 - (r^* + 1) \geq v - 1 \geq s$ we can apply Chain Growth
-  between rounds $r^* + 1$ and $r_1$
+  On the other hand, by Equation~\ref{eq:bitcoin-r-bound}, $r_1 - (r^* + 1) \geq v \geq s$ and
+  we can apply Chain Growth between rounds $r^* + 1$ and $r_1$
   with parameters $s, \tau$ to obtain
-  $|\chain_1| - |\chain^P_{r^* + 1}| \geq \tau(r_1 - (r^* + 1)) \geq \tau (v - 1) \geq
-  \tau (\frac{k + \ell}{\tau} + 1 - 1) \geq k + \ell$,
+  $|\chain_1| - |\chain^P_{r^* + 1}| \geq \tau(r_1 - (r^* + 1)) \geq \tau v \geq
+  \tau \frac{k + \ell}{\tau} \geq k + \ell$,
   which is a contradiction because of Equation~(\ref{eq:bitcoin-contradiction}).
 
   \Qed
