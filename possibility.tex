@@ -63,7 +63,7 @@ Backbone paper.
 \end{theorem}
 \begin{proof}
   Requirements (1) and (2) of timeliness are satisfied due to the new chain validity rules.
-  We will prove (3).
+  We will now prove (3).
 
   Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
   the ledgers $L^P_{r_1}, L^P_{r_2}$ reported\footnote{
@@ -142,37 +142,37 @@ We work in the same model as the Streamlet paper~\cite{streamlet}.
 
 First, we have to make a couple of small changes to the Steamlet construction to turn it
 into a Temporal Ledger.
-The Temporal Streamlet protocol is the same as the Streamlet protocol, except
+The \emph{Temporal Streamlet} protocol is the same as the Streamlet protocol, except
 for the following change: When the ledger is \textsf{read}, the reported transactions are
-read from the finalized chain and each transaction is reported with round $e 2 \Delta$,
+read from the finalized chain and each transaction is reported with round $2 e \Delta$,
 where $e$ is the epoch number of the block in which it is included, and $\Delta$ is the
 network delay.
-Temporal Streamlet remains safe (consistent) and live($u$).
+With these changes, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$).
 
 We assume that an honest party $P$, at the beginning of a round, and
 before performing any other action, checks the network and
 stores the longest finalized chain.
-Let $\chain^P_r$ be the longest finalized chain stored by an honest
+We define $\chain^P_r$ to be the longest finalized chain stored by an honest
 party $P$ at the beginning of round $r$.
 
 \begin{theorem}[Streamlet Timeliness]
-  An execution of the Temporal Streamlet protocol is timely
-  with timeliness $v = u - 3 \Delta$.
+  An execution of the Temporal Streamlet protocol with $< \frac{1}{3}$ corrupt parties is timely
+  with timeliness $v = u - 3 \Delta$ in the partially synchronous model after GST.
 \end{theorem}
 \begin{proof}
   Requirement (1) of timeliness is satisfied because the epoch numbers in any notarized chain
-  are non dicreasing.
+  are non-decreasing.
   Requirement (2) of timeliness is satisfied because a block $B$, of epoch $e$, becomes finalized
-  only after the next one gets notarized. This can only happen after round $e 2 \Delta + \Delta$,
-  which comes after the recorded round $e 2 \Delta$ of $B$.
-  We will prove (3).
+  only after the next one gets notarized. This can only happen after round $2 e \Delta + \Delta$,
+  which comes after the recorded round $2 e \Delta$ of $B$.
+  We will now prove (3).
 
   Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
   the ledgers $L^P_{r_1}, L^P_{r_2}$ reported by $P$ at rounds $r_1, r_2$ respectively.
   Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
   $\tx$ with recorded round $r \leq r_1 - v$.
 
-  Let $\chain_1, \chain_2$ be the chains that $P$ stores at the begining of rounds $r_1$
+  Let $\chain_1, \chain_2$ be the chains that $P$ stores at the beginning of rounds $r_1$
   and $r_2$ respectively.
   It must be true that $|\chain_2| > |\chain_1|$, and due to safety, $\chain_2$ will extend $\chain_1$.
   The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1]|{:}]$.
