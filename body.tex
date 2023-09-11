@@ -1,6 +1,13 @@
 % Stretch goals:
 % - Prove results without a global clock (assuming clocks fall within a bounded difference)
 % - Prove that variable difficulty bitcoin is timely
+% - Make the timeliness proof abstract dependent only on 6 properties:
+%   1) Common Prefix
+%   2) Chain Quality
+%   3) Chain Growth
+%   4) Honest parties validate chain by: Increasing timestamps, No round in the future
+%   5) Honest parties report current round
+%   6) Confirmation rule is the same as Common Prefix
 
 \import{./}{definitions.tex}
 \import{./}{possibility.tex}
