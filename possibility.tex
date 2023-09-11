@@ -74,7 +74,7 @@ Backbone paper.
   $\tx$ with recorded round $r \leq r_1 - v$.
 
   % TODO(dionyziz): figure
-  Let $\chain_1, \chain_2$ be the chains that $P$ adopts at rounds $r_1$
+  Let $\chain_1, \chain_2$ be the chain that $P$ adopts at round $r_1$
   and $r_2$ respectively.
   It must be true that $|\chain_2| > |\chain_1|$.
   Due to Common Prefix, $\chain_2$ will extend a block in $\chain_1[-k-1{:}]$.
@@ -172,10 +172,10 @@ party $P$ at the beginning of round $r$.
   Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
   $\tx$ with recorded round $r \leq r_1 - v$.
 
-  Let $\chain_1, \chain_2$ be the chains that $P$ stores at the beginning of rounds $r_1$
+  Let $\chain_1, \chain_2$ be the longest finalized chain that $P$ stores at the beginning of round $r_1$
   and $r_2$ respectively.
   It must be true that $|\chain_2| > |\chain_1|$, and due to safety, $\chain_2$ will extend $\chain_1$.
-  The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1]|{:}]$.
+  The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1|{:}]$.
 
   Let $e$ be the epoch number of block $B$ and $r = e 2 \Delta$ the recorded round of $B$.
   Let $B^* = \chain_1[-1]$ be the last final block of $\chain_1$. Let $e^*$ be the epoch
@@ -190,10 +190,10 @@ party $P$ at the beginning of round $r$.
 
   Let $e_0,e_1,e_2,e_3,e_4$ be the last 5 consecutive epochs with honest leaders,
   where $e_3 \leq e^*$. Let $e'_0,e'_1,e'_2,e'_3,e'_4$ be the first 5 consecutive epochs
-  with honest leaders, where $e < e'_3$.
+  with honest leaders, where $e^* < e'_3$.
   From liveness, by round $e'_4 2 \Delta + 1$, all honest parties will have stored
   a finalized chain ending with the block proposed in epoch $e'_3$. Hence, because
-  of $e < e'_3$, it must be true that $r_1 \leq e'_4 2 \Delta$.
+  of $e^* < e'_3$, it must be true that $r_1 \leq e'_4 2 \Delta$.
 
   \atnote{A figure is definitely needed.}
   We now examine 2 cases:
