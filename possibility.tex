@@ -136,7 +136,97 @@ Backbone paper.
 
 \subsection{Streamlet}
 
-\dznote{Prove that streamlet is timely}
+We now prove that the Partially Synchronous Streamlet Protocol is timely
+after GST.
+We work in the same model as the Streamlet paper~\cite{streamlet}.
+
+First, we have to make a couple of small changes to the Steamlet construction to turn it
+into a Temporal Ledger.
+The Temporal Streamlet protocol is the same as the Streamlet protocol, except
+for the following change: When the ledger is \textsf{read}, the reported transactions are
+read from the finalized chain and each transaction is reported with round $e 2 \Delta$,
+where $e$ is the epoch number of the block in which it is included, and $\Delta$ is the
+network delay.
+Temporal Streamlet remains safe (consistent) and live($u$).
+
+We assume that an honest party $P$, at the beginning of a round, and
+before performing any other action, checks the network and
+stores the longest finalized chain.
+Let $\chain^P_r$ be the longest finalized chain stored by an honest
+party $P$ at the beginning of round $r$.
+
+\begin{theorem}[Streamlet Timeliness]
+  An execution of the Temporal Streamlet protocol is timely
+  with timeliness $v = u - 3 \Delta$.
+\end{theorem}
+\begin{proof}
+  Requirement (1) of timeliness is satisfied because the epoch numbers in any notarized chain
+  are non dicreasing.
+  Requirement (2) of timeliness is satisfied because a block $B$, of epoch $e$, becomes finalized
+  only after the next one gets notarized. This can only happen after round $e 2 \Delta + \Delta$,
+  which comes after the recorded round $e 2 \Delta$ of $B$.
+  We will prove (3).
+
+  Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
+  the ledgers $L^P_{r_1}, L^P_{r_2}$ reported by $P$ at rounds $r_1, r_2$ respectively.
+  Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
+  $\tx$ with recorded round $r \leq r_1 - v$.
+
+  Let $\chain_1, \chain_2$ be the chains that $P$ stores at the begining of rounds $r_1$
+  and $r_2$ respectively.
+  It must be true that $|\chain_2| > |\chain_1|$, and due to safety, $\chain_2$ will extend $\chain_1$.
+  The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1]|{:}]$.
+
+  Let $e$ be the epoch number of block $B$ and $r = e 2 \Delta$ the recorded round of $B$.
+  Let $B^* = \chain_1[-1]$ be the last final block of $\chain_1$. Let $e^*$ be the epoch
+  number of $B^*$ and $r^* = e^* 2 \Delta$ the recorded round of $B^*$.
+  By their definition, block $B$ extends a chain that contains $B^*$. Hence
+  $e > e^*$ and $r > r^*$.
+  We will now prove that round $r^*$ cannot be much earlier than round $r_1$.
+  \atnote{Maybe this could be a Lemma.}
+
+  \atnote{Something about genesis needs to be added probably.}
+  \atnote{Epochs $e'_0,e'_1,e'_2,e'_3,e'_4$ may be in the future.}
+
+  Let $e_0,e_1,e_2,e_3,e_4$ be the last 5 consecutive epochs with honest leaders,
+  where $e_3 \leq e^*$. Let $e'_0,e'_1,e'_2,e'_3,e'_4$ be the first 5 consecutive epochs
+  with honest leaders, where $e < e'_3$.
+  From liveness, by round $e'_4 2 \Delta + 1$, all honest parties will have stored
+  a finalized chain ending with the block proposed in epoch $e'_3$. Hence, because
+  of $e < e'_3$, it must be true that $r_1 \leq e'_4 2 \Delta$.
+
+  \atnote{A figure is definitely needed.}
+  We now examine 2 cases:
+  \begin{itemize}
+    \item A transaction that is broadcasted by round $e_1 2 \Delta + \Delta$
+      will be received by all honest parties by the first round of epoch $e_3$.
+      Hence, it will be included in the block proposed by the honest leader at
+      epoch $e_3$ and will appear in all honest ledgers by round $e_4 2 \Delta + 1$.
+
+    \item A transaction that is broadcasted after round $e_1 2 \Delta + \Delta$
+      may not be included in the block proposed at epoch $e_3$.
+      However, the transaction will definitely be included
+      in the finalized chain ending at the block proposed at epoch $e'_3$.
+      Hence, it will appear in all honest ledgers by round $e'_4 2 \Delta + 1$.
+  \end{itemize}
+
+  By liveness, it holds that $e'_4 2 \Delta + 1 - (e_1 2 \Delta + 1) \leq u$.
+  Therefore:
+  \begin{align*}
+    \makebox[0.5\textwidth][c]{$e'_4 2 \Delta - e_1 2 \Delta - \Delta \leq u$}   && \\
+    \makebox[0.5\textwidth][c]{$e'_4 2 \Delta - e_3 2 \Delta \leq u - 3 \Delta$} && \text{[$e_3 = e_1 + 4 \Delta$]} \\
+    \makebox[0.5\textwidth][c]{$e'_4 2 \Delta - e^* 2 \Delta \leq u - 3 \Delta$} && \text{[$e_3 \leq e^*$]} \\
+    \makebox[0.5\textwidth][c]{$r_1 - r^* \leq u - 3 \Delta$}                    && \text{[$r_1 \leq e'_4 2 \Delta$] and [$r^* = e^* 2 \Delta$]} \\
+    \makebox[0.5\textwidth][c]{$r - r^* \leq u - v - 3 \Delta$}                  && \text{[$r \leq r_1 - v$]} \\
+    \makebox[0.5\textwidth][c]{$r - r^* \leq 0$}                                 && \text{[$v = u - 3 \Delta$]}
+  \end{align*}
+  which is a contradiction because of $r > r^*$.
+
+  \Qed
+\end{proof}
+
+
+
 
 \subsection{Ouroboros Proof-of-Stake}
 
