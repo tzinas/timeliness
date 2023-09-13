@@ -147,17 +147,81 @@ for the following change: When the ledger is \textsf{read}, the reported transac
 read from the finalized chain and each transaction is reported with round $2 e \Delta$,
 where $e$ is the epoch number of the block in which it is included, and $\Delta$ is the
 network delay.
-With these changes, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$).
+With this change, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$).
 
-We assume that an honest party $P$, at the beginning of a round, and
+An honest party $P$, at the beginning of a round, and
 before performing any other action, checks the network and
 stores the longest finalized chain.
 We define $\chain^P_r$ to be the longest finalized chain stored by an honest
 party $P$ at the beginning of round $r$.
+Let $G(e)$ be the predicate indicating that epochs $e,e+1,e+2,e+3,e+4$ have honest leaders.
+
+We first show the maximum distance between two consecutive fully honest quintuples
+is bounded.
+
+\begin{lemma}[Honest Quintuple Distance] \label{lem:honest-quintuple}
+  Consider an execution of the Temporal Streamlet protocol with duration
+  of $E$ epochs and $< \frac{1}{3}$ corrupt parties.
+  Let $J = \{0,E\} \cup \{0 < e < E: G(e)\}$.
+  Then, for all $w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{2}{3}\right)^5\right)}$:
+  $\Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w] \leq \text{negl($\kappa$)}$.
+\end{lemma}
+\begin{proof}
+  We let $K = \{0, E\} \cup \{e \in \{0, 5, 10 ,\ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
+  \atnote{Doublecheck and write about 0 and E}
+  It holds that
+  $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq \max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e))$.
+  Therefore:
+
+  \begin{gather*}
+      \Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w] \leq \\
+      \Pr [\max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e)) > w] \leq \\
+      \floor*{\frac{E}{5}} \left(1 - \left(\frac{2}{3}\right)^5\right)^w
+  \end{gather*}
+
+  For the second inequality, we observe that each chunk is a Bernoulli trial and we
+  apply a union bound.
+  Letting $F = \left(1 - \left(\frac{2}{3}\right)^5\right)$, we obtain
+  $\floor*{\frac{E}{5}} F^w \leq 2^{-\kappa} \Rightarrow
+   w \lg F \leq -\kappa - \lg \floor*{\frac{E}{5}} \Rightarrow
+   w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg F}
+  $.
+  \Qed
+\end{proof}
+
+\atnote{Maybe calculate liveness parameter u}
+% \begin{theorem}[Streamlet Liveness]
+%   The Streamlet protocol is live($u$) in the partially
+%   synchronous model with $u \geq ???$, unless with negligible probability.
+% \end{theorem}
+
+\begin{lemma}[Latest Finalized Round] \label{lem:latest-finalized-round}
+  Consider an execution of the Temporal Streamlet protocol with duration
+  of $E$ epochs and $< \frac{1}{3}$ corrupt parties.
+  Consider any honest party $P$ and any round $r_1$. Let block
+  $B^* = \chain^P_{r_1}[-1]$, with
+  epoch $e^*$ and recorded round $r^* = 2e^*\Delta$.
+  It holds that $r_1 - r^* \leq 2\Delta(w + 1)$.
+\end{lemma}
+\begin{proof}
+  Let $e = \max(\{\hat e \leq e^* - 3: G(\hat e)\})$ and $e' = \min(\{\hat e > e^* - 3: G(\hat e)\})$.
+  From Lemma~\ref{lem:honest-quintuple}, it holds that $e' - e \leq w$.
+  By round $2 (e' + 4) \Delta + 1$, all honest parties store a finalized
+  chain longer than $\chain^P_{r_1}$. Hence, $r_1 \leq 2 (e' + 4)\Delta$.
+  Therefore:
+
+  \begin{align*}
+    \makebox[0.5\textwidth][c]{$2e' \Delta - 2e \Delta \leq 2w\Delta$}           && \text{[$e' - e \leq w$]}\\
+    \makebox[0.5\textwidth][c]{$2e' \Delta - r^* \leq 2w\Delta - 6\Delta$}       && \text{[$e \leq e^* - 3$]} \\
+    \makebox[0.5\textwidth][c]{$r_1 - r^* \leq 2\Delta(w + 1)$}                  && \text{[$r_1 \leq 2 (e' + 4)\Delta$]}
+  \end{align*}
+  \Qed
+\end{proof}
+
 
 \begin{theorem}[Streamlet Timeliness]
   An execution of the Temporal Streamlet protocol with $< \frac{1}{3}$ corrupt parties is timely
-  with timeliness $v = u - 3 \Delta$ in the partially synchronous model after GST.
+  with timeliness $v = 2\Delta(w + 1)$ in the partially synchronous model after GST.
 \end{theorem}
 \begin{proof}
   Requirement (1) of timeliness is satisfied because the epoch numbers in any notarized chain
@@ -167,7 +231,7 @@ party $P$ at the beginning of round $r$.
   which comes after the recorded round $2 e \Delta$ of $B$.
   We will now prove (3).
 
-  Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
+  Let $P$ be any honest party and $r_1 \leq r_2 \in \N$ be any rounds, and consider
   the ledgers $L^P_{r_1}, L^P_{r_2}$ reported by $P$ at rounds $r_1, r_2$ respectively.
   Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
   $\tx$ with recorded round $r \leq r_1 - v$.
@@ -175,53 +239,22 @@ party $P$ at the beginning of round $r$.
   Let $\chain_1, \chain_2$ be the longest finalized chain that $P$ stores at the beginning of round $r_1$
   and $r_2$ respectively.
   It must be true that $|\chain_2| > |\chain_1|$, and due to safety, $\chain_2$ will extend $\chain_1$.
-  The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1|{:}]$.
+  The transaction $\tx$ is contained in some block $B \in \chain_2[|\chain_1|{:}]$,
+  with epoch number $e$ and recorded round $r = 2e\Delta$.
 
-  Let $e$ be the epoch number of block $B$ and $r = e 2 \Delta$ the recorded round of $B$.
-  Let $B^* = \chain_1[-1]$ be the last final block of $\chain_1$. Let $e^*$ be the epoch
-  number of $B^*$ and $r^* = e^* 2 \Delta$ the recorded round of $B^*$.
-  By their definition, block $B$ extends a chain that contains $B^*$. Hence
-  $e > e^*$ and $r > r^*$.
-  We will now prove that round $r^*$ cannot be much earlier than round $r_1$.
-  \atnote{Maybe this could be a Lemma.}
+  Let $B^* = \chain_1[-1]$, with epoch number $e^*$ and recorded round $r^* = 2e^*\Delta$.
+  From Lemma~\ref{lem:latest-finalized-round}, it holds that
+  $r_1 - r^* \leq 2\Delta(w + 1)$. Therefore:
+
+  \begin{align*}
+    \makebox[0.5\textwidth][c]{$r - r^* \leq 2\Delta(w + 1) - v$}                && \text{[$r \leq r_1 - v$]} \\
+    \makebox[0.5\textwidth][c]{$r - r^* \leq 0$}                                 && \text{[$v = 2\Delta(w + 1)$]}
+  \end{align*}
+
+  This is a contradiction because block $B$ extends a chain that contains $B^*$,
+  and hence $r > r^*$.
 
   \atnote{Something about genesis needs to be added probably.}
-  \atnote{Epochs $e'_0,e'_1,e'_2,e'_3,e'_4$ may be in the future.}
-
-  Let $e_0,e_1,e_2,e_3,e_4$ be the last 5 consecutive epochs with honest leaders,
-  where $e_3 \leq e^*$. Let $e'_0,e'_1,e'_2,e'_3,e'_4$ be the first 5 consecutive epochs
-  with honest leaders, where $e^* < e'_3$.
-  From liveness, by round $e'_4 2 \Delta + 1$, all honest parties will have stored
-  a finalized chain ending with the block proposed in epoch $e'_3$. Hence, because
-  of $e^* < e'_3$, it must be true that $r_1 \leq e'_4 2 \Delta$.
-
-  \atnote{A figure is definitely needed.}
-  We now examine 2 cases:
-  \begin{itemize}
-    \item A transaction that is broadcasted by round $e_1 2 \Delta + \Delta$
-      will be received by all honest parties by the first round of epoch $e_3$.
-      Hence, it will be included in the block proposed by the honest leader at
-      epoch $e_3$ and will appear in all honest ledgers by round $e_4 2 \Delta + 1$.
-
-    \item A transaction that is broadcasted after round $e_1 2 \Delta + \Delta$
-      may not be included in the block proposed at epoch $e_3$.
-      However, the transaction will definitely be included
-      in the finalized chain ending at the block proposed at epoch $e'_3$.
-      Hence, it will appear in all honest ledgers by round $e'_4 2 \Delta + 1$.
-  \end{itemize}
-
-  By liveness, it holds that $e'_4 2 \Delta + 1 - (e_1 2 \Delta + 1) \leq u$.
-  Therefore:
-  \begin{align*}
-    \makebox[0.5\textwidth][c]{$e'_4 2 \Delta - e_1 2 \Delta - \Delta \leq u$}   && \\
-    \makebox[0.5\textwidth][c]{$e'_4 2 \Delta - e_3 2 \Delta \leq u - 3 \Delta$} && \text{[$e_3 = e_1 + 4 \Delta$]} \\
-    \makebox[0.5\textwidth][c]{$e'_4 2 \Delta - e^* 2 \Delta \leq u - 3 \Delta$} && \text{[$e_3 \leq e^*$]} \\
-    \makebox[0.5\textwidth][c]{$r_1 - r^* \leq u - 3 \Delta$}                    && \text{[$r_1 \leq e'_4 2 \Delta$] and [$r^* = e^* 2 \Delta$]} \\
-    \makebox[0.5\textwidth][c]{$r - r^* \leq u - v - 3 \Delta$}                  && \text{[$r \leq r_1 - v$]} \\
-    \makebox[0.5\textwidth][c]{$r - r^* \leq 0$}                                 && \text{[$v = u - 3 \Delta$]}
-  \end{align*}
-  which is a contradiction because of $r > r^*$.
-
   \Qed
 \end{proof}
 
