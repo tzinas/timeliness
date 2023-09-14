@@ -161,9 +161,9 @@ is bounded.
 
 \begin{lemma}[Honest Quintuple Distance] \label{lem:honest-quintuple}
   Consider an execution of the Temporal Streamlet protocol with duration
-  of $E$ epochs and $< \frac{1}{3}$ corrupt parties.
+  of $E$ epochs and $t < \frac{1}{3}n$.
   Let $J = \{0,E\} \cup \{0 < e < E: G(e)\}$.
-  Then, for all $w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{2}{3}\right)^5\right)}$:
+  Then, for all $w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{t}{n}\right)^5\right)}$:
   $\Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w] \leq \text{negl($\kappa$)}$.
 \end{lemma}
 \begin{proof}
@@ -176,12 +176,12 @@ is bounded.
   \begin{gather*}
       \Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w] \leq \\
       \Pr [\max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e)) > w] \leq \\
-      \floor*{\frac{E}{5}} \left(1 - \left(\frac{2}{3}\right)^5\right)^w
+      \floor*{\frac{E}{5}} \left(1 - \left(\frac{t}{n}\right)^5\right)^w
   \end{gather*}
 
   For the second inequality, we observe that each chunk is a Bernoulli trial and we
   apply a union bound.
-  Letting $F = \left(1 - \left(\frac{2}{3}\right)^5\right)$, we obtain
+  Letting $F = \left(1 - \left(\frac{t}{n}\right)^5\right)$, we obtain
   $\floor*{\frac{E}{5}} F^w \leq 2^{-\kappa} \Rightarrow
    w \lg F \leq -\kappa - \lg \floor*{\frac{E}{5}} \Rightarrow
    w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg F}
