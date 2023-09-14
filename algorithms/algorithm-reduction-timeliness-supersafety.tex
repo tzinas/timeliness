@@ -1,0 +1,23 @@
+\begin{algorithm}[H]
+  \caption{\label{alg:reduction-timeliness-supersafety} The reduction from Timeliness
+    (the $\Pi$ protocol) to Supersafety (the $\Pi^*$ protocol).
+    }
+    \begin{algorithmic}[1]
+      \Let{P}{\new~\Pi()} \label{line.reduction-t-s-init}
+
+        \Function{\execute}{{}}
+          \State{$P.\execute()$} \label{line.reduction-t-s-execute}
+        \EndFunction
+
+        \Function{\rread}{{}}
+          \Let{\Ledger}{P.\rread()} \label{line.reduction-t-s-ledger}
+          \State\Return{$[(r, \tx) \in \Ledger: r \leq \now - v]$} \label{line.reduction-t-s-filter}
+        \EndFunction
+
+        \Function{\wwrite}{\tx}
+          \State{$P.\wwrite(\tx)$} \label{line.reduction-t-s-write}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+

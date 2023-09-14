@@ -1,4 +1,4 @@
-timeliness.pdf: *.tex *.bib *.sty
+timeliness.pdf: *.tex *.bib *.sty figures/* algorithms/*.tex
 	xelatex timeliness.tex && \
 	bibtex timeliness && \
 	xelatex timeliness.tex && \
