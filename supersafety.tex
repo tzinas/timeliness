@@ -36,6 +36,10 @@ to party $P$ in Line~\ref{line.reduction-t-s-write}.
 
 \import{./}{algorithms/algorithm-reduction-timeliness-supersafety.tex}
 
+Before proving protocol $\Pi^*$ is supersafe, we introduce
+the following lemma, which allows us to argue that all
+protocol $\Pi$ parties share a common view of sufficiently old transactions.
+
 \begin{lemma}[Past Perfect]\label{lem:past-perfect}
   Consider a temporal ledger protocol $\Pi$'s
   execution with duration $R$ rounds in which $\Pi$ is
@@ -66,22 +70,28 @@ to party $P$ in Line~\ref{line.reduction-t-s-write}.
 \end{proof}
 
 \atnote{Adjust for $R - u$?}
-\begin{conjecture}
+\begin{theorem}[Timeliness to Supersafety]
   An execution of protocol $\Pi^*$ is supersafe, if the execution of the
   temporal ledger protocol $\Pi$ is safe, live($u$) and timely$(v)$.
-\end{conjecture}
+\end{theorem}
 \begin{proof}
   Consider any honest parties $P_1^*,P_2^*$, where
-  $P_1,P_2$ are their $\Pi$ protocol encapsulated parties respectively.
+  $P_1,P_2$ are their encapsulated $\Pi$ parties respectively.
   Consider any round $r$ and any
   $(r^*, \tx) \in \Ledger[P_1][][r]$, where $r^* \leq r - v$.
   From Lemma~\ref{lem:past-perfect} it holds that
   $(r^*, \tx) \in \Ledger[P_2][][r]$. Hence, 
   $[(r^*, \tx) \in \Ledger[P_1][][r]: r^* \leq r - v] = [(r^*, \tx) \in \Ledger[P_2][][r]: r^* \leq r - v]$.
+  \atnote{Maybe talk about same order due to safety?}
   Therefore, when \rread is invoked in $P_1^*$ and $P_2^*$ after round $r$, both
   parties return the same ledger in Algorithm~\ref{alg:reduction-timeliness-supersafety}
   Line~\ref{line.reduction-t-s-filter}. Therefore, $\Ledger[P_1^*][][r] = \Ledger[P_2^*][][r]$.
 
+  Consider any honest party $P^*$, where $P$ is its encapsulated $\Pi$ party,
+  and any rounds $r_1 \leq r_2$.
+  From stickiness, it holds that $\Ledger[P][][r_1] \preceq \Ledger[P][][r_2]$.
+  Hence, $[(r^*, \tx) \in \Ledger[P][][r_1]: r^* \leq r_1 - v] \preceq [(r^*, \tx) \in \Ledger[P][][r_2]: r^* \leq r_2 - v]$
+  and $\Pi^*$ is also sticky.
 \end{proof}
 
 \dznote{Figure}
