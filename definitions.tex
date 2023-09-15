@@ -4,6 +4,17 @@
 %TODO: Complete
 We use the set builder notation with [] for sequences.
 
+In a distributed ledger protocol execution, the notation
+$\Ledger[P][][r]$ denotes the output of $\rread()$
+invoked on party $P$ at the end of round $r$. 
+We denote that ledger
+$\Ledger[P_1][][r_1]$ is a prefix of ledger $\Ledger[P_2][][r_2]$,
+using the notation
+$\Ledger[P_1][][r_1] \preccurlyeq \Ledger[P_2][][r_2]$. When
+$(\Ledger[P_1][][r_1] \preccurlyeq \Ledger[P_2][][r_2]) \lor (\Ledger[P_2][][r_2] \preccurlyeq \Ledger[P_1][][r_1])$ holds,
+we use the notation $\Ledger[P_1][][r_1] \sim \Ledger[P_2][][r_2]$.
+
+
 \dznote{Define model: synchronous time, global clocks}
 
 First, we note a few preliminary definitions.
@@ -12,6 +23,26 @@ First, we note a few preliminary definitions.
 \atnote{Define Synchrony, Partial Synchrony, GST, liveness under synchrony, safety}
 
 % TODO: \kappa is the security parameter.
+
+\begin{definition}[Stickiness]
+  A distributed ledger protocol is \emph{sticky} if
+  for any honest party $P$ and any rounds $r_1 \leq r_2$,
+  it holds that $\Ledger[P][][r_1] \preceq \Ledger[P][][r_2]$.
+\end{definition}
+
+\begin{definition}[Safety]
+  A distributed ledger protocol is \emph{safe} if
+  for any honest parties $P_1, P_2$ and any rounds $r_1, r_2$, it holds that
+  $\Ledger[P_1][][r_1]~\sim~\Ledger[P_2][][r_2]$. Additionally, the
+  protocol is sticky.
+\end{definition}
+
+\atnote{Do we want to correlate stickiness with safety and supersafety?}
+
+Stickiness can be easily enforced in any safe protocol
+without stickiness by having the parties report the longest
+ledger they have seen so far~\cite{streamlet}.
+
 
 \begin{definition}[Liveness in Partial Synchrony]
   A distributed ledger protocol, in a partially synchronous network,
@@ -53,9 +84,8 @@ The following definitions are first introduced in this work.
 \begin{definition}[Supersafety]
   A distributed ledger protocol is \emph{supersafe} if
   for any honest parties $P_1, P_2$ and any round $r$, it holds that
-  $\Ledger[P_1][][r] = \Ledger[P_2][][r]$. Additionally, for any honest party
-  $P$ and any round $r_1 \leq r_2$, it holds that
-  $\Ledger[P][][r_1] \preceq \Ledger[P][][r_2]$.
+  $\Ledger[P_1][][r] = \Ledger[P_2][][r]$.Additionally, the
+  protocol is sticky.
 \end{definition}
 
 All supersafe protocols are safe.
