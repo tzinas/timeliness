@@ -71,10 +71,16 @@ to party $P$ in Line~\ref{line.reduction-t-s-write}.
   temporal ledger protocol $\Pi$ is safe, live($u$) and timely$(v)$.
 \end{conjecture}
 \begin{proof}
-  Consider any honest parties $P_1^*,P_2^*$ and any round $r$.
-  Let $(r^*, \tx) \in \Ledger[P_1][][r]$, where $r^* \leq r - v$.
+  Consider any honest parties $P_1^*,P_2^*$, where
+  $P_1,P_2$ are their $\Pi$ protocol encapsulated parties respectively.
+  Consider any round $r$ and any
+  $(r^*, \tx) \in \Ledger[P_1][][r]$, where $r^* \leq r - v$.
   From Lemma~\ref{lem:past-perfect} it holds that
-  $(r^*, \tx) \in \Ledger[P_2][][r]$.
+  $(r^*, \tx) \in \Ledger[P_2][][r]$. Hence, 
+  $[(r^*, \tx) \in \Ledger[P_1][][r]: r^* \leq r - v] = [(r^*, \tx) \in \Ledger[P_2][][r]: r^* \leq r - v]$.
+  Therefore, when \rread is invoked in $P_1^*$ and $P_2^*$ after round $r$, both
+  parties return the same ledger in Algorithm~\ref{alg:reduction-timeliness-supersafety}
+  Line~\ref{line.reduction-t-s-filter}. Therefore, $\Ledger[P_1^*][][r] = \Ledger[P_2^*][][r]$.
 
 \end{proof}
 
