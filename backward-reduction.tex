@@ -1,15 +1,14 @@
 \section{Supersafety to Perfect Timeliness}
 
-We now construct a perfectly timely protocol $\bar\Pi$
-using a black-box reduction from a supersafe, and live($u$) protocol $\Pi^*$.
+We now construct a perfectly timely protocol $\Pi^*$
+using a black-box reduction from a supersafe, and live($u$) protocol $\Pi$.
 Each honest party $P$, executing the $\Pi^*$ protocol, runs a
 full node of protocol $\Pi$.
-The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][\Pi][r]$ and
-$\Ledger[*][\Pi][r]$ respectively.
-The main idea is that new transactions appearing in $\Ledger[][][r]$ are
-concatenated with $\Ledger[*][][r - 1]$ and reported
-with recorded round $r$
-to create temporal ledger $\Ledger[*][][r]$.
+The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][P][r]$ and
+$\Ledger[*][P][r]$ respectively.
+To construct temporal ledger $\Ledger[*][][r]$,
+new transactions appearing in
+$\Ledger[][][r]$ are appended to $\Ledger[*][][r - 1]$ with recorded round $r$.
 This process is illustrated
 in Figure~\ref{fig:backward-reduction}
 and the pseudocode is presented in Algorithm~\ref{alg:backward-reduction}.
@@ -24,5 +23,27 @@ and the pseudocode is presented in Algorithm~\ref{alg:backward-reduction}.
 \end{figure}
 
 \import{./}{algorithms/algorithm-backward-reduction.tex}
+
+We now prove that protocol $\Pi^*$ is perfectly timely.
+
+\begin{theorem}[Supersafety to Perfect Timeliness]
+  An execution of protocol $\Pi^*$ is perfectly timely, supersafe, and live($u$), if the execution of
+  protocol $\Pi$ is supersafe and live($u$).
+\end{theorem}
+\begin{proof}
+  By the construction of $\Pi^*$, during round $r$, only transactions with
+  recorded round $r$ can appear in honest ledger $\Ledger[*]$.
+  Hence timeliness requirements (1) and (2) follow from the construction.
+  We now prove requirement (3).
+  Consider any honest party $P$ and any rounds $r_1 \leq r_2$.
+  By the construction of $\Pi^*$, only transactions with recorded round greater
+  than $r_1$ can appear in ledger $\Ledger[*][P][r_2]{[\Ledger[*][P][r_1]{:}]}$.
+  Hence, $\Pi^*$ is timely with parameter $v = 0$, and therefore it is perfectly timely.
+
+  At any round $r$, the transactions that appear in honest ledger $\Ledger$
+  are the same with the transactions that appear in honest ledger $\Ledger[*]$.
+  Hence, supersafety and liveness($u$) follows from the contruction of $\Pi^*$.
+  \Qed
+\end{proof}
 
 \dznote{Describe and prove the reverse reduction}
