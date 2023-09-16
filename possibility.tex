@@ -157,20 +157,21 @@ party $P$ at the beginning of round $r$.
 \atnote{Define $\Ledger$ (read transaction from $\chain$)}
 Let $G(e)$ be the predicate indicating that epochs $e,e+1,e+2,e+3,e+4$ have honest leaders.
 
-\begin{definition}[Streamlet Typical Execution]
-  A Steamlet execution is \emph{typical} if it is safe and live($u$).
-\end{definition}
-
 We first show the maximum distance between two consecutive fully honest quintuples
 is bounded.
 
-\atnote{Explain what $t$ and $n$ are in model.}
-\begin{lemma}[Honest Quintuple Distance] \label{lem:honest-quintuple}
-  Consider a typical execution of the Temporal Streamlet protocol with duration
+\begin{definition}[Streamlet Typical Execution]
+  Consider an execution of the Temporal Streamlet protocol with duration
   of $E$ epochs, $n$ total number of parties and $t$ number of corrupt parties.
   Let $J = \{0,E\} \cup \{0 < e < E: G(e)\}$.
-  Then, for all $w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{t}{n}\right)^5\right)}$:
-  $\Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w] \leq \text{negl($\kappa$)}$.
+  The execution is \emph{typical} if for all
+  $w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{n - t}{n}\right)^5\right)}$:
+  $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w$.
+\end{definition}
+
+\atnote{Explain what $t$ and $n$ are in model.}
+\begin{lemma}[Streamlet Typicality] \label{lem:honest-quintuple}
+  A Streamlet execution is typical, except with negligible probability in $\kappa$.
 \end{lemma}
 \begin{proof}
   We let $K = \{0, E\} \cup \{e \in \{0, 5, 10 ,\ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
@@ -182,12 +183,12 @@ is bounded.
   \begin{gather*}
       \Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w] \leq \\
       \Pr [\max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e)) > w] \leq \\
-      \floor*{\frac{E}{5}} \left(1 - \left(\frac{t}{n}\right)^5\right)^w
+      \floor*{\frac{E}{5}} \left(1 - \left(\frac{n - t}{n}\right)^5\right)^w
   \end{gather*}
 
   For the second inequality, we observe that each chunk is a Bernoulli trial and we
   apply a union bound.
-  Letting $F = \left(1 - \left(\frac{t}{n}\right)^5\right)$, we obtain
+  Letting $F = \left(1 - \left(\frac{n - t}{n}\right)^5\right)$, we obtain
   $\floor*{\frac{E}{5}} F^w \leq 2^{-\kappa} \Rightarrow
    w \lg F \leq -\kappa - \lg \floor*{\frac{E}{5}} \Rightarrow
    w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg F}
@@ -196,32 +197,19 @@ is bounded.
 \end{proof}
 
 \atnote{Maybe calculate liveness parameter u}
-% \begin{theorem}[Streamlet Liveness]
-%   The Streamlet protocol is live($u$) in the partially
-%   synchronous model with $u \geq ???$, unless with negligible probability.
-% \end{theorem}
 
 \begin{lemma}[Latest Finalized Round] \label{lem:latest-finalized-round}
-  Consider a typical execution of the Temporal Streamlet protocol with duration
-  of $E$ epochs, $n$ total number of parties and $t$ number of corrupt parties.
-  Consider any honest party $P$ and any round $r_1$. Let block
-  $B^* = \chain^P_{r_1}[-1]$, with
-  epoch $e^*$ and recorded round $r^* = 2\Delta e^*$.
-  It holds that $r_1 - r^* \leq 2\Delta(w + 1)$.
+  In epoch $e$ of a Temporal Streamlet typical execution,
+  the epoch $e^*$ of the tip of an honest party's finalized chain
+  satisfies $e - e^* \leq w - 3$.
 \end{lemma}
 \begin{proof}
-  Let $e = \max(\{\hat e \leq e^* - 3: G(\hat e)\})$ and $e' = 2\Delta \ceil*{\frac{r_1}{2\Delta}}$.
-  From Lemma~\ref{lem:honest-quintuple}, it holds that $e' - e \leq w$.
-  From the Liveness proof of Streamlet~\cite{streamlet}, by round $2\Delta (e' + 4) + 1$,
-  all honest parties store a finalized chain longer than $\chain^P_{r_1}$.
-  Hence, $r_1 \leq 2\Delta (e' + 4)$.
-  Therefore:
-
-  \begin{align*}
-    \makebox[0.5\textwidth][c]{$2\Delta e' - 2\Delta e \leq 2\Delta w$}           && \text{[$e' - e \leq w$]}\\
-    \makebox[0.5\textwidth][c]{$2\Delta e' - r^* \leq 2\Delta w - 6\Delta$}       && \text{[$e \leq e^* - 3$]} \\
-    \makebox[0.5\textwidth][c]{$r_1 - r^* \leq 2\Delta(w + 1)$}                  && \text{[$r_1 \leq 2\Delta (e' + 4)$]}
-  \end{align*}
+  Let $e' = \max(\{\hat e \leq e - 3: G(\hat e)\})$.
+  From typicality, it holds that $e - e' \leq w$.
+  Epoch $e' + 3$ contains a finalized block which cannot be after
+  chain tip of epoch $e^*$.
+  Hence, $e' \leq e^* - 3$.
+  Therefore, $e - e^* \leq w - 3$.
   \Qed
 \end{proof}
 
