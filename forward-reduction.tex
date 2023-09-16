@@ -82,8 +82,11 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
 
 \atnote{Adjust for $R - u$?}
 \begin{theorem}[Timeliness to Supersafety]
-  An execution of protocol $\Pi^*$ is supersafe and live($u + v$), if the execution of the
-  temporal ledger protocol $\Pi$ is safe, live($u$) and timely$(v)$.
+  An execution of protocol $\Pi^*$, with duration $R$ rounds, is supersafe
+  and live($u + v$), if the execution of the
+  temporal ledger protocol $\Pi$ is safe, live($u$) and timely$(v)$
+  as long as at least one new honest transaction appears in the
+  network at all rounds before $R - u$.
 \end{theorem}
 \begin{proof}
   Consider any honest parties $P_1,P_2$, any round $r$, and any
@@ -97,8 +100,6 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   Therefore, $\Ledger[*][P_1][r] = \Ledger[*][P_2][r]$.
   Lastly, stickiness follows from the stickiness of $\Pi$.
   Therefore, $\Pi^*$ is supersafe.
-  \atnote{Prove liveness.}
-
 
   Liveness follows from the liveness of $\Pi$ with an added
   confirmation delay of $v$ rounds.
