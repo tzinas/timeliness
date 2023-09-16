@@ -3,26 +3,27 @@
 In this section we construct a supersafe protocol
 $\Pi^*$ using a black-box reduction from a safe, live($u$) and timely($v$)
 protocol $\Pi$.
-Each honest party $P^*$, executing the $\Pi^*$ protocol, runs a
-full node party $P$ of protocol $\Pi$.
-The ledger of party $P$ and $P^*$, at round $r$, are denoted as $\Ledger[][][r]$ and
-$\Ledger[*][][r]$ respectively.
-The main idea is that $P^*$ constructs ledger $\Ledger[*][][r]$
-by filtering through ledger $\Ledger[][][r]$, and only keeps transactions
+Each honest party $P$, executing the $\Pi^*$ protocol, runs a
+full node of protocol $\Pi$.
+The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][\Pi][r]$ and
+$\Ledger[*][\Pi][r]$ respectively.
+The main idea is that ledger $\Ledger[*][][r]$ is constructed
+by filtering through ledger $\Ledger[][][r]$, and only keeping transactions
 with recorded round less than or equal to $r - v$. When a transaction
-is written to $P^*$, it is simply forwarded to $P$. This process is illustrated
+is written to $P$, it is simply forwarded to the instance of protocol $\Pi$. This process is illustrated
 in Figure~\ref{fig:reduction-timeliness-supersafety}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\columnwidth,keepaspectratio]{figures/reduction-timeliness-supersafety.pdf}
+  \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/forward-reduction.pdf}
   \caption{The reduction from Timeliness
     (the $\Pi$ protocol) to Supersafety (the $\Pi^*$ protocol). A transaction is illustrated
     as a black circle and its recorded round is displayed below.
   }
-
  \label{fig:reduction-timeliness-supersafety}
 \end{figure}
+
+\atnote{Talk about added confirmation delay.}
 
 \atnote{Add \now notation}
 \atnote{Add set builder notation for sequences}
@@ -34,11 +35,19 @@ filtered to create $\Ledger[*]$, which is returned in Line~\ref{line.reduction-t
 When the \wwrite function is invoked with transactions $\tx$, party $P^*$ simply writes $\tx$
 to party $P$ in Line~\ref{line.reduction-t-s-write}.
 
-\import{./}{algorithms/algorithm-reduction-timeliness-supersafety.tex}
+\import{./}{algorithms/algorithm-forward-reduction.tex}
 
-Before proving protocol $\Pi^*$ is supersafe, we introduce
-the following lemma, which allows us to argue that all
+Before proving protocol $\Pi^*$ is supersafe, we present
+the following lemma\footnote{
+  A variant of this auxiliary lemma was introduced and proven in earlier work~\cite{rollerblade}.
+}, which allows us to argue that all
 protocol $\Pi$ parties share a common view of sufficiently old transactions.
+
+%TODO: Add figure for Past Perfect lemma
+%TODO: Clean up network activity: as at least one new honest transaction $\tx'$
+%      appears in the network at any round $r_3$, where $r_1 < r_3 \leq R - u$.
+%TODO: 
+
 
 \begin{lemma}[Past Perfect]\label{lem:past-perfect}
   Consider a temporal ledger protocol $\Pi$'s
@@ -69,31 +78,37 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   Since $r^* \leq r_2 - v$, this contradicts the timeliness with parameter $v$.\Qed
 \end{proof}
 
+\atnote{Add: The above lemma holds for already booted clients.}
+
 \atnote{Adjust for $R - u$?}
 \begin{theorem}[Timeliness to Supersafety]
-  An execution of protocol $\Pi^*$ is supersafe, if the execution of the
+  An execution of protocol $\Pi^*$ is supersafe and live($u + v$), if the execution of the
   temporal ledger protocol $\Pi$ is safe, live($u$) and timely$(v)$.
 \end{theorem}
 \begin{proof}
-  Consider any honest parties $P_1^*,P_2^*$, where
-  $P_1,P_2$ are their encapsulated $\Pi$ parties respectively.
-  Consider any round $r$ and any
-  $(r^*, \tx) \in \Ledger[P_1][][r]$, where $r^* \leq r - v$.
+  Consider any honest parties $P_1,P_2$, any round $r$, and any
+  $(r^*, \tx) \in \Ledger[][P_1][r]$, where $r^* \leq r - v$.
   From Lemma~\ref{lem:past-perfect} it holds that
-  $(r^*, \tx) \in \Ledger[P_2][][r]$. Hence, 
-  $[(r^*, \tx) \in \Ledger[P_1][][r]: r^* \leq r - v] = [(r^*, \tx) \in \Ledger[P_2][][r]: r^* \leq r - v]$.
-  \atnote{Maybe talk about same order due to safety?}
-  Therefore, when \rread is invoked in $P_1^*$ and $P_2^*$ after round $r$, both
-  parties return the same ledger in Algorithm~\ref{alg:reduction-timeliness-supersafety}
-  Line~\ref{line.reduction-t-s-filter}. Therefore, $\Ledger[P_1^*][][r] = \Ledger[P_2^*][][r]$.
+  $(r^*, \tx) \in \Ledger[][P_2][r]$.
+  From this and from safety, it follows that
+  $\Ledger[*][P_1][r] = [(r^*, \tx) \in \Ledger[][P_1][r]: r^* \leq r - v] \preceq
+  [(r^*, \tx) \in \Ledger[][P_2][r]: r^* \leq r - v] = \Ledger[*][P_2][r]$.
+  Inversely, $\Ledger[*][P_2][r] \preceq \Ledger[*][P_1][r]$.
+  Therefore, $\Ledger[*][P_1][r] = \Ledger[*][P_2][r]$.
+  Lastly, stickiness follows from the stickiness of $\Pi$.
+  Therefore, $\Pi^*$ is supersafe.
+  \atnote{Prove liveness.}
 
-  Consider any honest party $P^*$, where $P$ is its encapsulated $\Pi$ party,
-  and any rounds $r_1 \leq r_2$.
-  From stickiness, it holds that $\Ledger[P][][r_1] \preceq \Ledger[P][][r_2]$.
-  Hence, $[(r^*, \tx) \in \Ledger[P][][r_1]: r^* \leq r_1 - v] \preceq [(r^*, \tx) \in \Ledger[P][][r_2]: r^* \leq r_2 - v]$
-  and $\Pi^*$ is also sticky.
+
+  Liveness follows from the liveness of $\Pi$ with an added
+  confirmation delay of $v$ rounds.
+  % TODO: Maybe explain more:
+  % Next, we prove liveness. Consider a transaction $\tx$
+  % is written to any honest party at round $r$.
+  % From the liveness of $\Pi$, for any honest party $P$, it holds that $(r^*, \tx) \in \Ledger[][P][r + u]$.
+  % Due to timeliness of $\Pi$, the recorded round of $\tx$ is $r^* \leq r + u$.
+  % Hence, $(r^*, \tx) \in \Ledger[*][P][r + u + v]$.
+  \Qed
 \end{proof}
 
-\dznote{Figure}
-\dznote{Describe and prove the forward reduction}
-\dznote{Describe and prove the reverse reduction}
+\atnote{Add: The above theorem holds for already booted clients.}

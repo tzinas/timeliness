@@ -1,0 +1,27 @@
+\begin{algorithm}[H]
+  \caption{\label{alg:backward-reduction} The reduction from Supersafety
+    (the $\Pi$ protocol) to Perfect Timeliness (the $\Pi^*$ protocol).
+    }
+    \begin{algorithmic}[1]
+      \Let{P}{\new~\Pi()}
+      \Let{\Ledger[*]}{[]}
+
+        \Function{\execute}{{}}
+          \State{$P.\execute()$}
+          \Let{\Ledger}{P.\rread()}
+          \For{$\tx \in \Ledger{[|\Ledger[*]|{:}]}$}
+            \Let{\Ledger[*]}{\Ledger[*] \concat (\now, \tx)}  \atnote{Use append instead? What is more clear?}
+          \EndFor
+        \EndFunction
+
+        \Function{\rread}{{}}
+          \State\Return{$\Ledger[*]$}
+        \EndFunction
+
+        \Function{\wwrite}{\tx}
+          \State{$P.\wwrite(\tx)$}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+
