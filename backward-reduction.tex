@@ -18,6 +18,8 @@ and the pseudocode is presented in Algorithm~\ref{alg:backward-reduction}.
   \includegraphics[width=0.9\columnwidth,keepaspectratio]{figures/backward-reduction.pdf}
   \caption{The reduction from Supersafety
     (the $\Pi$ protocol) to Perfect Timeliness (the $\Pi^*$ protocol).
+    New transactions of $\Ledger[][][r]$ are included in
+    $\Ledger[*][][r]$ with recorded round $r$.
   }
  \label{fig:backward-reduction}
 \end{figure}
@@ -42,7 +44,7 @@ We now prove that protocol $\Pi^*$ is perfectly timely.
 
   At any round $r$, the transactions that appear in honest ledger $\Ledger$
   are the same with the transactions that appear in honest ledger $\Ledger[*]$.
-  Hence, supersafety and liveness($u$) follows from the contruction of $\Pi^*$.
+  Hence, supersafety and liveness($u$) follow from the construction of $\Pi^*$.
   \Qed
 \end{proof}
 
