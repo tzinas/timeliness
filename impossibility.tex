@@ -1,7 +1,9 @@
 \section{Impossibility}
 
-We saw that protocols can be timely under partial synchrony after GST.
-Conversely, in the following theorem, we show that timeliness before GST is unachievable.
+We saw that in the synchronous setting and in the partially synchronous setting after GST,
+protocols can be timely.
+Conversely, in the following theorem, we show that timeliness before GST in partially
+synchronous networks is unachievable.
 
 \begin{theorem}[Timeliness is Impossible in Partial Synchrony]
   In a partially synchronous communication network, a distributed temporal ledger protocol
@@ -16,8 +18,8 @@ Conversely, in the following theorem, we show that timeliness before GST is unac
   \underline{World A}
   There are $n-1$ honest parties and one adversarial party. The adversary remains silent and
   does not disrupt the synchrony of the network ($\gst = 0$).
-  The adversary chooses any round $r$ and introduces a high entropy transaction $\tx$ to the honest parties. We are in a
-  synchronous network, hence, because of liveness, $\tx$ appears in the ledgers of all honest parties
+  The adversary chooses any round $r$ and introduces a high entropy transaction $\tx$ to the honest parties. We are in
+  synchrony, hence, because of liveness, $\tx$ appears in the ledgers of all honest parties
   by round $r + u$. The transaction is recorded with round $r^* \leq r + u$ because of
   timeliness requirement \ref{def:timely-past}.
 
@@ -31,13 +33,12 @@ Conversely, in the following theorem, we show that timeliness before GST is unac
   World A and World B are identical up to now. Hence, like in World A,
   they report $\tx$ in their ledgers by round $r + u$, with recorded round $r^* \leq r + u$.
 
-  Only after \gst, the transaction will eventually be included in $\Ledger[P]$ due to liveness.
-  Consider the earliest round $r_2$, when $\tx$ appears in $\Ledger[P]$.
+  Only after \gst, due to liveness, will the transaction eventually be included in $P$'s ledger
+  Consider the earliest round $r_2$, when $\tx$ appears in the ledger.
   The transaction will have recorded round $r^*$, due to safety.
-  Hence, $(r^*, \tx) \in \Ledger[P][][r_2][|\Ledger[P][][\gst - 1]]$.
+  Hence, $(r^*, \tx) \in \Ledger[][P][r_2][|\Ledger[][P][\gst - 1]]$.
   From the timeliness requirement \ref{def:timely-increasing}, we
   get $r^* > \gst - v - 1$. Therefore, $r^* > r + u$.
   This is a contradiction, since $r^* \leq r + u$.
-
   \Qed
 \end{proof}

@@ -3,10 +3,10 @@
 \dznote{Mention that we prove timeliness for all flavours of permissionless blockchains
 by illustrating the proof for three prototypal example.}
 
-\subsection{Bitcoin}
+\subsection{Bitcoin is Timely}
 
 We now prove that Bitcoin is timely. We work in the Bitcoin Backbone model~\cite{backbone}
-in the synchronous setting.
+in the synchronous setting. \atnote{static?}
 
 First, we have to make a couple of small changes to the Bitcoin Backbone construction to turn it
 into a Temporal Ledger, as the original Bitcoin Backbone construction is a ledger protocol only.
@@ -66,11 +66,11 @@ Backbone paper.
   We will now prove (3).
 
   Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
-  the ledgers $L^P_{r_1}, L^P_{r_2}$ reported\footnote{
+  the ledgers $\Ledger[][P][r_1], \Ledger[][P][r_2]$ reported\footnote{
     Recall that the ledger reported at a round is obtained by inspecting the
     chain \emph{adopted} at that round.
   } by $P$ at rounds $r_1, r_2$ respectively.
-  Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
+  Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$ contains a transaction
   $\tx$ with recorded round $r \leq r_1 - v$.
 
   % TODO(dionyziz): figure
@@ -134,27 +134,27 @@ Backbone paper.
   \Qed
 \end{proof}
 
-\subsection{Streamlet}
+\subsection{Streamlet is Timely}
 
-We now prove that the Partially Synchronous Streamlet Protocol is timely
-after GST. For the rest of this section it is simply referred to as the Streamlet Protocol.
+We now prove that the Partially Synchronous Streamlet Protocol is timely,
+in the partially synchronous setting, after GST.
 We work in the same model as the Streamlet paper~\cite{streamlet}.
 
-First, we have to make a couple of small changes to the Steamlet construction to turn it
-into a Temporal Ledger.
+First, we have to turn Streamlet into a temporal ledger protocol.
 The \emph{Temporal Streamlet} protocol is the same as the Streamlet protocol, except
-for the following change: When the ledger is \textsf{read}, the reported transactions are
+for the following change: When \rread is invoked, the transactions are
 read from the finalized chain and each transaction is reported with round $2\Delta e$,
 where $e$ is the epoch number of the block in which it is included, and $\Delta$ is the
 network delay.
 With this change, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$).
+\atnote{Maybe add pseudocode if there is time?}
 
-An honest party $P$, at the beginning of a round, and
+Honest party $P$, at the beginning of a round, and
 before performing any other action, checks the network and
 stores the longest finalized chain.
-We define $\chain^P_r$ to be the longest finalized chain stored by an honest
-party $P$ at the beginning of round $r$.
-\atnote{Define $\Ledger$ (read transaction from $\chain$)}
+We define $\chain^P_r$ to be the longest finalized chain stored by party $P$
+at the beginning of round $r$.
+We define ledger $\Ledger[][P][r]$ to contain the transactions included in $\chain^P_r$.
 Let $G(e)$ be the predicate indicating that epochs $e,e+1,e+2,e+3,e+4$ have honest leaders.
 
 We first show the maximum distance between two consecutive fully honest quintuples
@@ -169,13 +169,12 @@ is bounded.
   $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w$.
 \end{definition}
 
-\atnote{Explain what $t$ and $n$ are in model.}
 \begin{lemma}[Streamlet Typicality] \label{lem:honest-quintuple}
   A Streamlet execution is typical, except with negligible probability in $\kappa$.
 \end{lemma}
+  \atnote{Doublecheck and write about 0 and E}
 \begin{proof}
   We let $K = \{0, E\} \cup \{e \in \{0, 5, 10 ,\ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
-  \atnote{Doublecheck and write about 0 and E}
   It holds that
   $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq \max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e))$.
   Therefore:
@@ -204,6 +203,7 @@ is bounded.
   satisfies $e - e^* \leq w - 3$.
 \end{lemma}
 \begin{proof}
+  \atnote{Fix this for genesis}
   Let $e' = \max(\{\hat e \leq e - 3: G(\hat e)\})$.
   From typicality, it holds that $e - e' \leq w$.
   Epoch $e' + 3$ contains a finalized block which cannot be after
@@ -216,7 +216,7 @@ is bounded.
 
 \begin{theorem}[Streamlet Timeliness]
   A typical execution of the Temporal Streamlet protocol is timely
-  with timeliness $v = 2\Delta (w + 1)$ in the partially synchronous model after GST.
+  with timeliness $v = 2\Delta (w - 3)$ in the partially synchronous model after GST.
 \end{theorem}
 \begin{proof}
   Requirement (1) of timeliness is satisfied because the epoch numbers in any notarized chain
@@ -226,30 +226,26 @@ is bounded.
   which comes after the recorded round $2\Delta e$ of $B$.
   We will now prove (3).
 
-  Let $P$ be any honest party and $r_1 \leq r_2 \in \N$ be any rounds, and consider
-  the ledgers $L^P_{r_1}, L^P_{r_2}$ reported by $P$ at rounds $r_1, r_2$ respectively.
-  Suppose, towards a contradiction, that $L^P_{r_2}[|L^P_{r_1}|{:}]$ contains a transaction
-  $\tx$ with recorded round $r \leq r_1 - v$.
-
-  Let $\chain_1, \chain_2$ be the longest finalized chain that $P$ stores at the beginning of round $r_1$
-  and $r_2$ respectively.
-  It must be true that $|\chain_2| > |\chain_1|$, and due to safety, $\chain_2$ will extend $\chain_1$.
-  The transaction $\tx$ is contained in some block $B \in \chain_2[|\chain_1|{:}]$,
-  with epoch number $e$ and recorded round $r = 2\Delta e$.
-
-  Let $B^* = \chain_1[-1]$, with epoch number $e^*$ and recorded round $r^* = 2\Delta e^*$.
+  \atnote{Fix this for genesis.}
+  Consider any honest party $P$, and any rounds $r_1 \leq r_2 \in \N$.
+  Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$
+  contains a transaction $\tx$ with recorded round $r \leq r_1 - v$.
+  Due to safety, it holds that $\chain^P_{r_1} \prec \chain^P_{r_2}$.
+  Transaction $\tx$ is in some block $B \in \chain^P_{r_2}[|\chain^P_{r_1}|{:}]$,
+  with epoch number $e = \frac{r}{2\Delta}$.
+  Let $B^* = \chain^P_{r_1}[-1]$, with epoch number $e^*$.
   From Lemma~\ref{lem:latest-finalized-round}, it holds that
-  $r_1 - r^* \leq 2\Delta (w + 1)$. Therefore:
+  $\frac{r_1}{2\Delta} - e^* \leq w - 3$. Therefore:
 
   \begin{align*}
-    \makebox[0.5\textwidth][c]{$r - r^* \leq 2\Delta (w + 1) - v$}                && \text{[$r \leq r_1 - v$]} \\
-    \makebox[0.5\textwidth][c]{$r - r^* \leq 0$}                                 && \text{[$v = 2\Delta (w + 1)$]}
+    \makebox[0.5\textwidth][c]{$e - e^* \leq w - 3 - \frac{v}{2\Delta}$}         && \text{[$r \leq r_1 - v$]} \\
+    \makebox[0.5\textwidth][c]{$e - e^* \leq 0$}                                 && \text{[$v = 2\Delta (w - 3)$]}
   \end{align*}
 
   This is a contradiction because block $B$ extends a chain that contains $B^*$,
-  and hence $r > r^*$.
+  and hence $e > e^*$.
 
-  \atnote{Something about genesis needs to be added probably.}
+  \atnote{Create figure if there is enough time}
   \Qed
 \end{proof}
 

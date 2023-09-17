@@ -63,6 +63,13 @@ execution round.
 % messages are delivered with a delay of one round (messages sent in a round
 % arrive at the beginning of the next round).
 
+\atnote{Define clients. Maybe in a later section?}
+% \begin{definition}[Client] \atnote{Revisit this}
+%   We define a \emph{client} as a late joining party which
+%   is activated after round $1$ and takes a
+%   constant number of rounds to sync up with the rest of the peers.
+% \end{definition}
+
 In this work, we work in two network settings: Synchrony and Partial Synchrony.
 
 \begin{definition}[Synchrony]
@@ -83,13 +90,13 @@ that we make use of in our analysis.
 \begin{definition}[Stickiness]
   A distributed ledger protocol is \emph{sticky} if
   for any honest party $P$ and any rounds $r_1 \leq r_2$,
-  it holds that $\Ledger[P][][r_1] \preceq \Ledger[P][][r_2]$.
+  it holds that $\Ledger[][P][r_1] \preceq \Ledger[][P][r_2]$.
 \end{definition}
 
 \begin{definition}[Safety]
   A distributed ledger protocol is \emph{safe} if it is sticky and
   for any honest parties $P_1, P_2$ and any rounds $r_1, r_2$, it holds that
-  $\Ledger[P_1][][r_1]~\sim~\Ledger[P_2][][r_2]$. 
+  $\Ledger[][P_1][r_1]~\sim~\Ledger[][P_2][r_2]$. 
 \end{definition}
 
 Stickiness can be easily enforced in any safe protocol

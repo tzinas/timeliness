@@ -19,9 +19,9 @@ The following definitions are first introduced in this work.
   if for all honest parties $P$ and rounds $r_1$ it holds that:
 
   \begin{enumerate}
-    \item The rounds recorded in $\Ledger[P][][r_1]$ are non-decreasing.\label{def:timely-increasing}
-    \item The round recorded at $\Ledger[P][][r_1][-1]$ is at most $r_1$.\label{def:timely-past}
-    \item For all $r_1 \leq r_2$, the rounds recorded in $\Ledger[P][][r_2][|\Ledger[P][][r_1]|{:}]$ are
+    \item The rounds recorded in $\Ledger[][P][r_1]$ are non-decreasing.\label{def:timely-increasing}
+    \item The round recorded at $\Ledger[][P][r_1][-1]$ is at most $r_1$.\label{def:timely-past}
+    \item For all $r_1 \leq r_2$, the rounds recorded in $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$ are
           newer than $r_1 - v$.\label{def:timely-chunk}
   \end{enumerate}
 \end{definition}
@@ -36,7 +36,7 @@ of the properties.
 \begin{definition}[Supersafety]
   A distributed ledger protocol is \emph{supersafe} if it is sticky and
   for any honest parties $P_1, P_2$ and any round $r$, it holds that
-  $\Ledger[P_1][][r] = \Ledger[P_2][][r]$.
+  $\Ledger[][P_1][r] = \Ledger[][P_2][r]$.
 \end{definition}
 
 Note that all supersafe protocols are safe.
