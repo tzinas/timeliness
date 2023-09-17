@@ -141,12 +141,14 @@ in the partially synchronous setting, after GST.
 We work in the same model as the Streamlet paper~\cite{streamlet}.
 
 First, we have to turn Streamlet into a temporal ledger protocol.
-The \emph{Temporal Streamlet} protocol is the same as the Streamlet protocol, except
-for the following change: When \rread is invoked, the transactions are
+The \emph{Temporal Streamlet} protocol is the same as Streamlet, except
+for the following changes: No future blocks are accepted, and when \rread is invoked,
+the transactions are
 read from the finalized chain and each transaction is reported with round $2\Delta e$,
-where $e$ is the epoch number of the block in which it is included, and $\Delta$ is the
+where $e$ is the epoch of the block in which it is included, and $\Delta$ is the
 network delay.
-With this change, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$).
+With this change, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$)
+for $\frac{t}{n} < \frac{1}{3}$.
 \atnote{Maybe add pseudocode if there is time?}
 
 Honest party $P$, at the beginning of a round, and
@@ -155,7 +157,7 @@ stores the longest finalized chain.
 We define $\chain^P_r$ to be the longest finalized chain stored by party $P$
 at the beginning of round $r$.
 We define ledger $\Ledger[][P][r]$ to contain the transactions included in $\chain^P_r$.
-Let $G(e)$ be the predicate indicating that epochs $e,e+1,e+2,e+3,e+4$ have honest leaders.
+Let $G(e)$ be the predicate indicating that epochs $e-3,e-2,e-1,e,e+1$ have honest leaders.
 
 We first show the maximum distance between two consecutive fully honest quintuples
 is bounded.
@@ -166,13 +168,12 @@ is bounded.
   Let $J = \{0,E\} \cup \{0 < e < E: G(e)\}$.
   The execution is \emph{typical} if for all
   $w \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{n - t}{n}\right)^5\right)}$:
-  $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > w$.
+  $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq w$.
 \end{definition}
 
 \begin{lemma}[Streamlet Typicality] \label{lem:honest-quintuple}
   A Streamlet execution is typical, except with negligible probability in $\kappa$.
 \end{lemma}
-  \atnote{Doublecheck and write about 0 and E}
 \begin{proof}
   We let $K = \{0, E\} \cup \{e \in \{0, 5, 10 ,\ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
   It holds that
@@ -195,38 +196,30 @@ is bounded.
   \Qed
 \end{proof}
 
-\atnote{Maybe calculate liveness parameter u}
-
-\begin{lemma}[Latest Finalized Round] \label{lem:latest-finalized-round}
+\begin{lemma}[Latest Finalized Epoch] \label{lem:latest-finalized-round}
   In epoch $e$ of a Temporal Streamlet typical execution,
   the epoch $e^*$ of the tip of an honest party's finalized chain
-  satisfies $e - e^* \leq w - 3$.
+  satisfies $e - e^* \leq w$.
 \end{lemma}
 \begin{proof}
-  \atnote{Fix this for genesis}
-  Let $e' = \max(\{\hat e \leq e - 3: G(\hat e)\})$.
+  Let $e' = \max(\{\hat e \leq e: G(\hat e)\} \cup \{0\})$.
   From typicality, it holds that $e - e' \leq w$.
-  Epoch $e' + 3$ contains a finalized block which cannot be after
-  chain tip of epoch $e^*$.
-  Hence, $e' \leq e^* - 3$.
-  Therefore, $e - e^* \leq w - 3$.
+  From Streamlet liveness, epoch $e'$ contains a finalized
+  block. This block cannot be after chain tip with epoch $e^*$.
+  Hence, $e' \leq e^*$. Therefore, $e - e^* \leq w$.
   \Qed
 \end{proof}
 
 
 \begin{theorem}[Streamlet Timeliness]
   A typical execution of the Temporal Streamlet protocol is timely
-  with timeliness $v = 2\Delta (w - 3)$ in the partially synchronous model after GST.
+  with timeliness $v = 2\Delta w$ in the partially synchronous model after GST.
 \end{theorem}
 \begin{proof}
-  Requirement (1) of timeliness is satisfied because the epoch numbers in any notarized chain
-  are non-decreasing.
-  Requirement (2) of timeliness is satisfied because a block $B$, of epoch $e$, becomes finalized
-  only after the next one gets notarized. This can only happen after round $2\Delta e + \Delta$,
-  which comes after the recorded round $2\Delta e$ of $B$.
+  Requirements (1) and (2) of timeliness are satisfied because the epoch numbers in any chain
+  are non-decreasing and not in the future.
   We will now prove (3).
 
-  \atnote{Fix this for genesis.}
   Consider any honest party $P$, and any rounds $r_1 \leq r_2 \in \N$.
   Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$
   contains a transaction $\tx$ with recorded round $r \leq r_1 - v$.
@@ -235,11 +228,11 @@ is bounded.
   with epoch number $e = \frac{r}{2\Delta}$.
   Let $B^* = \chain^P_{r_1}[-1]$, with epoch number $e^*$.
   From Lemma~\ref{lem:latest-finalized-round}, it holds that
-  $\frac{r_1}{2\Delta} - e^* \leq w - 3$. Therefore:
+  $\frac{r_1}{2\Delta} - e^* \leq w$. Therefore:
 
   \begin{align*}
-    \makebox[0.5\textwidth][c]{$e - e^* \leq w - 3 - \frac{v}{2\Delta}$}         && \text{[$r \leq r_1 - v$]} \\
-    \makebox[0.5\textwidth][c]{$e - e^* \leq 0$}                                 && \text{[$v = 2\Delta (w - 3)$]}
+    \makebox[0.5\textwidth][c]{$e - e^* \leq w - \frac{v}{2\Delta}$}         && \text{[$r \leq r_1 - v$]} \\
+    \makebox[0.5\textwidth][c]{$e - e^* \leq 0$}                                 && \text{[$v = 2\Delta w$]}
   \end{align*}
 
   This is a contradiction because block $B$ extends a chain that contains $B^*$,
