@@ -1,0 +1,113 @@
+\section{Preliminaries \& Model}
+
+\noindent
+\textbf{Notation.} \atnote{Parts are taken from PoPoS.}
+We use $[]$ to denote the empty sequence.
+We denote by $|C|$ the length of sequence $C$;
+by $C[i]$ the $i^{\textsf{th}}$ (zero-based) element of
+sequence $C$, and by $C[-i]$ the $i^{\textsf{th}}$ element
+from the end. We use $C[i{:}j]$ to mean the subsequence 
+of $C$ from the $i^{\textsf{th}}$ (zero-based inclusive)
+to the $j^{\textsf{th}}$ (zero-based exclusive).
+Omitting $i$ takes the sequence to the beginning,
+and omitting $j$ takes the sequence to the end.
+By $C_1 || C_2$, we mean the concatenation
+of sequences $C_1$ and $C_2$.
+We use the set notation $i \in C$ to iterate
+through a sequence $C$.\atnote{[?]}
+We use the set builder notation $[i \in C: \{\textsf{condition}\}]$
+to filter the elements of sequence $C$ that satisfy the condition. \atnote{[?]}
+We denote that sequence $C_1$ is a prefix of $C_2$
+using notation $C_1 \preccurlyeq C_2$.
+When $C_1 \preccurlyeq C_2 \lor C_2 \preccurlyeq C_1$ holds,
+we use the notation $C_1 \sim C_2$.
+We use $\kappa$ to denote the security parameter.
+
+\begin{definition}[Ledger]
+  A \emph{ledger} is a sequence of transactions.
+\end{definition}
+
+\begin{definition}[Distributed Ledger Protocol]
+  A \emph{distributed ledger protocol} is an
+  Interactive Turing Machine which exposes the following
+  methods:
+  \begin{itemize}
+    \item \execute: Executes a single round of the protocol, during
+      which the machine can communicate with the network.
+    \item $\wwrite(\tx)$: Takes transaction $\tx$ as input.
+    \item $\rread()$: Outputs a ledger.
+  \end{itemize}
+\end{definition}
+
+The notation
+$\Ledger[][P][r]$ denotes the output of $\rread()$
+invoked on party $P$ at the end of round $r$. 
+
+\noindent
+\textbf{Model.}
+\atnote{Here we want to introduce a baseline model since we work on the backbone and streamlet models for our analysis.}
+Execution commences in discrete rounds $1, 2, \ldots$, of polynomial duration in the
+security parameter $\kappa$.
+The protocol is executed by a fixed number of $n$ parties,
+unknown to the honest parties, and the adversary controls $t$ of them. \atnote{Are we in the static setting?}
+In each round, the environment invokes \execute
+on all honest parties and also triggers the adversary.
+Parties communicate through an unauthenticated network,
+meaning that the adversary can ``spoof''~\cite{douceur2002sybil}
+the source address of any message that is delivered.
+We assume all parties have a \emph{global clock}, meaning
+they can use the environment function \now to get the current
+execution round.
+%TODO: Synchrony or Partial Synchrony should be declared in each protocol analysis independently
+% We assume a synchronous communication network, where all honestly produced
+% messages are delivered with a delay of one round (messages sent in a round
+% arrive at the beginning of the next round).
+
+In this work, we work in two network settings: Synchrony and Partial Synchrony.
+
+\begin{definition}[Synchrony]
+  A network is \emph{synchronous} when
+  all honestly produced messages are delivered with a delay of $\Delta$ rounds
+  (messages sent during round $r$ arrive at the beginning of round $r + \Delta$).
+\end{definition}
+
+\begin{definition}[Partial Synchrony]
+  A network is \emph{partially synchronous} when the adversary can delay
+  messages arbitrarily before a Global Stabilization Time (GST)~\cite{dwork1988consensus}, however
+  after GST the network becomes synchronous.
+\end{definition}
+
+We now present some preliminary distributed ledger virtues
+that we make use of in our analysis.
+
+\begin{definition}[Stickiness]
+  A distributed ledger protocol is \emph{sticky} if
+  for any honest party $P$ and any rounds $r_1 \leq r_2$,
+  it holds that $\Ledger[P][][r_1] \preceq \Ledger[P][][r_2]$.
+\end{definition}
+
+\begin{definition}[Safety]
+  A distributed ledger protocol is \emph{safe} if it is sticky and
+  for any honest parties $P_1, P_2$ and any rounds $r_1, r_2$, it holds that
+  $\Ledger[P_1][][r_1]~\sim~\Ledger[P_2][][r_2]$. 
+\end{definition}
+
+Stickiness can be easily enforced in any safe protocol
+without stickiness by having the parties report the longest
+ledger they have seen so far~\cite{streamlet}.
+
+\begin{definition}[Liveness in Synchrony]
+  A distributed ledger protocol, in a synchronous network, is \emph{live}$(u)$ if
+  all transactions written to any honest party
+  at round $r$, appear in the ledgers of all honest parties by round
+  $r + u$.
+\end{definition}
+
+\atnote{Maybe combine the 2 liveness definitions.}
+\begin{definition}[Liveness in Partial Synchrony]
+  A distributed ledger protocol, in a partially synchronous network,
+  is \emph{live}$(u)$ if all transactions written to any honest party
+  at round $r$, appear in the ledgers of all honest parties by round
+  $\max{(r,\gst)} + u$.
+\end{definition}
+
