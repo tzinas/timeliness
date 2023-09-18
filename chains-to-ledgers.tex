@@ -1,0 +1,95 @@
+\subsection{From Chains to Ledgers}
+
+We first define temporal blockchain protocols,
+a subset of blockchain protocols which keep track of time.
+
+\begin{definition}[(Temporal) Blockchain Protocol]
+  A \emph{blockchain} protocol is distributed protocol
+  in which, at the end of every round, each honest party outputs
+  a chain. A chain is a finite sequence of blocks. Each block
+  contains a finite sequence of transactions.
+
+  A \emph{temporal blockchain} protocol is a blockchain protocol
+  where every block contains a recorded round.
+\end{definition}
+
+\atnote{Refactor all C into $\Chain$ format.}
+In blockchain protocols, honest parties hold at all times a finalized (or confirmed) chain
+based on their confirmation rule\footnote{
+  In longest-chain protocols, the longest observed chain without the last $k$ blocks
+  is considered final.
+  In Streamlet, the chain ending at the second of three consecutive notarized
+  blocks with consecutive epochs is considered final.
+}.
+We use $\Chain[][P][r]$ to denote the finalized chain
+of party $P$ at the end of round $r$.
+
+\begin{definition}[Chain Safety]
+  A blockchain protocol is \emph{safe} if for
+  all honest parties $P_1, P_2$ and all rounds $r_1, r_2$,
+  it holds that $\Chain[][P_1][r_1] \sim \Chain[][P_2][r_2]$.
+  Furthermore, $\Chain[][P_1][r_1] \preccurlyeq \Chain[][P_1][r_2]$ (sticky).
+\end{definition}
+
+\noindent
+\textbf{From Temporal Blockchains to Temporal Ledgers.}
+Any temporal blockchain protocol can be transformed into a
+temporal ledger protocol using the following construction:
+When \rread is invoked on party $P$ at the end of round $r$, each transaction of
+$\Chain[][P][r]$ is reported to $\Ledger[][P][r]$ with the same order, and with
+the recorded round of the block in which it is included.
+We call these protocols \emph{chain-based temporal ledger protocols}.
+Ledger protocols based on safe blockchains are safe.
+
+We now introduce two intermediate properties of temporal blockchains
+that will help us prove timeliness of
+chain-based temporal ledger protocols.
+
+\begin{definition}[Consistent Recorded Rounds]
+  A temporal blockchain protocol has \emph{consistent recorded rounds}
+  when for all honest parties $P$ and rounds $r$,
+  the recorded rounds in $\Chain[][P][r]$ are non-decreasing and not
+  in the future.
+\end{definition}
+
+\begin{definition}[Freshness] \label{def:tip-freshness}
+  A temporal blockchain protocol execution is \emph{fresh}($w$) when for
+  any round $r$, the recorded round
+  $r^*$ of the tip of any honest party's finalized chain
+  satisfies $r - r^* \leq w$.
+\end{definition}
+
+The notion of freshness tells us that the recorded round
+of any finalized chain tip cannot be too old.
+
+\begin{theorem}[Freshness to Timeliness]
+  A temporal ledger protocol based on a safe and fresh($w$)
+  temporal chain protocol with consistent recorded rounds is timely with timeliness $v = w$.
+\end{theorem}
+\begin{proof}
+  Requirements (1) and (2) of timeliness are directly satisfied from
+  the consistent recorded rounds.
+  We now prove (3).
+
+  Consider any honest party $P$, and any rounds $r_1 \leq r_2$.
+  Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$
+  contains a transaction $\tx$ with recorded round $r \leq r_1 - v$.
+  Due to safety, it holds that $\chain^P_{r_1} \prec \chain^P_{r_2}$.
+  Transaction $\tx$ is in some block $B \in \chain^P_{r_2}[|\chain^P_{r_1}|{:}]$.
+  Let $B^*$ be the tip of $\chain^P_{r_1}$ with recorded round $r^*$.
+  Because of freshness, it holds that $r_1 - r^* \leq w$.
+  Therefore:
+
+  \begin{align*}
+    \makebox[0.5\textwidth][c]{$r - r^* \leq w - v$}         && \text{[$r \leq r_1 - v$]} \\
+    \makebox[0.5\textwidth][c]{$r - r^* \leq 0$}             && \text{[$v = w$]}
+  \end{align*}
+
+  This is a contradiction because block $B$ extends a chain that contains $B^*$,
+  and hence $r > r^*$.
+  \Qed
+\end{proof}
+
+In the next subsections, we express Streamlet, Bitcoin and Ouroboros
+as chain-based temporal ledger protocols (with the above properties) to
+prove them timely.

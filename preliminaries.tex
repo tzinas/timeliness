@@ -22,7 +22,7 @@ of $C_2$ and $C_1 \prec C_2$ to mean that the prefix is strict.
 We write $C_1 \sim C_2$ when
 $C_1 \preccurlyeq C_2 \lor C_2 \preccurlyeq C_1$.
 We use $\kappa$ to denote the security parameter.
-\atnote{Change preceq with curly.}
+\atnote{Change preccurlyeq with curly.}
 
 \noindent
 \textbf{Model.}
@@ -80,7 +80,7 @@ invoked on party $P$ at the end of round $r$.
 \begin{definition}[Stickiness]
   A distributed ledger protocol is \emph{sticky} if
   for any honest party $P$ and any rounds $r_1 \leq r_2$,
-  it holds that $\Ledger[][P][r_1] \preceq \Ledger[][P][r_2]$.
+  it holds that $\Ledger[][P][r_1] \preccurlyeq \Ledger[][P][r_2]$.
 \end{definition}
 
 \begin{definition}[Safety]
