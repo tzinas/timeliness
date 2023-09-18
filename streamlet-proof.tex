@@ -5,7 +5,7 @@ in the partially synchronous setting, after GST.
 We work in the same model as the Streamlet paper~\cite{streamlet},
 in particular assuming a PKI.
 
-First, we turn Streamlet into a temporal chain protocol.
+First, we turn Streamlet into a temporal blockchain protocol.
 \emph{Temporal Streamlet} is the same as Streamlet with the
 following changes: No future blocks are accepted. In each block, we report
 $2\Delta e$ as the recorded round, where $e$ is its epoch.
@@ -14,7 +14,7 @@ for $\frac{t}{n} < \frac{1}{3}$. Furthermore, it has consistent recorded rounds.
 
 Honest party $P$, at the beginning of round $r$, and
 before performing any other action, checks the network and
-stores the longest finalized chain $\chain^P_r$. \atnote{Check if this is needed to clarify}
+stores the longest finalized chain $\chain^P_r$.
 Let $G(e)$ be the predicate indicating that epochs $e-3,e-2,e-1,e,e+1$ have honest leaders.
 Before proving freshness, we first show the maximum interval between two consecutive fully
 honest epoch quintuples is bounded.
@@ -54,21 +54,19 @@ honest epoch quintuples is bounded.
 \end{proof}
 
 \begin{lemma}[Temporal Streamlet Freshness] \label{lem:latest-finalized-round}
-  During any round $r$ in any epoch $e$ of a Temporal Streamlet typical execution,
-  the recorded round $r^*$ of the tip of an honest party's finalized chain
-  satisfies $r - r^* \leq 2\Delta d$.
+  Temporal Streamlet is fresh($2\Delta d$).
 \end{lemma}
 \begin{proof}
+  Let $r$ be the current round of the current epoch $e$
+  and $r^*,e^*$ be the recorded round and, respectively, epoch of the tip
+  of an honest party's finalized chain.
   Let $e' = \max(\{\hat e \leq e: G(\hat e)\} \cup \{0\})$.
   From typicality, it holds that $e - e' \leq d$.
-  From Streamlet liveness, epoch $e'$ contains a finalized
-  block. This block cannot be after chain tip with epoch $e^* = \frac{r^*}{2\Delta}$.
+  From the proof of Streamlet liveness~\cite[Theorem 6]{streamlet}, epoch $e'$ contains a finalized
+  block. This block cannot be after the tip.
   Hence, $e' \leq e^*$. Therefore, $e - e^* \leq d \Rightarrow r - r^* \leq 2\Delta d$.
-  Temporal Streamlet is fresh($2\Delta d$).
   \Qed
 \end{proof}
 
-\atnote{Next line not needed?}
-Temporal Streamlet is safe, fresh($2\Delta d$) and has consistent recorded rounds.
-Hence, from Theorem~\ref{thm:freshness-to-timeliness}, a temporal ledger protocol
-based on Temporal Streamlet is timely($2\Delta d$).
+From the above and Theorem~\ref{thm:freshness-to-timeliness}, it follows that
+Temporal Streamlet is timely($2\Delta d$).
