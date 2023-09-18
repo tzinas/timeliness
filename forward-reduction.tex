@@ -94,9 +94,9 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   From Lemma~\ref{lem:past-perfect} it holds that
   $(r^*, \tx) \in \Ledger[][P_2][r]$.
   From this and from safety, it follows that
-  $\Ledger[*][P_1][r] = [(r^*, \tx) \in \Ledger[][P_1][r]: r^* \leq r - v] \preceq
+  $\Ledger[*][P_1][r] = [(r^*, \tx) \in \Ledger[][P_1][r]: r^* \leq r - v] \preccurlyeq
   [(r^*, \tx) \in \Ledger[][P_2][r]: r^* \leq r - v] = \Ledger[*][P_2][r]$.
-  Inversely, $\Ledger[*][P_2][r] \preceq \Ledger[*][P_1][r]$.
+  Inversely, $\Ledger[*][P_2][r] \preccurlyeq \Ledger[*][P_1][r]$.
   Therefore, $\Ledger[*][P_1][r] = \Ledger[*][P_2][r]$.
   Lastly, stickiness follows from the stickiness of $\Pi$.
   Therefore, $\Pi^*$ is supersafe.
