@@ -1,7 +1,16 @@
 \section{Existing Blockchains are Timely}\label{sec:possible}
 
-\dznote{Mention that we prove timeliness for all flavours of permissionless blockchains
-by illustrating the proof for three prototypal example.}
+We posit that all popularly deployed flavors of blockchain protocols are timely.
+The vast majority of real blockchain protocols are based on proof-of-work longest chain
+% TODO(dionyziz): citations
+(Bitcoin, Doge, Litecoin),
+proof-of-stake longest chain
+(Cardano),
+proof-of-stake quorums
+(Algorand, Cosmos),
+or a mixture thereof
+(Ethereum, Polkadot). As exemplary cases we prove that Bitcoin, Ouroboros, and Streamlet
+are all timely, showing timeliness for each of the respective mechanisms.
 
 \import{./}{chains-to-ledgers.tex}
 
@@ -119,7 +128,6 @@ is bounded.
 
 
 
-m
 \subsection{Bitcoin is Timely}
 
 We now prove that Bitcoin is timely. In this subsection, we work in the Bitcoin Backbone model~\cite{backbone}
@@ -127,6 +135,9 @@ in static synchronous setting with $\Delta = 1$.
 
 First, we have to make a couple of small changes to the Bitcoin Backbone construction to turn it
 into a Temporal Ledger, as the original Bitcoin Backbone construction is a ledger protocol only.
+Our changes correspond to the real Bitcoin deployment in which timestamps are included in the block
+% TODO(dionyziz): replace this citation with a reference to the original Nakamoto client commit that introduced timestamps to the header
+headers~\cite{mastering-bitcoin}.
 Our Temporal Bitcoin Backbone construction is illustrated in Figure~\ref{fig.temporal-backbone}.
 It is clear that the Temporal Bitcoin Backbone construction retains the properties of Common Prefix,
 Chain Quality and Chain Growth proven in the original Bitcoin Backbone paper~\cite{backbone}.
