@@ -39,6 +39,20 @@ property in this abstract fashion greatly simplifies the proofs of security of p
         remaining mindful of late-joining clients.
 \end{enumerate}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
+  \caption{Overview of the paper. Bitcoin and Ouroboros attain the abstract chain virtues
+  of Common Prefix, Chain Quality, and Chain Growth (top)~\cite{backbone,ouroboros}.
+  We show that these are enough to attain the intermediate property of Tip Freshness
+  (Lemma~\ref{lem:freshness}, middle). This property is also achieved by Streamlet, which does
+  not follow a longest chain structure. This property is sufficient to attain Timeliness
+  (Theorem~\ref{lem:freshness-to-timeliness}). From Timeliness we can achieve Supersafety
+  and vice versa (Theorems~\ref{thm:forward-reduction}-\ref{thm:backward-reduction}, bottom).
+  }
+ \label{fig:overview}
+\end{figure}
+
 \noindent
 \textbf{Overview of results.}
 After we describe our model and give the precise definition
@@ -62,6 +76,7 @@ The second reduction is from supersafety back to (perfect) timeliness (Section~\
 To do this, every online node reports the new transactions they see with
 their current timestamp, and due to supersafety these are the same.
 Some additional work is needed to allow late-joining nodes to catch up.
+An overview of the results of this paper is illustrated in Figure~\ref{fig:overview}.
 
 \noindent
 \textbf{Related work.}
