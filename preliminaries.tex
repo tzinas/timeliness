@@ -1,4 +1,4 @@
-\section{Preliminaries \& Model}
+\section{Preliminaries \& Model}\label{sec:prelims}
 
 \noindent
 \textbf{Notation.} \atnote{Parts are taken from PoPoS.}
@@ -6,7 +6,7 @@ We use $[]$ to denote the empty sequence.
 We denote by $|C|$ the length of sequence $C$;
 by $C[i]$ the $i^{\textsf{th}}$ (zero-based) element of
 sequence $C$, and by $C[-i]$ the $i^{\textsf{th}}$ element
-from the end. We use $C[i{:}j]$ to mean the subsequence 
+from the end. We use $C[i{:}j]$ to mean the subsequence
 of $C$ from the $i^{\textsf{th}}$ (zero-based inclusive)
 to the $j^{\textsf{th}}$ (zero-based exclusive).
 Omitting $i$ takes the sequence to the beginning,
@@ -41,7 +41,7 @@ We use $\kappa$ to denote the security parameter.
 
 The notation
 $\Ledger[][P][r]$ denotes the output of $\rread()$
-invoked on party $P$ at the end of round $r$. 
+invoked on party $P$ at the end of round $r$.
 
 \noindent
 \textbf{Model.}
@@ -96,7 +96,7 @@ that we make use of in our analysis.
 \begin{definition}[Safety]
   A distributed ledger protocol is \emph{safe} if it is sticky and
   for any honest parties $P_1, P_2$ and any rounds $r_1, r_2$, it holds that
-  $\Ledger[][P_1][r_1]~\sim~\Ledger[][P_2][r_2]$. 
+  $\Ledger[][P_1][r_1]~\sim~\Ledger[][P_2][r_2]$.
 \end{definition}
 
 Stickiness can be easily enforced in any safe protocol
