@@ -1,0 +1,137 @@
+\subsection{Bitcoin is Timely}
+
+We now prove that Bitcoin is timely. In this subsection, we work in the Bitcoin Backbone model~\cite{backbone}
+in static synchronous setting with $\Delta = 1$.
+
+First, we have to make a couple of small changes to the Bitcoin Backbone construction to turn it
+into a Temporal Ledger, as the original Bitcoin Backbone construction is a ledger protocol only.
+Our changes correspond to the real Bitcoin deployment in which timestamps are included in the block
+% TODO(dionyziz): replace this citation with a reference to the original Nakamoto client commit that introduced timestamps to the header
+headers~\cite{mastering-bitcoin}.
+Our Temporal Bitcoin Backbone construction is illustrated in Figure~\ref{fig.temporal-backbone}.
+It is clear that the Temporal Bitcoin Backbone construction retains the properties of Common Prefix,
+Chain Quality and Chain Growth proven in the original Bitcoin Backbone paper~\cite{backbone}.
+The reason is that the only change we make is to add a round number to the block format, and
+the validity predicate of an honestly produced block is unaffected by the new validation rules.
+Therefore the temporal ledger reported by the Bitcoin Backbone protocol is safe and live.
+
+\begin{figure}
+  % TODO(dionyziz): Typeset this
+
+  The Temporal Bitcoin Backbone protocol is the same as the Bitcoin Backbone protocol, except
+  for the following changes:
+
+  \begin{enumerate}
+    \item The block format is changed to include a round number and looks like this:
+
+    \[
+      B = (h, \textsf{ctr}, x, r)
+    \]
+
+    where $h$ is the hash of the previous block, \textsf{ctr} is the nonce, $x$ is the
+    payload of transactions, and $r$ is a round number.
+
+    \item The genesis block is augmented with the round $0$.
+    \item The honest parties mine blocks that contain the current round number.
+    \item Whenever a chain is received by an honest party, we add the following rules to
+          its validation process:
+
+          \begin{enumerate}
+            \item Ensure that the rounds recorded on the received chain are strictly
+                  increasing.
+            \item Ensure that the round recorded on the tip is less than the current round.
+          \end{enumerate}
+    \item When the ledger is \textsf{read}, the reported transactions are read from the
+          stable part of the chain $\chain[{:}{-k}]$. Each transaction is reported with the
+          round of the block in which it is included.
+  \end{enumerate}
+  \caption{Temporal Bitcoin Backbone construction.}
+  \label{fig.temporal-backbone}
+\end{figure}
+
+Let $\chain^P_r$ be the chain adopted by an honest party $P$ at the
+beginning of round $r$ (as returned by the function \emph{maxvalid}).
+For the notation definitions ($k, \ell, \tau, \mu$)
+in the following theorem, please refer to the original Bitcoin
+Backbone paper.
+
+\begin{theorem}[Bitcoin Timeliness]
+  A typical execution of the Temporal Bitcoin Backbone protocol is timely
+  with timeliness $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
+\end{theorem}
+\begin{proof}
+  Requirements (1) and (2) of timeliness are satisfied due to the new chain validity rules.
+  We will now prove (3).
+
+  Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
+  the ledgers $\Ledger[][P][r_1], \Ledger[][P][r_2]$ reported\footnote{
+Recall that the ledger reported at a round is obtained by inspecting the
+    chain \emph{adopted} at that round.
+  } by $P$ at rounds $r_1, r_2$ respectively.
+  Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$ contains a transaction
+  $\tx$ with recorded round $r \leq r_1 - v$.
+
+  % TODO(dionyziz): figure
+  Let $\chain_1, \chain_2$ be the chain that $P$ adopts at round $r_1$
+  and $r_2$ respectively.
+  It must be true that $|\chain_2| > |\chain_1|$.
+  Due to Common Prefix, $\chain_2$ will extend a block in $\chain_1[-k-1{:}]$.
+  The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1[{:}{-k}]|{:}{-k}]$.
+
+  Let $B^*$ be the most recent
+  honestly generated block in $\chain_1[{:}{-k}][{-\ell}{:}]$
+  (or let $B^*$ be genesis if $|\chain_1| \leq \ell + k$).
+  This block will exist by
+  Chain Quality because we are looking at a chain chunk of length at least $\ell$ and
+  $\mu\ell \geq 1$ (or is genesis).
+  Block $B^*$ is honestly generated, so let $r^*$ be the round
+  during which $B^*$ was generated, noting that the round recorded in $B^*$ is $r^*$.
+  Let $P^*$ be the party who mined $B^*$ at round $r^*$ (or $P^* = P, r^* = 0$ if $B^*$ is
+  the genesis block).
+
+  The block $B$ extends a chain that contains $B^*$, so $r > r^*$,
+  therefore
+  \begin{equation}
+    r^* < r_1 - v\label{eq:bitcoin-r-bound}.
+  \end{equation}
+
+  Let $\chain^{P^*}_{r^*}$ be the chain that $P^*$ adopts at
+  round $r^*$ (this will be the empty chain if $B^*$ is genesis).
+  Party $P^*$ extends $\chain^{P^*}_{r^*}$, at round $r^*$, with block $B^*$,
+  creating a chain of length $|\chain^{P^*}_{r^*}| + 1$.
+  This newly generated chain is broadcasted to the network and
+  received by party $P$ at the beginning of round $r^* + 1$.
+  Let $\bar \chain^P_{r^* + 2}$ be the chain
+  that $P$ \emph{has} at round $r^* + 2$.
+  We observe that, at round $r^* + 2$, due to the
+  longest chain rule, party $P$ \emph{has} a chain of greater or equal
+  length to the one broadcasted by party $P^*$. Hence
+  $|\bar \chain^P_{r^* + 2}| \geq |\chain^{P^*}_{r^*}| + 1$. Therefore
+
+   % This is also the chain that $P$ \emph{has} at round $r^* + 2$.
+
+  \[
+     |\chain_1| - |\bar \chain^P_{r^* + 2}| \leq
+     |\chain_1| - |\chain^{P^*}_{r^*}| - 1 <
+     k + \ell\, \label{eq:bitcoin-contradiction}\tag{$\ast$}.
+  \]
+
+  For the second inequality, observe that
+  $\chain_1$ is the chain of $P$ adopted at round $r_1$,
+  whereas $\chain^{P^*}_{r^*}$ is
+  the parent chain of $B^*$ and those are spaced at most $k + \ell$ blocks
+  apart by the definition of $B^*$.
+
+  On the other hand, by Equation~\ref{eq:bitcoin-r-bound}, $r_1 - (r^* + 2) \geq v - 1 \geq s$ and
+  we can apply Chain Growth between rounds $r^* + 2$ and $r_1$
+  with parameters $s, \tau$ to obtain
+  $|\chain_1| - |\bar \chain^P_{r^* + 2}| \geq \tau(r_1 - (r^* + 2)) \geq \tau (v - 1) \geq
+  \tau (\frac{k + \ell}{\tau} + 1 - 1) \geq k + \ell$,
+  which is a contradiction because of Equation~(\ref{eq:bitcoin-contradiction}).
+
+  \Qed
+\end{proof}
+
+
+% \subsection{Ouroboros Proof-of-Stake}
+% \dznote{Prove that Ouroboros is timely}
