@@ -2,10 +2,11 @@
   When Satoshi Nakamoto introduced Bitcoin, a central tenet was
   that the blockchain functions as a \emph{timestamping server}.
   In the Ethereum era, smart contracts widely assume on-chain timestamps
-  are mostly accurate. In this paper, we prove this is indeed the case,
+  are mostly accurate.
+  In this paper, we prove this is indeed the case,
   namely that recorded timestamps do not wildly deviate from real-world
   time, a property we call \emph{timeliness}.
-  We prove that all popular mechanisms for constructing permissionless
+  We prove that all popular mechanisms for constructing
   blockchains (proof-of-work, longest chain proof-of-stake, and
   quorum-based proof-of-stake) are \emph{timely} under honest majority,
   but a synchronous network is a necessary condition.
@@ -15,6 +16,6 @@
   such that all honest parties output exactly the same ledgers at
   the same round, achieving a property we call \emph{supersafety},
   which may be of independent interest.
-  Conversely, we also show that supersafety implies timeliness,
+  Conversely, we also show that supersafety implies (perfect) timeliness,
   completing the circle.
 \end{abstract}
