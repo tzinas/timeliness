@@ -1,7 +1,7 @@
 \section{Definitions}\label{sec:defs}
 
-The following definitions are first introduced in this work.
-\atnote{Write something in between the definitions.}
+In this work we are concerned with ledgers that
+record a round with every transaction.
 
 \begin{definition}[Temporal Ledger]
   A \emph{temporal ledger} is a finite sequence of pairs $(r, \tx)$ where $\tx$ is
@@ -13,6 +13,8 @@ The following definitions are first introduced in this work.
   A \emph{distributed temporal ledger protocol} is a distributed ledger protocol
   that when \rread is invoked, honest parties output temporal ledgers instead of traditional ledgers.
 \end{definition}
+
+The following property of temporal ledgers is central to this work.
 
 \begin{definition}[Timely]\label{def:timely}
   A distributed temporal ledger protocol is \emph{timely}$(v)$
@@ -26,8 +28,8 @@ The following definitions are first introduced in this work.
   \end{enumerate}
 \end{definition}
 
-Note that timeliness is orthogonal to safety and liveness. Protocols can have any, none, or all three
-of the properties.
+Timeliness is orthogonal to safety and liveness. Protocols can have any combination
+of the three properties.
 
 \begin{definition}[Perfectly Timely]
   We call a protocol \emph{perfectly timely} if it is timely with parameter $v = 0$.
@@ -39,4 +41,4 @@ of the properties.
   $\Ledger[][P_1][r] = \Ledger[][P_2][r]$.
 \end{definition}
 
-Note that all supersafe protocols are safe.
+All supersafe protocols are safe.

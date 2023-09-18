@@ -1,8 +1,8 @@
 \section{Preliminaries \& Model}\label{sec:prelims}
 
 \noindent
-\textbf{Notation.} \atnote{Parts are taken from PoPoS.}
-We use $[]$ to denote the empty sequence.
+\textbf{Notation.}
+We use $[~]$ to denote the empty sequence.
 We denote by $|C|$ the length of sequence $C$;
 by $C[i]$ the $i^{\textsf{th}}$ (zero-based) element of
 sequence $C$, and by $C[-i]$ the $i^{\textsf{th}}$ element
@@ -13,18 +13,52 @@ Omitting $i$ takes the sequence to the beginning,
 and omitting $j$ takes the sequence to the end.
 By $C_1 || C_2$, we mean the concatenation
 of sequences $C_1$ and $C_2$.
-We use the set notation $i \in C$ to iterate
-through a sequence $C$.\atnote{[?]}
-We use the set builder notation $[i \in C: \{\textsf{condition}\}]$
-to filter the elements of sequence $C$ that satisfy the condition. \atnote{[?]}
-We denote that sequence $C_1$ is a prefix of $C_2$
-using notation $C_1 \preccurlyeq C_2$.
-When $C_1 \preccurlyeq C_2 \lor C_2 \preccurlyeq C_1$ holds,
-we use the notation $C_1 \sim C_2$.
+We use the set notation $B \in C$ to iterate
+through a sequence $C$.
+We use the set builder notation $[B \in C: p(B)]$
+to filter the elements of sequence $C$ that satisfy $p$.
+We write $C_1 \preccurlyeq C_2$ when $C_1$ is a prefix
+of $C_2$ and $C_1 \prec C_2$ to mean that the prefix is strict.
+We write $C_1 \sim C_2$ when
+$C_1 \preccurlyeq C_2 \lor C_2 \preccurlyeq C_1$.
 We use $\kappa$ to denote the security parameter.
+\atnote{Change preceq with curly.}
+
+\noindent
+\textbf{Model.}
+\atnote{Here we want to introduce a baseline model since we work on the backbone and streamlet models for our analysis.}
+Execution commences in discrete rounds $1, 2, \ldots$, of polynomial duration in the
+security parameter $\kappa$.
+The protocol is executed by
+parties of two types: $n$ \emph{nodes} and an unlimited number of \emph{clients}.
+The adversary controls $t$ of the nodes.
+Nodes are always online. A client is awakened in some round by the environment,
+requires a number of rounds to synchronize with the rest of the peers and may be killed by
+the environment at a later round.
+In each round, the environment invokes \execute
+on all honest parties and also triggers the adversary.
+We assume all parties have a \emph{global clock}, meaning
+they can use the environment function \now to get the current
+execution round.
+
+In this work, we work in two network settings: Synchrony and Partial Synchrony.
+
+\begin{definition}[Synchrony]
+  A network is \emph{synchronous} when
+  all honestly produced messages are delivered with a delay of $\Delta$ rounds
+  (messages sent during round $r$ arrive at the beginning of round $r + \Delta$).
+\end{definition}
+
+\begin{definition}[Partial Synchrony]
+  A network is \emph{partially synchronous} when the adversary can delay
+  messages arbitrarily before a Global Stabilization Time (GST)~\cite{dwork1988consensus}; however
+  after GST the network becomes synchronous.
+\end{definition}
+
+We now turn our attention to distributed ledger protocols.
 
 \begin{definition}[Ledger]
-  A \emph{ledger} is a sequence of transactions.
+  A \emph{ledger} is a finite sequence of transactions.
 \end{definition}
 
 \begin{definition}[Distributed Ledger Protocol]
@@ -42,50 +76,6 @@ We use $\kappa$ to denote the security parameter.
 The notation
 $\Ledger[][P][r]$ denotes the output of $\rread()$
 invoked on party $P$ at the end of round $r$.
-
-\noindent
-\textbf{Model.}
-\atnote{Here we want to introduce a baseline model since we work on the backbone and streamlet models for our analysis.}
-Execution commences in discrete rounds $1, 2, \ldots$, of polynomial duration in the
-security parameter $\kappa$.
-The protocol is executed by a fixed number of $n$ parties,
-unknown to the honest parties, and the adversary controls $t$ of them. \atnote{Are we in the static setting?}
-In each round, the environment invokes \execute
-on all honest parties and also triggers the adversary.
-Parties communicate through an unauthenticated network,
-meaning that the adversary can ``spoof''~\cite{douceur2002sybil}
-the source address of any message that is delivered.
-We assume all parties have a \emph{global clock}, meaning
-they can use the environment function \now to get the current
-execution round.
-%TODO: Synchrony or Partial Synchrony should be declared in each protocol analysis independently
-% We assume a synchronous communication network, where all honestly produced
-% messages are delivered with a delay of one round (messages sent in a round
-% arrive at the beginning of the next round).
-
-\atnote{Define clients. Maybe in a later section?}
-% \begin{definition}[Client] \atnote{Revisit this}
-%   We define a \emph{client} as a late joining party which
-%   is activated after round $1$ and takes a
-%   constant number of rounds to sync up with the rest of the peers.
-% \end{definition}
-
-In this work, we work in two network settings: Synchrony and Partial Synchrony.
-
-\begin{definition}[Synchrony]
-  A network is \emph{synchronous} when
-  all honestly produced messages are delivered with a delay of $\Delta$ rounds
-  (messages sent during round $r$ arrive at the beginning of round $r + \Delta$).
-\end{definition}
-
-\begin{definition}[Partial Synchrony]
-  A network is \emph{partially synchronous} when the adversary can delay
-  messages arbitrarily before a Global Stabilization Time (GST)~\cite{dwork1988consensus}, however
-  after GST the network becomes synchronous.
-\end{definition}
-
-We now present some preliminary distributed ledger virtues
-that we make use of in our analysis.
 
 \begin{definition}[Stickiness]
   A distributed ledger protocol is \emph{sticky} if
@@ -110,7 +100,6 @@ ledger they have seen so far~\cite{streamlet}.
   $r + u$.
 \end{definition}
 
-\atnote{Maybe combine the 2 liveness definitions.}
 \begin{definition}[Liveness in Partial Synchrony]
   A distributed ledger protocol, in a partially synchronous network,
   is \emph{live}$(u)$ if all transactions written to any honest party

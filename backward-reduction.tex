@@ -33,19 +33,11 @@ We now prove that protocol $\Pi^*$ is perfectly timely.
   protocol $\Pi$ is supersafe and live($u$).
 \end{theorem}
 \begin{proof}
-  By the construction of $\Pi^*$, during round $r$, only transactions with
-  recorded round $r$ can appear in honest ledger $\Ledger[*]$.
-  Hence timeliness requirements (1) and (2) follow from the construction.
-  We now prove requirement (3).
-  Consider any honest party $P$ and any rounds $r_1 \leq r_2$.
-  By the construction of $\Pi^*$, only transactions with recorded round greater
-  than $r_1$ can appear in ledger $\Ledger[*][P][r_2]{[\Ledger[*][P][r_1]{:}]}$.
-  Hence, $\Pi^*$ is timely with parameter $v = 0$, and therefore it is perfectly timely.
-
-  At any round $r$, the transactions that appear in honest ledger $\Ledger$
-  are the same with the transactions that appear in honest ledger $\Ledger[*]$.
-  Hence, supersafety and liveness($u$) follow from the construction of $\Pi^*$.
+  Timeliness requirements (1) and (2) are directly satisfied.
+  For (3) consider any honest party $P$ and any rounds $r_1 \leq r_2$.
+  Only transactions with recorded round greater
+  than $r_1$ appear in ledger $\Ledger[*][P][r_2]{[|\Ledger[*][P][r_1]|{:}]}$.
+  Hence, $\Pi^*$ is timely with parameter $v = 0$.
+  Supersafety and liveness($u$) follow from those of $\Pi$.
   \Qed
 \end{proof}
-
-\dznote{Describe and prove the reverse reduction}

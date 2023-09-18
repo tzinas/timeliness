@@ -10,7 +10,7 @@
           \State{$P.\execute()$}
           \Let{\Ledger}{P.\rread()}
           \For{$\tx \in \Ledger{[|\Ledger[*]|{:}]}$}
-            \Let{\Ledger[*]}{\Ledger[*] \concat (\now, \tx)}  \atnote{Use append instead? What is more clear?}
+            \Let{\Ledger[*]}{\Ledger[*] \concat (\now, \tx)}
           \EndFor
         \EndFunction
 

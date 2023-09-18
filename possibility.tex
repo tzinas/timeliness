@@ -5,8 +5,8 @@ by illustrating the proof for three prototypal example.}
 
 \subsection{Bitcoin is Timely}
 
-We now prove that Bitcoin is timely. We work in the Bitcoin Backbone model~\cite{backbone}
-in the synchronous setting. \atnote{static?}
+We now prove that Bitcoin is timely. In this subsection, we work in the Bitcoin Backbone model~\cite{backbone}
+in static synchronous setting with $\Delta = 1$.
 
 First, we have to make a couple of small changes to the Bitcoin Backbone construction to turn it
 into a Temporal Ledger, as the original Bitcoin Backbone construction is a ledger protocol only.
@@ -138,28 +138,27 @@ Backbone paper.
 
 We now prove that the Partially Synchronous Streamlet Protocol is timely,
 in the partially synchronous setting, after GST.
-We work in the same model as the Streamlet paper~\cite{streamlet}.
+We work in the same model as the Streamlet paper~\cite{streamlet},
+in particular assuming a PKI.
 
-First, we have to turn Streamlet into a temporal ledger protocol.
-The \emph{Temporal Streamlet} protocol is the same as Streamlet, except
-for the following changes: No future blocks are accepted, and when \rread is invoked,
+First, we turn Streamlet into a temporal ledger protocol.
+\emph{Temporal Streamlet} is the same as Streamlet with the
+following changes: No future blocks are accepted. When \rread is invoked,
 the transactions are
 read from the finalized chain and each transaction is reported with round $2\Delta e$,
-where $e$ is the epoch of the block in which it is included, and $\Delta$ is the
-network delay.
-With this change, Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$)
+where $e$ is the epoch of the block in which it is included.
+Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$)
 for $\frac{t}{n} < \frac{1}{3}$.
-\atnote{Maybe add pseudocode if there is time?}
 
 Honest party $P$, at the beginning of a round, and
 before performing any other action, checks the network and
 stores the longest finalized chain.
 We define $\chain^P_r$ to be the longest finalized chain stored by party $P$
 at the beginning of round $r$.
-We define ledger $\Ledger[][P][r]$ to contain the transactions included in $\chain^P_r$.
+We define ledger $\Ledger[][P][r]$ to contain the transactions of $\chain^P_r$.
 Let $G(e)$ be the predicate indicating that epochs $e-3,e-2,e-1,e,e+1$ have honest leaders.
 
-We first show the maximum distance between two consecutive fully honest quintuples
+We first show the maximum interval between two consecutive fully honest epoch quintuples
 is bounded.
 
 \begin{definition}[Streamlet Typical Execution]
