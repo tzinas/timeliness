@@ -6,8 +6,8 @@ We work in the same model as the Streamlet paper~\cite{streamlet},
 in particular assuming a PKI.
 
 First, we turn Streamlet into a temporal blockchain protocol.
-\emph{Temporal Streamlet} is the same as Streamlet with the
-following changes: No future blocks are accepted. In each block, we report
+\emph{Temporal Streamlet} is the Streamlet protocol with the
+following additions: No future epoch blocks are accepted. In each block, we report
 $2\Delta e$ as the recorded round, where $e$ is its epoch.
 Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$)
 for $\frac{t}{n} < \frac{1}{3}$. Furthermore, it has consistent recorded rounds.
