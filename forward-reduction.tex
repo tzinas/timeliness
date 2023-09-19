@@ -23,15 +23,12 @@ in Figure~\ref{fig:reduction-timeliness-supersafety}.
  \label{fig:reduction-timeliness-supersafety}
 \end{figure}
 
-\atnote{Talk about added confirmation delay.}
-
-\atnote{Add \now notation}
-\atnote{Add set builder notation for sequences}
 The pseudocode of protocol $\Pi^*$ is illustrated in Algorithm~\ref{alg:reduction-timeliness-supersafety}.
 When the \rread function is invoked, the temporal ledger of party $P$ is acquired
 in Line~\ref{line.reduction-t-s-ledger}.
 Then, transactions with recorded round less than or equal to $\now - v$ are
 filtered to create $\Ledger[*]$, which is returned in Line~\ref{line.reduction-t-s-filter}.
+This introduces a confirmation delay of $v$ additional rounds (see Theorem~\ref{thm:timeliness-to-supersafety}).
 When the \wwrite function is invoked with transactions $\tx$, party $P^*$ simply writes $\tx$
 to party $P$ in Line~\ref{line.reduction-t-s-write}.
 
@@ -46,7 +43,6 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
 %TODO: Add figure for Past Perfect lemma
 %TODO: Clean up network activity: as at least one new honest transaction $\tx'$
 %      appears in the network at any round $r_3$, where $r_1 < r_3 \leq R - u$.
-%TODO:
 
 
 \begin{lemma}[Past Perfect]\label{lem:past-perfect}
@@ -81,7 +77,7 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
 \atnote{Add: The above lemma holds for already booted clients.}
 
 \atnote{Adjust for $R - u$?}
-\begin{theorem}[Timeliness to Supersafety]
+\begin{theorem}[Timeliness to Supersafety] \label{thm:timeliness-to-supersafety}
   An execution of protocol $\Pi^*$, with duration $R$ rounds, is supersafe
   and live($u + v$), if the execution of the
   temporal ledger protocol $\Pi$ is safe, live($u$) and timely$(v)$
@@ -103,12 +99,6 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
 
   Liveness follows from the liveness of $\Pi$ with an added
   confirmation delay of $v$ rounds.
-  % TODO: Maybe explain more:
-  % Next, we prove liveness. Consider a transaction $\tx$
-  % is written to any honest party at round $r$.
-  % From the liveness of $\Pi$, for any honest party $P$, it holds that $(r^*, \tx) \in \Ledger[][P][r + u]$.
-  % Due to timeliness of $\Pi$, the recorded round of $\tx$ is $r^* \leq r + u$.
-  % Hence, $(r^*, \tx) \in \Ledger[*][P][r + u + v]$.
   \Qed
 \end{proof}
 

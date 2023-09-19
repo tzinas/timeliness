@@ -81,11 +81,7 @@ Backbone paper~\cite{backbone-new}.
      k + \ell\, \label{eq:bitcoin-contradiction}
   \end{equation}
 
-  For the second inequality, refer to Figure~\ref{fig:longest-chain-freshness-proof}
-  % observe that
-  % $\TChain[][P][r][{:}-k]$ is the chain with block $B^*$ as tip,
-  % whereas $\TChain[][P'][r']$ is the parent chain of block $B'$.
-  % Those are spaced at most $\ell$ blocks apart by the definition of $B'$.
+  For the second inequality, refer to Figure~\ref{fig:longest-chain-freshness-proof}.
 
   \begin{figure}
     \centering
@@ -105,20 +101,12 @@ Backbone paper~\cite{backbone-new}.
   \Qed
 \end{proof}
 
-We now make a couple of small changes to the Bitcoin and Ouroboros
-construction to turn them into Temporal Blockchains.
-Our changes correspond to the real Bitcoin and Ouroboros deployments, in which timestamps (recorded rounds)
-are included in the block
-% TODO(dionyziz): replace this citation with a reference to the original Nakamoto client commit that introduced timestamps to the header
-headers~\cite{mastering-bitcoin}. \atnote{Add citation for Ouroboros as well.}
-
-\noindent
-\textbf{Temporal Bitcoin.}
-Our Temporal Bitcoin construction is illustrated in Figure~\ref{fig.temporal-backbone}.
-It is clear that the Temporal Bitcoin construction retains the properties of Common Prefix,
-Chain Quality and Chain Growth proven in the original Bitcoin Backbone paper~\cite{backbone}.
-The reason is that the only change we make is to add a round number to the block format, and
-the validity predicate of an honestly produced block is unaffected by the new validity rules.
+Ouroboros is already a Temporal Blockchain protocol with consistent recorded rounds.
+The Bitcoin Backbone protocol can be augmented in
+straightforward manner to include recorded rounds
+corresponding to the real Bitcoin deployment~\cite{mastering-bitcoin}.
+The augmentation is illustrated in Figure~\ref{fig.temporal-backbone}.
+The construction retains Common Prefix, Chain Quality and Chain Growth.
 Furthermore, it has consistent recorded rounds.
 
 \begin{figure}
@@ -139,98 +127,7 @@ Furthermore, it has consistent recorded rounds.
   \label{fig.temporal-backbone}
 \end{figure}
 
-\noindent
-\textbf{Temporal Ouroboros.}
-The Temporal Ouroboros protocol is the Ouroboros protocol with
-the following additions: No future slot blocks are accepted.
-In each block, we report $??? e$ \atnote{Fill this in} as the recorded round, where $e$ is its slot.
-\atnote{In Ouroboros they use $r$ for slot.}
-Temporal Ouroboros retains the properties of Common Prefix,
-Chain Quality and Chain Growth proven in the original Ouroboros paper~\cite{ouroboros}.
-Furthermore, it has consistent recorded rounds.
-
-We observe that for all longest-chain protocols, safety follows from the
+We observe that for all longest-chain protocols, chain safety follows from the
 Common Prefix property. Hence, from the above and Theorem~\ref{thm:freshness-to-timeliness},
 it follows that Temporal Bitcoin and
-Temporal Ouroboros are timely with parameter $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
-
-% \begin{theorem}[Bitcoin Timeliness]
-%   A typical execution of the Temporal Bitcoin Backbone protocol is timely
-%   with timeliness $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
-% \end{theorem}
-% \begin{proof}
-%   Requirements (1) and (2) of timeliness are satisfied due to the new chain validity rules.
-%   We will now prove (3).
-%
-%   Let $P$ be any honest party and $r_1 \leq r_2 \in \mathbb{N}$ be any rounds, and consider
-%   the ledgers $\Ledger[][P][r_1], \Ledger[][P][r_2]$ reported\footnote{
-% Recall that the ledger reported at a round is obtained by inspecting the
-%     chain \emph{adopted} at that round.
-%   } by $P$ at rounds $r_1, r_2$ respectively.
-%   Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$ contains a transaction
-%   $\tx$ with recorded round $r \leq r_1 - v$.
-%
-%   % TODO(dionyziz): figure
-%   Let $\chain_1, \chain_2$ be the chain that $P$ adopts at round $r_1$
-%   and $r_2$ respectively.
-%   It must be true that $|\chain_2| > |\chain_1|$.
-%   Due to Common Prefix, $\chain_2$ will extend a block in $\chain_1[-k-1{:}]$.
-%   The transaction $\tx$ is contained in some block $B$ of $\chain_2[|\chain_1[{:}{-k}]|{:}{-k}]$.
-%
-%   Let $B^*$ be the most recent
-%   honestly generated block in $\chain_1[{:}{-k}][{-\ell}{:}]$
-%   (or let $B^*$ be genesis if $|\chain_1| \leq \ell + k$).
-%   This block will exist by
-%   Chain Quality because we are looking at a chain chunk of length at least $\ell$ and
-%   $\mu\ell \geq 1$ (or is genesis).
-%   Block $B^*$ is honestly generated, so let $r^*$ be the round
-%   during which $B^*$ was generated, noting that the round recorded in $B^*$ is $r^*$.
-%   Let $P^*$ be the party who mined $B^*$ at round $r^*$ (or $P^* = P, r^* = 0$ if $B^*$ is
-%   the genesis block).
-%
-%   The block $B$ extends a chain that contains $B^*$, so $r > r^*$,
-%   therefore
-%   \begin{equation}
-%     r^* < r_1 - v\label{eq:bitcoin-r-bound}.
-%   \end{equation}
-%
-%   Let $\chain^{P^*}_{r^*}$ be the chain that $P^*$ adopts at
-%   round $r^*$ (this will be the empty chain if $B^*$ is genesis).
-%   Party $P^*$ extends $\chain^{P^*}_{r^*}$, at round $r^*$, with block $B^*$,
-%   creating a chain of length $|\chain^{P^*}_{r^*}| + 1$.
-%   This newly generated chain is broadcasted to the network and
-%   received by party $P$ at the beginning of round $r^* + 1$.
-%   Let $\bar \chain^P_{r^* + 2}$ be the chain
-%   that $P$ \emph{has} at round $r^* + 2$.
-%   We observe that, at round $r^* + 2$, due to the
-%   longest chain rule, party $P$ \emph{has} a chain of greater or equal
-%   length to the one broadcasted by party $P^*$. Hence
-%   $|\bar \chain^P_{r^* + 2}| \geq |\chain^{P^*}_{r^*}| + 1$. Therefore
-%
-%    % This is also the chain that $P$ \emph{has} at round $r^* + 2$.
-%
-%   \[
-%      |\chain_1| - |\bar \chain^P_{r^* + 2}| \leq
-%      |\chain_1| - |\chain^{P^*}_{r^*}| - 1 <
-%      k + \ell\, \label{eq:bitcoin-contradiction}\tag{$\ast$}.
-%   \]
-%
-%   For the second inequality, observe that
-%   $\chain_1$ is the chain of $P$ adopted at round $r_1$,
-%   whereas $\chain^{P^*}_{r^*}$ is
-%   the parent chain of $B^*$ and those are spaced at most $k + \ell$ blocks
-%   apart by the definition of $B^*$.
-%
-%   On the other hand, by Equation~\ref{eq:bitcoin-r-bound}, $r_1 - (r^* + 2) \geq v - 1 \geq s$ and
-%   we can apply Chain Growth between rounds $r^* + 2$ and $r_1$
-%   with parameters $s, \tau$ to obtain
-%   $|\chain_1| - |\bar \chain^P_{r^* + 2}| \geq \tau(r_1 - (r^* + 2)) \geq \tau (v - 1) \geq
-%   \tau (\frac{k + \ell}{\tau} + 1 - 1) \geq k + \ell$,
-%   which is a contradiction because of Equation~(\ref{eq:bitcoin-contradiction}).
-%
-%   \Qed
-% \end{proof}
-
-
-% \subsection{Ouroboros Proof-of-Stake}
-% \dznote{Prove that Ouroboros is timely}
+Ouroboros are timely with parameter $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
