@@ -44,11 +44,12 @@ property in this abstract fashion greatly simplifies the proofs of security of p
   \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
   \caption{Overview of the paper. Bitcoin and Ouroboros attain the abstract chain virtues
   of Common Prefix, Chain Quality, and Chain Growth (top)~\cite{backbone,ouroboros}.
-  We show that these are enough to attain the intermediate property of Tip Freshness
-  (Lemma~\ref{lem:freshness}, middle). This property is also achieved by Streamlet, which does
-  not follow a longest chain structure. This property is sufficient to attain Timeliness
-  (Theorem~\ref{lem:freshness-to-timeliness}). From Timeliness we can achieve Supersafety
-  and vice versa (Theorems~\ref{thm:forward-reduction}-\ref{thm:backward-reduction}, bottom).
+  We show that CQ and CG are enough to attain the intermediate property of Freshness
+  (Theorem~\ref{thm.longest-chain-freshness}, middle). This property is also achieved by Streamlet, which does
+  not follow a longest chain structure. This property, together with safety,
+  is sufficient to attain Timeliness
+  (Theorem~\ref{thm:freshness-to-timeliness}). From Timeliness we can achieve Supersafety
+  and vice versa (Theorems~\ref{thm:timeliness-to-supersafety}-\ref{thm:backward-reduction}, bottom).
   }
  \label{fig:overview}
 \end{figure}
@@ -56,7 +57,7 @@ property in this abstract fashion greatly simplifies the proofs of security of p
 \noindent
 \textbf{Overview of results.}
 After we describe our model and give the precise definition
-of timeliness and related notions (Sections~\ref{prelims}-\ref{defs}),
+of timeliness and related notions (Sections~\ref{sec:prelims}-\ref{sec:defs}),
 we prove that all popular ways of constructing distributed ledgers
 are, indeed, timely, if we assume a global clock and a synchronous network.
 The timeliness follows from an intermediate technical property we call \emph{tip freshness}
@@ -91,12 +92,13 @@ and can still cause this block to be accepted by the honest nodes retroactively 
 up a lucky slightly longer chain in Bitcoin. However, these fabrications
 cannot exceed a certain \emph{timeliness} limit. It is this limit that we calculate in this paper.
 In the scientific literature, timeliness has been mostly understood, but it was never explored
-as a stand-alone property. For example, in the Bitcoin Backbone for Chains of Variable Difficulty~\cite{backbone-var},
+as a stand-alone property. For example, in the Bitcoin Backbone for Chains of Variable Difficulty~\cite{varbackbone},
 it is shown that the different honest parties performing target recalculation on different chains
 must arrive at roughly the same result, which is a form of timeliness. In the Ouroboros protocol~\cite{ouroboros},
 the randomness production from epoch-to-epoch requires chopping off a suitable number of slots,
 which is a form of supersafety. The blockchain itself has also been used as a mechanism for clock
-synchronization in the context of drifting clocks~\cite{klepsydra,chronos}. We augment and extend
+synchronization, a long-standing problem~\cite{lamport-synchronizing-clocks}, in the context of drifting
+clocks~\cite{klepsydra,chronos}. We augment and extend
 these works by introducing the definitions of timeliness, block freshness, and supersafety, in a way
 we believe can be used to simplify and complement their results. Our treatment brings insight into
 exactly what virtues these chain protocols enjoy, and we illustrate that the two different
