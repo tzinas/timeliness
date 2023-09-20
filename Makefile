@@ -1,8 +1,8 @@
 timeliness.pdf: *.tex *.bib *.sty figures/* algorithms/*.tex
-	xelatex timeliness.tex && \
+	xelatex -synctex=1 timeliness.tex && \
 	bibtex timeliness && \
-	xelatex timeliness.tex && \
-	xelatex timeliness.tex && \
+	xelatex -synctex=1 timeliness.tex && \
+	xelatex -synctex=1 timeliness.tex && \
 	rm -rf *.aux *.log *.out;
 
 minimal:
