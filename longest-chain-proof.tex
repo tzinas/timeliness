@@ -23,7 +23,8 @@ static synchronous setting with $\Delta = 1$.
     valid unstable chain $\TChain[][P][r]$.
   }
   the \emph{longest} valid observed unstable chain $\TChain[][P][r]$. It outputs the
-  \atnote{finalized?} chain $\Chain[][P][r] = \TChain[][P][r][:-k]$.
+  % TODO: define this more precisely; what is an unstable chain?
+  confirmed chain $\Chain[][P][r] = \TChain[][P][r][:-k]$.
   Honest parties always generate blocks that extend their adopted unstable chain.
 \end{definition}
 
@@ -43,7 +44,7 @@ Backbone paper~\cite{backbone-new}.
 \begin{proof}
   Let $P$ be any honest party and $r$ be any round.
   Suppose, towards a contradiction, that block $B^*$
-  is the tip of finalized chain $\Chain[][P][r]$ and has
+  is the tip of confirmed chain $\Chain[][P][r]$ and has
   recorded round $r^* < r - w$.
 
   Let $B'$ be the most recent honestly generated block
@@ -114,14 +115,9 @@ Furthermore, it has consistent recorded rounds.
   the following additions:
 
   \begin{enumerate}
-    \item Blocks include a round number.
-    \item Genesis has recorded round $0$.
+    \item Blocks include a round number. Genesis has recorded round $0$.
     \item Honest parties mine blocks with the current round.
-    \item When a chain is received by an honest party, we add the following validity rules:
-          \begin{enumerate}
-            \item Recorded rounds are strictly increasing.
-            \item Recorded rounds are not in the future.
-          \end{enumerate}
+    \item The recorded rounds of a valid chain are strictly increasing and not in the future.
   \end{enumerate}
   \caption{Temporal Bitcoin construction.}
   \label{fig.temporal-backbone}

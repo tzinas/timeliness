@@ -1,51 +1,74 @@
 \section{Introduction}
-Everyone trusts the timestamps recorded on the
-blockchain are accurate. But why?
-In the original Bitcoin paper~\cite{bitcoin}, Nakamoto refers to the
-blockchain as a distributed timestamping server.
-Applications rely on the precision of these recorded timestamps.
-For example, DeFi applications rely~\cite{0x-timestamp} on new transactions not only
-being included soon (a well-understood property known as \emph{liveness}),
-but also that the timestamps they are recorded with are relatively fresh.
-
+In the original Bitcoin paper~\cite{bitcoin}, Nakamoto refers to
+Bitcoin as a \emph{distributed timestamping server}.
 However, timestamps in adversarially produced blocks may be fabricated.
-And yet, empirical evidence suggests reported timestamps roughly correspond
-to real world time. \atnote{Citation?}
+% And yet, empirical evidence suggests reported timestamps roughly correspond
+% to real world time.
 
-In this paper, we put forth the notion of \emph{timeliness}, formalizing the folklore
+Chain timestamps have long been assumed to correspond to real-world time by the community.
+It is indeed the case that, in practical blockchain deployments, honest nodes only accept
+blocks with timestamps up to a short window into the future\footnote{
+  For example, this is part of the Bitcoin~\cite{bitcoin-code-future-blocks}
+  and Ethereum~\cite{geth-future-blocks} implementations.
+}.
+In community discussions, it has been incorrectly
+claimed\footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/questions/6795/is-block-timestamp-safe-for-longer-time-periods}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.}
+that all accepted block timestamps must be within that same window of accuracy.
+This is incorrect because an adversary can produce a block with a fabricated past timestamp,
+and can still cause this block to be accepted by the honest nodes retroactively by, for example, cooking
+up a lucky slightly longer Bitcoin chain. However, as we show, these fabrications
+cannot exceed a certain \emph{timeliness} limit. It is this limit that we calculate in this paper.
+
+DeFi applications with more than \$1B in monthly volume
+rely~\cite{0x-timestamp} on the precision of these recorded timestamps.
+They assume new transactions are not only
+included soon --- a well-understood property known as \emph{liveness} ---
+but also that their on-chain recorded timestamps are relatively fresh.
+
+We put forth the notion of \emph{timeliness}, formalizing the folklore
 understanding that timestamps recorded on-chain cannot deviate arbitrarily
 from real world time. In particular we define a timeliness parameter $v$ which bounds
 this potential deviation. Under honest majority, we prove this virtue materializes in all three popular flavors of
 permissionless blockchains, namely proof-of-work,
-longest chain proof-of-stake, and quorum-based proof-of-stake, and calculate the
-timeliness parameter.
+longest chain proof-of-stake, and quorum-based proof-of-stake, and analytically
+calculate their timeliness parameter.
 
 Blockchain systems executed in networks with delay, even when assuming a global clock and
-a synchronous network, allow honest parties to reach consensus, but not at exactly
-the same time. We observe that any timely blockchain can be modified to achieve
-consensus at the same exact global time, a property we call \emph{supersafety},
-albeit with the introduction of a small confirmation delay. We posit that the introduction of this
-property in this abstract fashion greatly simplifies the proofs of security of protocols built on top.
+a synchronous network, allow honest parties to reach consensus, but the ledgers reported by
+honest parties are typically merely prefixes of one another.
+Under perfectly synchronized clocks, we show that any \emph{timely} blockchain can be modified to achieve
+\emph{exactly equal} ledgers at every point in time, a property we call \emph{supersafety},
+albeit with the introduction of a small confirmation delay. The introduction of these two
+properties in this abstract fashion simplifies the proofs of security of protocols built on
+top. For example, cross-chain constructions such as Babylon~\cite{babylon} are simpler
+to prove if on-chain timestamps are used instead of block heights,
+but timeliness is needed to do this.
+Consensus constructions which require the synchronized production of randomness,
+such as Ouroboros~\cite{ouroboros,praos}, can also benefit by simpler security
+arguments from the abstraction of the supersafety property.
 
 \noindent
-\textbf{Our contributions.}
+\textbf{Our contributions.} In this paper, we make the following contributions:
 
 \begin{enumerate}
-  \item We define the notion of \emph{timeliness} of a blockchain system.
-  \item We prove that three exemplary cases of blockchain protocols (Bitcoin, Streamlet, and Ouroboros)
-        are timely and calculate their timeliness parameter.
-  \item We prove that timeliness cannot be achieved in partial synchrony before GST.
-  \item We present a black-box reduction from \emph{timeliness} to \emph{supersafety} and back,
-        remaining mindful of late-joining clients.
+  \item We introduce the notion of ledger \emph{timeliness}.
+        We prove that three exemplary cases of blockchain protocols (Bitcoin, Streamlet, and Ouroboros)
+        are timely, but network synchrony is required. We analytically calculate their timeliness.
+  \item We build a \emph{supersafe} protocol from any timely ledger.
+        Supersafe protocols allow parties with synchronized clocks to
+        reach the exact same conclusion about their ledgers at the exact same time.
+        Inversely, we reduce from supersafety back to timeliness, illustrating that
+        the two properties are morally equivalent.
 \end{enumerate}
 
 \begin{figure}
   \centering
   \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
-  \caption{Overview of the paper. Bitcoin and Ouroboros attain the abstract chain virtues
+  \caption{Paper overview. Bitcoin and Ouroboros attain the abstract chain virtues
   of Common Prefix, Chain Quality, and Chain Growth (top)~\cite{backbone,ouroboros}.
-  We show that CQ and CG are enough \atnote{enough?} to attain the intermediate property of Freshness
-  (Theorem~\ref{thm.longest-chain-freshness}, middle). This property is also achieved by Streamlet \atnote{theorem?}, which does
+  We show that CQ and CG imply the intermediate property of Freshness
+  (Theorem~\ref{thm.longest-chain-freshness}, middle). This property is also achieved by Streamlet
+  (Theorem~\ref{thm.streamlet-freshness}), which does
   not follow a longest chain structure. This property, together with safety,
   is sufficient to attain Timeliness
   (Theorem~\ref{thm:freshness-to-timeliness}). From Timeliness we can achieve Supersafety
@@ -55,52 +78,54 @@ property in this abstract fashion greatly simplifies the proofs of security of p
 \end{figure}
 
 \noindent
-\textbf{Overview of results.}
-After we describe our model and give the precise definition
-of timeliness and related notions (Sections~\ref{sec:prelims}-\ref{sec:defs}),
-we prove that all popular ways of constructing distributed ledgers
+\textbf{Overview of the results.}
+An overview of the results of this paper is illustrated in Figure~\ref{fig:overview}.
+Our first result is proving that all popular ways of constructing distributed ledgers
 are, indeed, timely, if we assume a global clock and a synchronous network.
-The timeliness follows from an intermediate technical property we call \emph{tip freshness}
-\atnote{Rename to freshness and talk about consisten recorded rounds?}
-of chains, which we prove for all flavours of blockchains\atnote{The main flavors?}. Namely, we prove the
-property for Streamlet, Bitcoin Backbone, and Ouroboros, which are representative
+The timeliness follows from an intermediate technical property we call \emph{freshness}
+of chains, which we prove for all popular flavours of blockchains, namely,
+Streamlet, Bitcoin Backbone, and Ouroboros, which are representative
 of the classes of protocols in the quorum-based proof-of-stake, longest chain
 proof-of-work, and longest-chain proof-of-stake realms (Section~\ref{sec:possible}).
 The Streamlet variant is proven in the partially synchronous setting after GST.
 We show that timeliness before GST is impossible for protocols that are always-safe
 and live after GST (Section~\ref{sec:impossibility}).
 
-Next, we perform two small blackbox instructive reductions that are, perhaps, somewhat unexpected:
+Next, we perform two simple but instructive blackbox reductions that are, perhaps, somewhat unexpected:
 The first reduction is from timeliness to supersafety (Section~\ref{sec:forward-reduction}).
 In this reduction, we delay the reported ledger until all
 transactions have timestamps enough into the past to ensure all other parties have seen them.
+This allows us to achieve a remarkable property: All honest parties report the
+exact same ledgers at the exact same time.
 The second reduction is from supersafety back to (perfect) timeliness (Section~\ref{sec:backward-reduction}).
 To do this, every online node reports the new transactions they see with
-their current timestamp, and due to supersafety these are the same.
+their current timestamp, and due to supersafety, these are the same.
 Some additional work is needed to allow late-joining nodes to catch up.
-An overview of the results of this paper is illustrated in Figure~\ref{fig:overview}.
 
 \noindent
 \textbf{Related work.}
-Timeliness of chain timestamps has long been assumed by the community.
-In community discussions, it has been incorrectly
-advocated even by \atnote{who is this?}experts\footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/questions/6795/is-block-timestamp-safe-for-longer-time-periods}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.} that, because
-honest nodes only accept blocks with timestamps up to a short window into the future
-(which is part of the Bitcoin and Ethereum implementations, for example),
-all accepted block timestamps must be accurate within that same window of accuracy.
-As we show, this is incorrect because an adversary can produce a block with a fabricated past timestamp,
-and can still cause this block to be accepted by the honest nodes retroactively by, for example, cooking
-up a lucky slightly longer chain in Bitcoin. However, these fabrications
-cannot exceed a certain \emph{timeliness} limit. It is this limit that we calculate in this paper.
-In the scientific literature, timeliness has been mostly understood, but it was never explored
-as a stand-alone property. For example, in the Bitcoin Backbone for Chains of Variable Difficulty~\cite{varbackbone},
+Arguments of chain timeliness appear at the heart of various security proofs
+in the blockchain literature.
+In the Variable Difficulty Bitcoin Backbone paper~\cite{varbackbone},
 it is shown that the different honest parties performing target recalculation on different chains
-must arrive at roughly the same result, which is a form of timeliness. In the Ouroboros protocol~\cite{ouroboros},
-the randomness production from epoch-to-epoch requires chopping off a suitable number of slots,
-which is a form of supersafety. The blockchain itself has also been used as a mechanism for clock
-synchronization, a long-standing problem~\cite{lamport-synchronizing-clocks}, in the context of drifting
-clocks~\cite{klepsydra,chronos}. We augment and extend
-these works by introducing the definitions of timeliness, block freshness\atnote{freshness?}, and supersafety, in a way
-we believe can be used to simplify and complement their results. Our treatment brings insight into
-exactly what virtues these chain protocols enjoy, and we illustrate that the two different
-notions of timeliness and supersafety are, in fact, equivalent under appropriate reductions.
+must arrive at roughly the same result, relying on roughly synchronized timestamps.
+In the Ouroboros protocol~\cite{ouroboros},
+the randomness production from epoch-to-epoch requires chopping off a suitable number of \emph{slots},
+achieving a form of supersafety. The blockchain itself has also been used~\cite{klepsydra,chronos}
+as a mechanism for clock synchronization among parties with desynchronized and drifting clocks,
+a long-standing problem~\cite{lamport-synchronizing-clocks}.
+In our work, we show that, if the clocks of honest parties are already synchronized,
+on-chain reported timestamps roughly correspond to real-world time.
+We posit that the abstraction of timeliness and supersafety
+into stand-alone properties can aid in simplifying the security proofs
+of existing and future protocols.
+Previous works have incorrectly conjectured that on-chain timestamps can be vastly
+inaccurate stating that \emph{timestamps can differ radically from the
+actual time, outside the network}~\cite{szalachowski2018short}.
+In this work, we debunk this misconception, and rigorously show that the chain itself
+guarantees a modest level of timeliness internally.
+Supersafety, although never stated formally, was achieved since the early
+days of consensus by Dolev and Strong~\cite{dolev-strong}.
+However, contrary to us, their construction does not support late-joining clients,
+and was designed for a different era of consensus, with a much smaller scale
+than today's systems in mind, poor performance, and no support for dynamic availability.

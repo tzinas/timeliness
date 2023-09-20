@@ -14,14 +14,13 @@ which keep track of time.
   where every block contains a recorded round.
 \end{definition}
 
-In blockchain protocols, honest parties hold at all times a finalized (or confirmed) chain
+In blockchain protocols, honest parties at every round output a chain
 based on their confirmation rule\footnote{
-  In longest-chain protocols, the longest observed chain without the last $k$ blocks
-  is considered final.
-  In Streamlet, the chain ending at the second of three consecutive notarized
-  blocks with consecutive epochs is considered final.
-}.
-We use $\Chain[][P][r]$ to denote the finalized chain
+  In longest-chain protocols, the output is the longest observed chain without the last $k$ blocks.
+  In Streamlet, the output is the longest chain ending in the second of three consecutive notarized
+  blocks.
+} (we also call these \emph{confirmed chains}).
+We use $\Chain[][P][r]$ to denote the chain outputted
 of party $P$ at the end of round $r$.
 
 \begin{definition}[Chain Safety]
@@ -52,7 +51,7 @@ chain-based temporal ledger protocols.
   in the future.
   Additionally, honestly generated blocks\footnote{
     Abstractly, an honestly generated block is a block that was first
-    sent to the network by an honest party broadcast. Concretely, in proof-of-work
+    sent to the network during a broadcast by an honest party. Concretely, in proof-of-work
     and proof-of-stake, these correspond to honestly mined and honestly
     proposed blocks respectively. Genesis is considered honestly generated.
   } record the round during which
@@ -62,15 +61,14 @@ chain-based temporal ledger protocols.
 \begin{definition}[Freshness] \label{def:tip-freshness}
   A temporal blockchain protocol execution is \emph{fresh}($w$) when for
   any round $r$, the recorded round
-  $r^*$ of the tip of any honest party's finalized chain
+  $r^*$ of the tip of any honest party's chain output
   satisfies $r - r^* \leq w$.
 \end{definition}
 
 The notion of freshness tells us that the recorded round
-of any finalized chain tip cannot be too old.
+of any confirmed chain tip cannot be too old.
 
 \begin{theorem}[Freshness to Timeliness] \label{thm:freshness-to-timeliness}
-  \atnote{Add execution here?}
   A temporal ledger protocol based on a safe and fresh($w$)
   temporal blockchain protocol with consistent recorded rounds is timely with timeliness $v = w$.
 \end{theorem}
@@ -83,23 +81,17 @@ of any finalized chain tip cannot be too old.
   Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$
   contains a transaction $\tx$ with recorded round $r \leq r_1 - v$.
   Due to chain safety, it holds that $\Chain[][P][r_1] \prec \Chain[][P][r_2]$.
-  Transaction $\tx$ is in some block $B \in \Chain[][P][r_2][|\Chain[][P][r_1]|{:}]$.
+  Transaction $\tx$ is in some block $B \in \Chain[][P][r_2][|\Chain[][P][r_1]|{:}]$
+  (see Figure~\ref{fig:freshness-to-timeliness}).
   Let $B^*$ be the tip of $\Chain[][P][r_1]$ with recorded round $r^*$.
   Because of freshness, it holds that $r_1 - r^* \leq w$.
-  Therefore:
+  Therefore, from $r \leq r_1 - v$ it follows that $r - r^* \leq w - v = 0$.
 
-  \begin{align*}
-    \makebox[0.5\textwidth][c]{$r - r^* \leq w - v$}         && \text{[$r \leq r_1 - v$]} \\
-    \makebox[0.5\textwidth][c]{$r - r^* \leq 0$}             && \text{[$v = w$]}
-  \end{align*}
-
-  \atnote{Introduce and caption figure, or delete if not needed.}
   \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/freshness-timeliness.pdf}
-    \caption{
-    }
-   \label{fig:freshness-to-timeliness}
+    \caption{The chain in the proof of Theorem~\ref{thm:freshness-to-timeliness}.}
+    \label{fig:freshness-to-timeliness}
   \end{figure}
 
   This is a contradiction because block $B$ extends a chain that contains $B^*$,

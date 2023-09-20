@@ -6,25 +6,26 @@ Conversely, in the following theorem, we show that timeliness before GST in part
 synchronous networks is unachievable.
 
 \begin{theorem}[Timeliness is Impossible in Partial Synchrony]
-  In a partially synchronous communication network, a distributed temporal ledger protocol
-  which is safe and live$(u)$, cannot be timely at all times.
+  In partial synchrony, a
+  safe and live$(u)$
+  distributed temporal ledger protocol cannot be timely before GST.
 \end{theorem}
 \begin{proof}
-  Suppose, towards a contradiction, there is a safe, live$(u)$, and timely$(v)$ distributed temporal ledger protocol.
-  There is a fixed number of $n$ parties.
+  Suppose, towards a contradiction, there is a safe, live$(u)$, and timely$(v)$ distributed temporal ledger protocol
+  with $n$ parties.
   Consider the following two worlds:
 
   \noindent
-  \underline{World A}
+  \underline{World A}.
   There are $n-1$ honest parties and one adversarial party. The adversary remains silent and
   does not disrupt the synchrony of the network ($\gst = 0$).
   The adversary chooses any round $r$ and introduces a high entropy transaction $\tx$ to the honest parties. We are in
   synchrony, hence, because of liveness, $\tx$ appears in the ledgers of all honest parties
   by round $r + u$. The transaction is recorded with round $r^* \leq r + u$ because of
-  timeliness requirement \ref{def:timely-past}.
+  timeliness.
 
   \noindent
-  \underline{World B}
+  \underline{World B}.
   All parties are honest. We are under partial synchrony, and the adversary partitions the network such that
   one honest party $P$ is isolated from the other $n-1$ honest parties.
   The adversary sets \gst to  $r + u + v + 1$.
@@ -33,13 +34,11 @@ synchronous networks is unachievable.
   World A and World B are identical up to now. Hence, like in World A,
   they report $\tx$ in their ledgers by round $r + u$, with recorded round $r^* \leq r + u$.
 
-  Only after \gst, due to liveness, will the transaction eventually be included in $P$'s ledger.
-  Consider the earliest round $r_2$, when $\tx$ appears in the ledger.
-  The transaction will have recorded round $r^*$, due to safety.
-  Hence, $(r^*, \tx) \in \Ledger[][P][r_2][|\Ledger[][P][\gst - 1]|:]$.
-  From timeliness requirement \ref{def:timely-chunk}, we
+  At $r_2 \geq \gst$, due to liveness, $\tx$ will be included in $P$'s ledger for the first time,
+  with recorded round $r^*$ due to safety.
+  Hence, $(r^*, \tx) \in \Ledger[][P][r_2][{|\Ledger[][P][\gst - 1]|}{:}]$.
+  From timeliness, we
   get $r^* > \gst - v - 1$. Therefore, $r^* > r + u$.
   This is a contradiction, since $r^* \leq r + u$.
-  \atnote{Maybe write this last part a bit better?}
   \Qed
 \end{proof}

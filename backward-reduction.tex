@@ -4,14 +4,15 @@ We now construct a perfectly timely protocol $\Pi^*$
 using a black-box reduction from a supersafe, and live($u$) protocol $\Pi$.
 Each honest party $P$, executing the $\Pi^*$ protocol, runs a
 full node of protocol $\Pi$.
-The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][P][r]$ and
-$\Ledger[*][P][r]$ respectively.
-To construct temporal ledger $\Ledger[*][][r]$,
-new transactions appearing in
-$\Ledger[][][r]$ are appended to $\Ledger[*][][r - 1]$ with recorded round $r$.
-This process is illustrated
-in Figure~\ref{fig:backward-reduction}
-and the pseudocode is presented in Algorithm~\ref{alg:backward-reduction}.
+The main idea is that, since ledgers are supersafe, we can simply
+ascribe to each new transaction the round at which it first appeared on our ledger.
+% The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][P][r]$ and
+% $\Ledger[*][P][r]$ respectively.
+% To construct temporal ledger $\Ledger[*][][r]$,
+% new transactions appearing in
+% $\Ledger[][][r]$ are appended to $\Ledger[*][][r - 1]$ with recorded round $r$.
+This reduction is illustrated in Figure~\ref{fig:backward-reduction}
+and Algorithm~\ref{alg:backward-reduction}.
 
 \begin{figure}
   \centering
@@ -29,8 +30,8 @@ and the pseudocode is presented in Algorithm~\ref{alg:backward-reduction}.
 %We now prove that protocol $\Pi^*$ is perfectly timely.
 
 \begin{theorem}[Supersafety to Perfect Timeliness] \label{thm:backward-reduction}
-  An execution of protocol $\Pi^*$ is perfectly timely, supersafe, and live($u$), if the execution of
-  protocol $\Pi$ is supersafe and live($u$).
+  An execution of $\Pi^*$ is perfectly timely, supersafe, and live($u$), if the execution of
+  $\Pi$ is supersafe and live($u$).
 \end{theorem}
 \begin{proof}
   Timeliness requirements (1) and (2) are directly satisfied.
