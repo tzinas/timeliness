@@ -41,3 +41,33 @@ and the pseudocode is presented in Algorithm~\ref{alg:backward-reduction}.
   Supersafety and liveness($u$) follow from those of $\Pi$.
   \Qed
 \end{proof}
+
+\atnote{We define clients in the beginning, but we only use them here.}
+With a couple of addition to the above construction, we can add support for late joining clients.
+From now on, we allow protocol $\Pi$ to be parameterized by a
+transaction validity language.
+Each of the $n$ honest parties runs another instance of protocol
+$\Pi$, which we call $\Pi_2$.
+In every round $r$, honest parties introduce a transaction
+to their $\Pi_2$ instance which contains ledger $\Ledger[*][P][r]$.
+We set the transaction validity language of $\Pi_2$ to be as follows:
+Valid transactions contain any ledger $\hat \Ledger \preccurlyeq \Ledger[*][P][r]$.
+
+Suppose a late joining client is activated by the environment.
+The client first synchronizes the two instances of $\Pi$ with the
+rest of the peers. Once synchronized, the client stores the transactions
+appearing in ledger $\Ledger$ for each round.
+For the next few rounds, the client observes the ledger of instance $\Pi_2$ for the
+recorded rounds of the previous transactions.
+The observed recorded rounds are accurate since they must satisfy $\Pi_2$'s
+new transaction validity rule.
+Eventually, all missing recorded rounds are
+recovered, and the client can report the correct temporal ledger $\Ledger[*]$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.65\columnwidth,keepaspectratio]{figures/clients.pdf}
+  \caption{Client support for $\Pi$.
+  }
+ \label{fig:backward-reduction}
+\end{figure}
