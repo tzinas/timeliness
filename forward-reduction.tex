@@ -5,8 +5,8 @@ $\Pi^*$ using a black-box reduction from a safe, live($u$) and timely($v$)
 protocol $\Pi$.
 Each honest party $P$, executing the $\Pi^*$ protocol, runs a
 full node of protocol $\Pi$.
-The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][\Pi][r]$ and
-$\Ledger[*][\Pi][r]$ respectively.
+The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][P][r]$ and
+$\Ledger[*][P][r]$ respectively.
 The main idea is that ledger $\Ledger[*][][r]$ is constructed
 by filtering through ledger $\Ledger[][][r]$, and only keeping transactions
 with recorded round less than or equal to $r - v$. When a transaction

@@ -5,7 +5,7 @@ a subset of blockchain protocols~\cite{rethinking-consensus}
 which keep track of time.
 
 \begin{definition}[(Temporal) Blockchain Protocol]
-  A \emph{blockchain} protocol is distributed protocol
+  A \emph{blockchain} protocol is a distributed protocol
   in which, at the end of every round, each honest party outputs
   a chain. A chain is a finite sequence of blocks. Each block
   contains a finite sequence of transactions.
@@ -14,7 +14,6 @@ which keep track of time.
   where every block contains a recorded round.
 \end{definition}
 
-\atnote{Refactor all C into $\Chain$ format.}
 In blockchain protocols, honest parties hold at all times a finalized (or confirmed) chain
 based on their confirmation rule\footnote{
   In longest-chain protocols, the longest observed chain without the last $k$ blocks
@@ -26,7 +25,7 @@ We use $\Chain[][P][r]$ to denote the finalized chain
 of party $P$ at the end of round $r$.
 
 \begin{definition}[Chain Safety]
-  A blockchain protocol is \emph{safe} if for
+  A blockchain protocol execution is \emph{safe} if for
   all honest parties $P_1, P_2$ and all rounds $r_1, r_2$,
   it holds that $\Chain[][P_1][r_1] \sim \Chain[][P_2][r_2]$.
   Furthermore, $\Chain[][P_1][r_1] \preccurlyeq \Chain[][P_1][r_2]$ (sticky).
@@ -47,7 +46,7 @@ that will help us prove timeliness of
 chain-based temporal ledger protocols.
 
 \begin{definition}[Consistent Recorded Rounds]
-  A temporal blockchain protocol has \emph{consistent recorded rounds}
+  A temporal blockchain protocol execution has \emph{consistent recorded rounds}
   when for all honest parties $P$ and rounds $r$,
   the recorded rounds in $\Chain[][P][r]$ are non-decreasing and not
   in the future.
@@ -71,6 +70,7 @@ The notion of freshness tells us that the recorded round
 of any finalized chain tip cannot be too old.
 
 \begin{theorem}[Freshness to Timeliness] \label{thm:freshness-to-timeliness}
+  \atnote{Add execution here?}
   A temporal ledger protocol based on a safe and fresh($w$)
   temporal blockchain protocol with consistent recorded rounds is timely with timeliness $v = w$.
 \end{theorem}
@@ -82,9 +82,9 @@ of any finalized chain tip cannot be too old.
   Consider any honest party $P$, and any rounds $r_1 \leq r_2$.
   Suppose, towards a contradiction, that $\Ledger[][P][r_2][|\Ledger[][P][r_1]|{:}]$
   contains a transaction $\tx$ with recorded round $r \leq r_1 - v$.
-  Due to safety, it holds that $\chain^P_{r_1} \prec \chain^P_{r_2}$.
-  Transaction $\tx$ is in some block $B \in \chain^P_{r_2}[|\chain^P_{r_1}|{:}]$.
-  Let $B^*$ be the tip of $\chain^P_{r_1}$ with recorded round $r^*$.
+  Due to chain safety, it holds that $\Chain[][P][r_1] \prec \Chain[][P][r_2]$.
+  Transaction $\tx$ is in some block $B \in \Chain[][P][r_2][|\Chain[][P][r_1]|{:}]$.
+  Let $B^*$ be the tip of $\Chain[][P][r_1]$ with recorded round $r^*$.
   Because of freshness, it holds that $r_1 - r^* \leq w$.
   Therefore:
 

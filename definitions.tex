@@ -17,7 +17,7 @@ record a round with every transaction.
 The following property of temporal ledgers is central to this work.
 
 \begin{definition}[Timely]\label{def:timely}
-  A distributed temporal ledger protocol is \emph{timely}$(v)$
+  A distributed temporal ledger protocol execution is \emph{timely}$(v)$
   if for all honest parties $P$ and rounds $r_1$ it holds that:
 
   \begin{enumerate}
@@ -32,11 +32,11 @@ Timeliness is orthogonal to safety and liveness. Protocols can have any combinat
 of the three properties.
 
 \begin{definition}[Perfectly Timely]
-  We call a protocol \emph{perfectly timely} if it is timely with parameter $v = 0$.
+  We call a protocol execution \emph{perfectly timely} if it is timely with parameter $v = 0$.
 \end{definition}
 
 \begin{definition}[Supersafety]
-  A distributed ledger protocol is \emph{supersafe} if it is sticky and
+  A distributed ledger protocol execution is \emph{supersafe} if it is sticky and
   for any honest parties $P_1, P_2$ and any round $r$, it holds that
   $\Ledger[][P_1][r] = \Ledger[][P_2][r]$.
 \end{definition}

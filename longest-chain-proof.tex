@@ -9,7 +9,7 @@ and show that any longest-chain
 temporal blockchain protocol with Common Prefix,
 Chain Quality and Chain Growth is timely,
 provided it has consistent recorded rounds.
-In this subsection, we are in the 
+In this subsection, we are in the
 static synchronous setting with $\Delta = 1$.
 
 \begin{definition}[Longest-Chain Protocol]
@@ -23,7 +23,7 @@ static synchronous setting with $\Delta = 1$.
     valid unstable chain $\TChain[][P][r]$.
   }
   the \emph{longest} valid observed unstable chain $\TChain[][P][r]$. It outputs the
-  chain $\Chain[][P][r] = \TChain[][P][r][:-k]$.
+  \atnote{finalized?} chain $\Chain[][P][r] = \TChain[][P][r][:-k]$.
   Honest parties always generate blocks that extend their adopted unstable chain.
 \end{definition}
 
@@ -38,7 +38,7 @@ Backbone paper~\cite{backbone-new}.
   %, Common Prefix($k$),
   \emph{Chain Growth($\tau, s$)},
   and consistent recorded rounds
-  are fresh with parameter $w =\max(s, \frac{k + \ell}{\tau}) + 1$.
+  are fresh($\max(s, \frac{k + \ell}{\tau}) + 1$).
 \end{theorem}
 \begin{proof}
   Let $P$ be any honest party and $r$ be any round.
@@ -102,7 +102,7 @@ Backbone paper~\cite{backbone-new}.
 \end{proof}
 
 Ouroboros is already a Temporal Blockchain protocol with consistent recorded rounds.
-The Bitcoin Backbone protocol can be augmented in
+The Bitcoin Backbone protocol can be augmented in a
 straightforward manner to include recorded rounds
 corresponding to the real Bitcoin deployment~\cite{mastering-bitcoin}.
 The augmentation is illustrated in Figure~\ref{fig.temporal-backbone}.

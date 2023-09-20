@@ -10,7 +10,7 @@ but also that the timestamps they are recorded with are relatively fresh.
 
 However, timestamps in adversarially produced blocks may be fabricated.
 And yet, empirical evidence suggests reported timestamps roughly correspond
-to real world time.
+to real world time. \atnote{Citation?}
 
 In this paper, we put forth the notion of \emph{timeliness}, formalizing the folklore
 understanding that timestamps recorded on-chain cannot deviate arbitrarily
@@ -44,8 +44,8 @@ property in this abstract fashion greatly simplifies the proofs of security of p
   \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
   \caption{Overview of the paper. Bitcoin and Ouroboros attain the abstract chain virtues
   of Common Prefix, Chain Quality, and Chain Growth (top)~\cite{backbone,ouroboros}.
-  We show that CQ and CG are enough to attain the intermediate property of Freshness
-  (Theorem~\ref{thm.longest-chain-freshness}, middle). This property is also achieved by Streamlet, which does
+  We show that CQ and CG are enough \atnote{enough?} to attain the intermediate property of Freshness
+  (Theorem~\ref{thm.longest-chain-freshness}, middle). This property is also achieved by Streamlet \atnote{theorem?}, which does
   not follow a longest chain structure. This property, together with safety,
   is sufficient to attain Timeliness
   (Theorem~\ref{thm:freshness-to-timeliness}). From Timeliness we can achieve Supersafety
@@ -61,7 +61,8 @@ of timeliness and related notions (Sections~\ref{sec:prelims}-\ref{sec:defs}),
 we prove that all popular ways of constructing distributed ledgers
 are, indeed, timely, if we assume a global clock and a synchronous network.
 The timeliness follows from an intermediate technical property we call \emph{tip freshness}
-of chains, which we prove for all flavours of blockchains. Namely, we prove the
+\atnote{Rename to freshness and talk about consisten recorded rounds?}
+of chains, which we prove for all flavours of blockchains\atnote{The main flavors?}. Namely, we prove the
 property for Streamlet, Bitcoin Backbone, and Ouroboros, which are representative
 of the classes of protocols in the quorum-based proof-of-stake, longest chain
 proof-of-work, and longest-chain proof-of-stake realms (Section~\ref{sec:possible}).
@@ -83,7 +84,7 @@ An overview of the results of this paper is illustrated in Figure~\ref{fig:overv
 \textbf{Related work.}
 Timeliness of chain timestamps has long been assumed by the community.
 In community discussions, it has been incorrectly
-advocated even by experts\footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/questions/6795/is-block-timestamp-safe-for-longer-time-periods}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.} that, because
+advocated even by \atnote{who is this?}experts\footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/questions/6795/is-block-timestamp-safe-for-longer-time-periods}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.} that, because
 honest nodes only accept blocks with timestamps up to a short window into the future
 (which is part of the Bitcoin and Ethereum implementations, for example),
 all accepted block timestamps must be accurate within that same window of accuracy.
@@ -99,7 +100,7 @@ the randomness production from epoch-to-epoch requires chopping off a suitable n
 which is a form of supersafety. The blockchain itself has also been used as a mechanism for clock
 synchronization, a long-standing problem~\cite{lamport-synchronizing-clocks}, in the context of drifting
 clocks~\cite{klepsydra,chronos}. We augment and extend
-these works by introducing the definitions of timeliness, block freshness, and supersafety, in a way
+these works by introducing the definitions of timeliness, block freshness\atnote{freshness?}, and supersafety, in a way
 we believe can be used to simplify and complement their results. Our treatment brings insight into
 exactly what virtues these chain protocols enjoy, and we illustrate that the two different
 notions of timeliness and supersafety are, in fact, equivalent under appropriate reductions.

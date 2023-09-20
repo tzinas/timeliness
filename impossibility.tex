@@ -33,12 +33,13 @@ synchronous networks is unachievable.
   World A and World B are identical up to now. Hence, like in World A,
   they report $\tx$ in their ledgers by round $r + u$, with recorded round $r^* \leq r + u$.
 
-  Only after \gst, due to liveness, will the transaction eventually be included in $P$'s ledger
+  Only after \gst, due to liveness, will the transaction eventually be included in $P$'s ledger.
   Consider the earliest round $r_2$, when $\tx$ appears in the ledger.
   The transaction will have recorded round $r^*$, due to safety.
-  Hence, $(r^*, \tx) \in \Ledger[][P][r_2][|\Ledger[][P][\gst - 1]]$.
-  From the timeliness requirement \ref{def:timely-increasing}, we
+  Hence, $(r^*, \tx) \in \Ledger[][P][r_2][|\Ledger[][P][\gst - 1]|:]$.
+  From timeliness requirement \ref{def:timely-chunk}, we
   get $r^* > \gst - v - 1$. Therefore, $r^* > r + u$.
   This is a contradiction, since $r^* \leq r + u$.
+  \atnote{Maybe write this last part a bit better?}
   \Qed
 \end{proof}
