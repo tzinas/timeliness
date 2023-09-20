@@ -35,7 +35,7 @@ honest epoch quintuples is bounded.
 For the proof, see Appendix~\ref{sec:proofs}.
 
 \begin{theorem}[Temporal Streamlet Freshness] \label{thm.streamlet-freshness}
-  Temporal Streamlet is fresh($2\Delta d$).
+  Temporal Streamlet is fresh with parameter $w = 2\Delta d$.
 \end{theorem}
 \begin{proof}
   Let $r$ be the current round of the current epoch $e$.
@@ -50,4 +50,4 @@ For the proof, see Appendix~\ref{sec:proofs}.
 \end{proof}
 
 From the above and Theorem~\ref{thm:freshness-to-timeliness}, it follows that
-Temporal Streamlet is timely($2\Delta d$).
+Temporal Streamlet is timely with parameter $v = 2\Delta d$.
