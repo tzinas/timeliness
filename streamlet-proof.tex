@@ -24,7 +24,7 @@ honest epoch quintuples is bounded.
   of $E$ epochs, $n$ total number of parties and $t$ number of corrupt parties.
   Let $J = \{0,E\} \cup \{0 < e < E: G(e)\}$.
   The execution is \emph{typical} if for all
-  $d \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{n - t}{n}\right)^5\right)}$:
+  $d \geq 5\frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{n - t}{n}\right)^5\right)}$:
   $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq d$.
 \end{definition}
 
@@ -32,8 +32,7 @@ honest epoch quintuples is bounded.
   A Temporal Streamlet execution is typical, except with negligible probability in $\kappa$.
 \end{lemma}
 \begin{proof}
-  We let $K = \{0, E\} \cup \{e \in \{0, 5, 10 ,\ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
-  \atnote{Maybe now we need $3, 8, 13, \ldots$}
+  We let $K = \{0, E\} \cup \{e \in \{5, 10, 15, \ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
   It holds that
   $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq \max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e))$.
   Therefore:
@@ -41,15 +40,15 @@ honest epoch quintuples is bounded.
   \begin{gather*}
       \Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > d] \leq \\
       \Pr [\max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e)) > d] \leq \\
-      \floor*{\frac{E}{5}} \left(1 - \left(\frac{n - t}{n}\right)^5\right)^d
+      \floor*{\frac{E}{5}} \left(1 - \left(\frac{n - t}{n}\right)^5\right)^{\frac{d}{5}}
   \end{gather*}
 
   For the second inequality, we observe that each chunk is a Bernoulli trial and we
   apply a union bound.
   Letting $F = \left(1 - \left(\frac{n - t}{n}\right)^5\right)$, we obtain
-  $\floor*{\frac{E}{5}} F^d \leq 2^{-\kappa} \Rightarrow
-   d \lg F \leq -\kappa - \lg \floor*{\frac{E}{5}} \Rightarrow
-   d \geq \frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg F}
+  $\floor*{\frac{E}{5}} F^{\frac{d}{5}} \leq 2^{-\kappa} \Rightarrow
+   \frac{d}{5} \lg F \leq -\kappa - \lg \floor*{\frac{E}{5}} \Rightarrow
+   d \geq 5\frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg F}
   $.
   \Qed
 \end{proof}
