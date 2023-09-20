@@ -44,31 +44,36 @@ and Algorithm~\ref{alg:backward-reduction}.
 \end{proof}
 
 \atnote{We define clients in the beginning, but we only use them here.}
-With a couple of addition to the above construction, we can add support for late joining clients.
-From now on, we allow protocol $\Pi$ to be parameterized by a
-transaction validity language.
-Each of the $n$ honest parties runs another instance of protocol
-$\Pi$, which we call $\Pi_2$.
-In every round $r$, honest parties introduce a transaction
-to their $\Pi_2$ instance which contains ledger $\Ledger[*][P][r]$.
-We set the transaction validity language of $\Pi_2$ to be as follows:
+When a late joining client if activated by the environment,
+first, it obtains all past transactions from its $\Pi$ instance.
+However, there is no way to calculate their recorded round.
+To allow this, each node party is required to run an
+additional instance of $\Pi$. We call this new instance $\Pi_2$,
+and the existing one, which operates in the same way, $\Pi_1$.
+Let $\Ledger[1]$ and $\Ledger[2]$ be the output ledgers
+of $\Pi_1$ and $\Pi_2$ respectively.
+The output ledger $\Ledger[*]$ of the nodes remains the same.
+Instance $\Pi_2$ is used as follows:
+In every round $r$, all honest nodes $P$ introduce a transaction
+which contains ledger $\Ledger[*][P][r]$.
+We parameterize $\Pi_2$ with the following transaction validity language:
 Valid transactions contain any ledger $\hat \Ledger \preccurlyeq \Ledger[*][P][r]$.
+The protocol is illustrated in Figure~\ref{fig:client-support}.
 
-Suppose a late joining client is activated by the environment.
-The client first synchronizes the two instances of $\Pi$ with the
-rest of the peers. Once synchronized, the client stores the transactions
-appearing in ledger $\Ledger$ for each round.
-For the next few rounds, the client observes the ledger of instance $\Pi_2$ for the
-recorded rounds of the previous transactions.
-The observed recorded rounds are accurate since they must satisfy $\Pi_2$'s
-new transaction validity rule.
-Eventually, all missing recorded rounds are
-recovered, and the client can report the correct temporal ledger $\Ledger[*]$.
+A late joining client, first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
+of the peers. Once synchronized, the recorded rounds of new
+transactions appearing in $\Ledger[1]$ are continuously stored.
+Due to safety, liveness and the validity rule of $\Pi_2$,
+the client can read ledger $\Ledger[2]$ to find out the
+recorded rounds of past transactions.
+Eventually, all past transaction recorded rounds are included in $\Ledger[2]$
+and the client can construct the correct temporal ledger $\Ledger[*]$.
+At this point we say that the client is booted.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.65\columnwidth,keepaspectratio]{figures/clients.pdf}
+  \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/clients.pdf}
   \caption{Client support for $\Pi$.
   }
- \label{fig:backward-reduction}
+ \label{fig:client-support}
 \end{figure}

@@ -8,6 +8,7 @@
 
 \anonymoustrue
 \notestrue
+\lncstrue
 %\todaytrue
 
 \ifccs
@@ -18,18 +19,13 @@
 \fi
 
 \iflncs
-\documentclass[11pt]{llncs}
+  \documentclass[runningheads]{llncs}
 \fi
 \ifccs
-\documentclass[sigconf, anonymous]{acmart}
-\input{ccs-preamble}
+  \documentclass[sigconf, anonymous]{acmart}
+  \input{ccs-preamble}
 \fi
 
-\documentclass[11pt]{llncs}
-\usepackage{graphicx}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-\usepackage{hyperref}
 \usepackage{preamble}
 
 \begin{document}
