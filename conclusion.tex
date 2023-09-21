@@ -1,0 +1,20 @@
+\section{Conclusion}
+
+We introduced two new properties of ledger protocols:
+Timeliness and supersafety. Timeliness mandates that transactions are
+recorded on ledgers with a timestamp that roughly corresponds to the
+current real time. Supersafety mandates that all parties
+report ledgers that are identical to each other at every moment.
+We proved that all popular blockchain
+deployments attain timeliness under the assumption
+that clocks are synchronized and the network is synchronous.
+We also showed that the synchrony assumption is a necessary condition.
+We reduced supersafety to timeliness and
+vice versa.
+Our final protocol is live, supersafe, perfectly timely,
+and has support for late-joining clients. Applying both our reductions
+in series to \emph{any} blockchain protocol with safety, liveness, timeliness and client support
+allows transforming it into a protocol that additionally enjoys supersafety and perfect timeliness.
+We hope that the nomenclature developed in this paper will shed some light on the constituent parts
+of security proofs of previous protocols and simplify the design of
+future ones.

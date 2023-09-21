@@ -28,7 +28,11 @@ The following property of temporal ledgers is central to this work.
   \end{enumerate}
 \end{definition}
 
-Timeliness is orthogonal to safety and liveness. Protocols can have any combination
+Timeliness is orthogonal to safety and liveness. Protocols can have any
+combination\footnote{A live, timely, but not safe protocol includes all transactions
+received from the network with the current round.
+A live, safe, but not timely protocol always records round $1$ for all transactions.
+A safe, timely, but not live protocol always reports empty ledgers.}
 of the three properties.
 
 \begin{definition}[Perfectly Timely]

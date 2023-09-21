@@ -31,8 +31,27 @@ honest epoch quintuples is bounded.
 \begin{lemma}[Temporal Streamlet Typicality] \label{lem:honest-quintuple}
   A Temporal Streamlet execution is typical, except with negligible probability in $\kappa$.
 \end{lemma}
+\begin{proof}
+  We let $K = \{0, E\} \cup \{e \in \{5, 10, 15, \ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
+  It holds that
+  $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq \max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e))$.
+  Therefore:
 
-For the proof, see Appendix~\ref{sec:proofs}.
+  \begin{gather*}
+      \Pr [\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) > d] \leq \\
+      \Pr [\max_{e \in K}(\min_{\substack{e' > e \\ e' \in K}}(e' - e)) > d] \leq \\
+      \floor*{\frac{E}{5}} \left(1 - \left(\frac{n - t}{n}\right)^5\right)^{\frac{d}{5}}
+  \end{gather*}
+
+  For the second inequality, we observe that each chunk is a Bernoulli trial and we
+  apply a union bound.
+  Letting $F = \left(1 - \left(\frac{n - t}{n}\right)^5\right)$, we obtain
+  $\floor*{\frac{E}{5}} F^{\frac{d}{5}} \leq 2^{-\kappa} \Rightarrow
+   \frac{d}{5} \lg F \leq -\kappa - \lg \floor*{\frac{E}{5}} \Rightarrow
+   d \geq 5\frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg F}
+  $.
+  \Qed
+\end{proof}
 
 \begin{theorem}[Temporal Streamlet Freshness] \label{thm.streamlet-freshness}
   Typical executions of Temporal Streamlet are fresh with parameter $w = 2\Delta d$.

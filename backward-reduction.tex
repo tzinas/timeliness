@@ -16,6 +16,8 @@ without loss of safety.
 This reduction is illustrated in Figure~\ref{fig:backward-reduction}
 and Algorithm~\ref{alg:backward-reduction}.
 
+\import{./}{algorithms/algorithm-backward-reduction.tex}
+
 \begin{figure}
   \centering
   \includegraphics[width=0.9\columnwidth,keepaspectratio]{figures/backward-reduction.pdf}
@@ -26,8 +28,6 @@ and Algorithm~\ref{alg:backward-reduction}.
   }
  \label{fig:backward-reduction}
 \end{figure}
-
-\import{./}{algorithms/algorithm-backward-reduction.tex}
 
 %We now prove that protocol $\Pi^*$ is perfectly timely.
 
@@ -100,4 +100,24 @@ Lastly, to make this protocol efficient, we observe that the payload of
 $\Pi_2$ transactions does not need to include whole ledgers, but can simply
 include only the additional transactions that have since appeared on $\Ledger[1]$.
 Lastly, the two instances of $\Pi$ can be combined into one by coloring
-transactions appropriately.
+transactions appropriately: A normal transaction $\tx$, colored \emph{black}, enters into the
+$\Pi^*$ protocol and is recorded on $\Pi$ as usual. When it stabilizes and its round
+has been recorded by an online node, this node wraps the transaction $\tx$ into an
+\emph{orange} transaction $\tx'$ containing as payload $\tx$ together with its recorded
+round. The ledger output by $\Pi$ is split into black and orange parts. The black part
+is reported as the output ledger of $\Pi^*$. The orange part is used to help clients boot,
+and is ignored by a client after booting has finished. The validity language restrictions
+only apply to the orange transactions. This final construction is illustrated in
+Figure~\ref{fig:client-support-feedback}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.55\columnwidth,keepaspectratio]{figures/perfectly-timely-clients-feedback.pdf}
+  \caption{The client-supporting supersafe and perfectly timely protocol $\Pi^*$
+           using only one instance of $\Pi$ for efficiency.
+           Normal transactions and ledgers are shown in solid black lines;
+           auxiliary transactions containing ledgers are shown in dashed
+           orange lines.}
+ \label{fig:client-support-feedback}
+\end{figure}
+
