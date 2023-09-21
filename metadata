@@ -2,6 +2,24 @@ Title:
 On-Chain Timestamps Are Accurate
 
 Abstract:
-When Satoshi Nakamoto introduced Bitcoin, a central tenet was that the blockchain functions as a timestamping server. In the Ethereum era, smart contracts widely assume on-chain timestamps are mostly accurate. In this paper, we prove this is indeed the case, namely that recorded timestamps do not wildly deviate from real-world time, a property we call timeliness. We prove that all popular mechanisms for constructing blockchains (proof-of-work, longest chain proof-of-stake, and quorum-based proof-of-stake) are timely under honest majority, but a synchronous network is a necessary condition. Next, we show that, given a global clock, all timely blockchains can be suitably modified, in a black-box fashion, such that all honest parties output exactly the same ledgers at the same round, achieving a property we call supersafety, which may be of independent interest. Conversely, we also show that supersafety implies (perfect) timeliness, completing the circle.
+  When Satoshi Nakamoto introduced Bitcoin, a central tenet was
+  that the blockchain functions as a timestamping server.
+  In the Ethereum era, smart contracts widely assume on-chain timestamps
+  are mostly accurate.
+  In this paper, we prove this is indeed the case,
+  namely that recorded timestamps do not wildly deviate from real-world
+  time, a property we call timeliness.
+  Assuming a global clock, we prove that all popular mechanisms for constructing
+  blockchains (proof-of-work, longest chain proof-of-stake, and
+  quorum-based proof-of-stake) are timely under honest majority,
+  but a synchronous network is a necessary condition.
+  Next we show that
+  all timely blockchains can be suitably modified,
+  in a black-box fashion,
+  such that all honest parties output exactly the same ledgers at
+  the same round, achieving a property we call supersafety,
+  which may be of independent interest.
+  Conversely, we also show that supersafety implies (perfect) timeliness,
+  completing the circle.
 
 
