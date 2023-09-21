@@ -71,7 +71,7 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   As $\tx'$ is new, it is not in $\Ledger[P_1][][r_1]$.
   Due to safety, $k' \geq |\Ledger[P_1][][r_1]| > k$, and
   $\Ledger[P_2][][r_3 + u][k] = (r^*, \tx)$.
-  Therefore
+  Therefore,
   $(r^*, \tx) \in \Ledger[P_2][][r_3 + u][|\Ledger[P_2][][r_2]|{:}]$.
   Since $r^* \leq r_2 - v$, this contradicts the timeliness with parameter $v$.\Qed
 \end{proof}

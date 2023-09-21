@@ -27,7 +27,7 @@ but also that their on-chain recorded timestamps are relatively fresh.
 
 We put forth the notion of \emph{timeliness}, formalizing the folklore
 understanding that timestamps recorded on-chain cannot deviate arbitrarily
-from real world time. In particular we define a timeliness parameter $v$ which bounds
+from real world time. In particular, we define a timeliness parameter $v$ which bounds
 this potential deviation. Under honest majority, we prove this virtue materializes in all three popular flavors of
 permissionless blockchains, namely proof-of-work,
 longest chain proof-of-stake, and quorum-based proof-of-stake, and analytically
@@ -86,12 +86,12 @@ The timeliness follows from an intermediate technical property we call \emph{fre
 of chains, which we prove for all popular flavours of blockchains, namely,
 Streamlet, Bitcoin Backbone, and Ouroboros, which are representative
 of the classes of protocols in the quorum-based proof-of-stake, longest chain
-proof-of-work, and longest-chain proof-of-stake realms (Section~\ref{sec:possible}).
+proof-of-work, and longest chain proof-of-stake realms (Section~\ref{sec:possible}).
 The Streamlet variant is proven in the partially synchronous setting after GST.
 We show that timeliness before GST is impossible for protocols that are always-safe
 and live after GST (Section~\ref{sec:impossibility}).
 
-Next, we perform two simple but instructive blackbox reductions that are, perhaps, somewhat unexpected:
+Next, we perform two simple but instructive black-box reductions that are, perhaps, somewhat unexpected:
 The first reduction is from timeliness to supersafety (Section~\ref{sec:forward-reduction}).
 In this reduction, we delay the reported ledger until all
 transactions have timestamps enough into the past to ensure all other parties have seen them.

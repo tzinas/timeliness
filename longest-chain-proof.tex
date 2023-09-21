@@ -1,19 +1,19 @@
-\subsection{Longest-Chain Protocols are Timely}
+\subsection{Longest Chain Protocols are Timely}
 
-We now prove that longest-chain protocols are timely both in proof-of-work and proof-of-stake.
+We now prove that longest chain protocols are timely both in proof-of-work and proof-of-stake.
 For concreteness, we work in the Bitcoin Backbone setting
 as a representative of proof-of-work and in the Ouroboros setting
 as a representative of proof-of-stake.
 Regardless, we work with abstract chain virtues
-and show that any longest-chain
+and show that any longest chain
 temporal blockchain protocol with Common Prefix,
 Chain Quality and Chain Growth is timely,
 provided it has consistent recorded rounds.
 In this subsection, we are in the
 static synchronous setting with $\Delta = 1$.
 
-\begin{definition}[Longest-Chain Protocol]
-  A longest-chain protocol with confirmation parameter $k$
+\begin{definition}[Longest Chain Protocol]
+  A longest chain protocol with confirmation parameter $k$
   is a blockchain protocol for which,
   at the beginning of any round $r$, every honest party $P$ \emph{adopts}\footnote{
     At the beginning of a round $r$, before observing the network, we say that
@@ -33,7 +33,7 @@ For the notation definitions ($\mu, \ell, \tau, s$)
 in the following theorem, refer to the original Bitcoin
 Backbone paper~\cite{backbone-new}.
 
-\begin{theorem}[Longest-Chain Freshness]\label{thm.longest-chain-freshness}
+\begin{theorem}[Longest Chain Freshness]\label{thm.longest-chain-freshness}
   Temporal Blockchains, following the longest chain rule,
   with \emph{Chain Quality($\mu,\ell$)},
   %, Common Prefix($k$),
@@ -73,7 +73,7 @@ Backbone paper~\cite{backbone-new}.
   that $P$ \emph{has} at round $r' + 2$.
   We observe that, at round $r' + 2$, due to the
   longest chain rule, party $P$ \emph{has} a chain of greater or equal
-  length to the one broadcasted by party $P^*$. Hence
+  length to the one broadcasted by party $P^*$. Hence,
   $|\HChain[][P][r' + 2]| \geq |\TChain[][P'][r']| + 1$. Therefore:
 
   \begin{equation}
@@ -87,7 +87,7 @@ Backbone paper~\cite{backbone-new}.
   \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/longest-chain-proof.pdf}
-    \caption{Longest-Chain blockchains freshness proof. Block $B'$ is illustrated in the
+    \caption{Longest chain blockchains freshness proof. Block $B'$ is illustrated in the
              earliest possible position.
     }
    \label{fig:longest-chain-freshness-proof}
@@ -123,7 +123,7 @@ Furthermore, it has consistent recorded rounds.
   \label{fig.temporal-backbone}
 \end{figure}
 
-We observe that for all longest-chain protocols, chain safety follows from the
+We observe that for all longest chain protocols, chain safety follows from the
 Common Prefix property. Hence, from the above and Theorem~\ref{thm:freshness-to-timeliness},
 it follows that Temporal Bitcoin and
 Ouroboros are timely with parameter $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
