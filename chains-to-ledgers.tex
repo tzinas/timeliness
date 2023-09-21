@@ -69,8 +69,9 @@ The notion of freshness tells us that the recorded round
 of any confirmed chain tip cannot be too old.
 
 \begin{theorem}[Freshness to Timeliness] \label{thm:freshness-to-timeliness}
-  A temporal ledger protocol based on a safe and fresh($w$)
-  temporal blockchain protocol with consistent recorded rounds is timely with timeliness $v = w$.
+  An execution of a temporal ledger protocol based on
+  temporal blockchain protocol
+  whose execution is safe, fresh($w$) and has consistent recorded rounds is timely with timeliness $v = w$.
 \end{theorem}
 \begin{proof}
   Requirements (1) and (2) of timeliness are directly satisfied from

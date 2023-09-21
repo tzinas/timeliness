@@ -1,11 +1,13 @@
-\section{Supersafety to Perfect Timeliness}\label{sec:backward-reduction}
+\subsection{Supersafety $\rightarrow$ Perfect Timeliness}\label{sec:backward-reduction}
 
 We now construct a perfectly timely protocol $\Pi^*$
 using a black-box reduction from a supersafe, and live($u$) protocol $\Pi$.
 Each honest party $P$, executing the $\Pi^*$ protocol, runs a
 full node of protocol $\Pi$.
-The main idea is that, since ledgers are supersafe, we can simply
-ascribe to each new transaction the round at which it first appeared on our ledger.
+The main idea is that, even though $\Pi$ is not a temporal ledger,
+since it is supersafe, we can simply
+ascribe to each new transaction the round at which it first appeared on our ledger
+without loss of safety.
 % The ledger of party $P$ for protocol $\Pi$ and $\Pi^*$ is denoted as $\Ledger[][P][r]$ and
 % $\Ledger[*][P][r]$ respectively.
 % To construct temporal ledger $\Ledger[*][][r]$,
@@ -43,37 +45,59 @@ and Algorithm~\ref{alg:backward-reduction}.
   \Qed
 \end{proof}
 
-\atnote{We define clients in the beginning, but we only use them here.}
-When a late joining client if activated by the environment,
-first, it obtains all past transactions from its $\Pi$ instance.
-However, there is no way to calculate their recorded round.
-To allow this, each node party is required to run an
-additional instance of $\Pi$. We call this new instance $\Pi_2$,
-and the existing one, which operates in the same way, $\Pi_1$.
+\subsection{A Perfectly Timely, Supersafe Protocol with Clients}
+
+The protocol of the last subsection is perfectly time and supersafe.
+But how about late-joining clients?
+When client first boots, it obtains all past transactions
+from $\Pi$.
+However, since $\Pi$ is not temporal, the client does not see any recorded rounds
+associated with the transactions. Additionally, since the recorded rounds depend
+on past ledger append times, the client cannot deduce them on its own.
+
+To enable clients, we make a small addition to the protocol:
+Each node runs an \emph{additional} instance of the internal
+ledger protocol $\Pi$
+to facilitate the booting of clients.
+We call $\Pi_1$ the first instance of $\Pi$
+(which operates as before),
+and $\Pi_2$ this new instance of $\Pi$.
+The output ledger $\Ledger[*]$ of the nodes remains the same.
+Since the online nodes have observed the timestamps with which
+transactions of $\Pi_1$ are reported, they record those
+timestamps on the second ledger $\Pi_2$ to help the client
+recover them.
 Let $\Ledger[1]$ and $\Ledger[2]$ be the output ledgers
 of $\Pi_1$ and $\Pi_2$ respectively.
-The output ledger $\Ledger[*]$ of the nodes remains the same.
-Instance $\Pi_2$ is used as follows:
+The instance $\Pi_2$ is used as follows:
 In every round $r$, all honest nodes $P$ introduce a transaction
-which contains ledger $\Ledger[*][P][r]$.
+which contains the whole ledger $\Ledger[*][P][r]$ as its payload.
 We parameterize $\Pi_2$ with the following transaction validity language:
 Valid transactions contain any ledger $\hat \Ledger \preccurlyeq \Ledger[*][P][r]$.
 The protocol is illustrated in Figure~\ref{fig:client-support}.
 
-A late joining client, first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
+A late-joining client first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
 of the peers. Once synchronized, the recorded rounds of new
-transactions appearing in $\Ledger[1]$ are continuously stored.
+transactions appearing in $\Ledger[1]$ are continuously monitored and stored.
 Due to safety, liveness and the validity rule of $\Pi_2$,
 the client can read ledger $\Ledger[2]$ to find out the
 recorded rounds of past transactions.
 Eventually, all past transaction recorded rounds are included in $\Ledger[2]$
 and the client can construct the correct temporal ledger $\Ledger[*]$.
-At this point we say that the client is booted.
+At this point we say the client is fully booted and can continue
+operating as a full online node without $\Pi_2$.
+From this point on, the client is perfectly timely and supersafe.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/clients.pdf}
-  \caption{Client support for $\Pi$.
+  \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/perfectly-timely-clients.pdf}
+  \caption{Client support for the perfectly timely and supersafe protocol $\Pi*$.
   }
  \label{fig:client-support}
 \end{figure}
+
+Lastly, to make this protocol efficient, we observe that the payload of
+$\Pi_2$ transactions does not need to include whole ledgers, but can simply
+include only the additional transactions that have since appeared on $\Ledger[1]$.
+Lastly, the two instances of $\Pi$ can be combined into one by coloring
+transactions appropriately.
