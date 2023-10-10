@@ -1,40 +1,41 @@
 \section{Introduction}
 In the original Bitcoin paper~\cite{bitcoin}, Nakamoto refers to
 Bitcoin as a \emph{distributed timestamping server}.
-However, timestamps in adversarially produced blocks may be fabricated.
+% However, timestamps in adversarially produced blocks may be fabricated.
 % And yet, empirical evidence suggests reported timestamps roughly correspond
 % to real world time.
-\textcolor{red}{This sentence could be removed for better flow since it appears later.}
-
+% \textcolor{red}{This sentence could be removed for better flow since it appears later.}
 Chain timestamps have long been assumed to correspond to real-world time by the community.
-It is indeed the case that, in practical blockchain deployments, honest nodes only accept
-blocks with timestamps up to a short window into the future\footnote{
-  For example, this is part of the Bitcoin~\cite{bitcoin-code-future-blocks}
-  and Ethereum~\cite{geth-future-blocks} implementations.
-}.
-In community discussions, it has been incorrectly
-claimed\footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/questions/6795/is-block-timestamp-safe-for-longer-time-periods}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.}
-that all accepted block timestamps must be within that same window of accuracy.
-\textcolor{red}{But this question asks about whether timestamps are accurate up to a month. That shouldn't be wrong, no?}
-This is incorrect because an adversary can produce a block with a fabricated past timestamp,
-and can still cause this block to be accepted by the honest nodes retroactively by, for example, cooking
-up a lucky slightly longer Bitcoin chain. However, as we show, these fabrications
-cannot exceed a certain \emph{timeliness} limit. In this paper, we calculate this limit.
-
 DeFi applications with more than \$1B in monthly volume
 rely~\cite{0x-timestamp} on the precision of these recorded timestamps.
 They assume new transactions are not only
 included soon --- a well-understood property known as \emph{liveness} ---
 but also that their on-chain recorded timestamps are relatively fresh.
+It is indeed the case that, in practical blockchain deployments, honest nodes only accept
+blocks with timestamps up to a short window into the future\footnote{
+  For example, this is part of the Bitcoin~\cite{bitcoin-code-future-blocks}
+  and Ethereum~\cite{geth-future-blocks} implementations.
+}.
+% In community discussions, it has been incorrectly
+% claimed
+% \footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/questions/6795/is-block-timestamp-safe-for-longer-time-periods}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.}
+% that all accepted block timestamps must be within that same window of accuracy.
+% \textcolor{red}{But this question asks about whether timestamps are accurate up to a month. That shouldn't be wrong, no? Could be removed.}
+However, an adversary can produce a block with a fabricated past timestamp,
+and can still cause this block to be accepted by the honest nodes retroactively by, for example, cooking
+up a lucky slightly longer Bitcoin chain. In this paper, we show that these fabrications
+cannot exceed a certain \emph{timeliness} limit, which we calculate.
+
 
 We put forth the notion of \emph{timeliness}, formalizing the folklore
 understanding that timestamps recorded on-chain cannot deviate arbitrarily
 from real world time. In particular, we define a timeliness parameter $v$ which bounds
-this potential deviation. Under honest majority, we prove this virtue materializes in all three popular flavors of
+this potential deviation. Under a synchronous network, a global clock, and honest majority, we prove this virtue materializes in all three popular flavors of
 permissionless blockchains, namely proof-of-work,
 longest chain proof-of-stake, and quorum-based proof-of-stake, and analytically
 calculate their timeliness parameter.
-\textcolor{red}{It's good to clarify also that it's under synchronization of a global clock, so that people don't confuse this with deriving a clock from the blockchain.}
+% \textcolor{red}{It's good to clarify also that it's under synchronization of a global clock, so that people don't confuse this with deriving a clock from the blockchain.}
+\textcolor{red}{Discuss somewhere that the global clock assumpttion can be weakened.}
 
 Blockchain systems executed in networks with delay, even when assuming a global clock and
 bounded delay, allow honest parties to reach consensus, but the ledgers reported by
@@ -75,7 +76,7 @@ arguments from the abstraction of the supersafety property.
   (Theorem~\ref{thm.longest-chain-freshness}, middle). This property is also achieved by Streamlet
   (Theorem~\ref{thm.streamlet-freshness}), which is different from the other two longest-chain protocols. This property, together with safety,
   is sufficient to prove timeliness
-  (Theorem~\ref{thm:freshness-to-timeliness}). From timeliness we can achieve supersafety
+  (Theorem~\ref{thm:freshness-to-timeliness}). In safe and live protocols, from timeliness we can achieve supersafety
   and vice versa (Theorems~\ref{thm:timeliness-to-supersafety}-\ref{thm:backward-reduction}, bottom).
   }
  \label{fig:overview}
@@ -121,18 +122,22 @@ as a mechanism for clock synchronization among parties with desynchronized and d
 a long-standing problem~\cite{lamport-synchronizing-clocks}.
 In our work, we show that, if the clocks of honest parties are already synchronized,
 on-chain reported timestamps roughly correspond to real-world time.
-\textcolor{red}{The contrast with these two papers is perhaps not very clear. Is the point that these two problems are orthogonal? Or is it something different?}
+\textcolor{red}{Logical clocks versus real-world time? How are their techniques related to ours and could they be used to derive timeliness or any additional properties?}
 We posit that the abstraction of timeliness and supersafety
 into stand-alone properties can aid in simplifying the security proofs
 of existing and future protocols.
-Previous works have incorrectly conjectured that on-chain timestamps can be vastly
+Previously, the community was confused about whether on-chain timestamps are accurate.
+In some discussions, it has been
+claimed \footnote{2016, Badr Bellaj, \href{https://ethereum.stackexchange.com/a/9752}{\emph{Is block.timestamp safe for longer time periods?}}, Ethereum StackExchange.} that all accepted block timestamps must be within the same tolerance that honest nodes use to accept blocks.
+Others have conjectured that on-chain timestamps can be vastly
 inaccurate stating that \emph{timestamps can differ radically from the
 actual time, outside the network}~\cite{szalachowski2018short}.
-\textcolor{red}{In the introduction, we showed a reference that people believe that timestamps are accurate. Perhaps, we can acknowledge here that people have been confused whether timestamps are accurate or not, as indicated by these references with differing statements. In this work, we settle the confusion.}
-In this work, we debunk this misconception, and rigorously show that the chain itself
-guarantees a modest level of timeliness internally.
+In this work, we resolve this confusion, and derive the timeliness parameter and rigorously show the conditions under which it holds.
+\textcolor{red}{This needs to be cleaned up.}
+% In this work, we debunk this misconception, and rigorously show that the chain itself
+% guarantees a modest level of timeliness internally.
 Supersafety, although never stated formally, was achieved since the early
 days of consensus by Dolev and Strong~\cite{dolev-strong}.
-However, contrary to us, their construction does not support late-joining clients,
+However, contrary to us, their construction does not support intermittently online (sleepy) clients,
 and was designed for a different era of consensus, with a much smaller scale
 than today's systems in mind, poor performance, and no support for dynamic availability.
