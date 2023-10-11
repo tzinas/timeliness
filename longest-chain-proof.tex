@@ -110,15 +110,16 @@ The construction retains Common Prefix, Chain Quality and Chain Growth.
 Furthermore, it has consistent recorded rounds.
 
 \begin{figure}
-  The Temporal Bitcoin protocol is the Bitcoin protocol with
-  the following additions:
+  \begin{mdframed}
+    The Temporal Bitcoin protocol is the Bitcoin protocol with
+    the following additions:
 
-  \begin{enumerate}
-    \item Blocks include a round number. Genesis has recorded round $0$.
-    \item Honest parties mine blocks with the current round.
-    \item The recorded rounds of a valid chain are strictly increasing and not in the future.
-  \end{enumerate}
-  \textcolor{red}{Would be better to put this in a box.}
+    \begin{enumerate}
+      \item Blocks include a round number. Genesis has recorded round $0$.
+      \item Honest parties mine blocks with the current round.
+      \item The recorded rounds of a valid chain are strictly increasing and not in the future.
+    \end{enumerate}
+  \end{mdframed}
   \caption{Temporal Bitcoin construction.}
   \label{fig.temporal-backbone}
 \end{figure}
