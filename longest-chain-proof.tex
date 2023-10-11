@@ -24,18 +24,10 @@ static synchronous setting with $\Delta = 1$.
   }
   the \emph{longest} valid observed unstable chain $\TChain[][P][r]$. It outputs the
   % TODO: define this more precisely; what is an unstable chain?
-  confirmed chain $\Chain[][P][r] = \TChain[][P][r][:-k]$.
-  Honest parties always generate blocks that extend their adopted unstable chain.
-\end{definition}
-
-Before we prove freshness, we define and prove the
-intermediate notion of recency.
-
-\begin{definition}[Recency]
-  A temporal blockchain protocol execution is \emph{recent}($w$)
-  when for any round, each honestly adopted chain
-  contains a block that was produced by an honest party
-  at most $w$ rounds ago.
+  confirmed chain $\Chain[][P][r] = \TChain[][P][r][{:}{-k}]$.
+  Whenever an honest party generates a block, it extends
+  his adopted unstable chain. This new chain is broadcasted and
+  guaranteed to be valid.
 \end{definition}
 
 For the notation definitions ($\mu, \ell, \tau, s$)
@@ -43,7 +35,7 @@ in the following lemma, refer to the original Bitcoin
 Backbone paper~\cite{backbone-new}.
 
 \begin{lemma}[Longest Chain Recency]\label{thm.longest-chain-recency}
-  Temporal Blockchains, following the longest chain rule,
+  Blockchain protocols following the longest chain rule,
   with \emph{Chain Quality($\mu,\ell$)} and
   \emph{Chain Growth($\tau, s$)}
   are recent with parameter $w = \max(s, \frac{k + \ell}{\tau}) + 1$.
@@ -55,14 +47,14 @@ Backbone paper~\cite{backbone-new}.
   (or let $B'$ be genesis if $|\Chain[][P][r][{-\ell}{:}]| \leq \ell$).
   This block exists by
   Chain Quality because we are looking at a chain chunk of length at least $\ell$ and
-  $\mu\ell \geq 1$ (or is genesis).
+  $\mu\ell \geq 1$ (or $B'$ is genesis).
   Let $r'$ be the round in which $B'$ was generated, and
-  $P'$ be the party which generated it
+  $P'$ be the party who generated it
   (or $P' = P, r' = 0$ if $B'$ is genesis).
   Suppose, towards a contradiction, that
   \begin{equation}
-    r' < r - w \label{eq:bitcoin-r-bound}
-  \end{equation}.
+    r' < r - w\,.\label{eq:bitcoin-r-bound}
+  \end{equation}
 
   Let $\TChain[][P'][r']$ be the chain that $P'$ adopts at
   round $r'$ (this will be the empty chain if $B'$ is genesis).
@@ -74,44 +66,31 @@ Backbone paper~\cite{backbone-new}.
   that $P$ \emph{has} at round $r' + 2$.
   We observe that, at round $r' + 2$, due to the
   longest chain rule, party $P$ \emph{has} a chain of greater or equal
-  length to the one broadcasted by party $P^*$. Hence,
-  $|\HChain[][P][r' + 2]| \geq |\TChain[][P'][r']| + 1$. Therefore:
+  length to the one broadcasted by party $P'$. Hence,
+  $|\HChain[][P][r' + 2]| \geq |\TChain[][P'][r']| + 1$. Therefore
 
   \begin{equation}
     |\TChain[][P][r]| - |\HChain[][P][r' + 2]| \leq
      |\TChain[][P][r]| - |\TChain[][P'][r']| - 1 <
-     k + \ell\, \label{eq:bitcoin-contradiction}
+     k + \ell\,. \label{eq:bitcoin-contradiction}
   \end{equation}
 
-  For the second inequality, refer to Figure~\ref{fig:longest-chain-freshness-proof}.
+  For the second inequality, refer to Figure~\ref{fig:longest-chain-recency-proof}.
 
   \begin{figure}
     \centering
     \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/longest-chain-proof.pdf}
-    \caption{Longest chain blockchains freshness proof. Block $B'$ is illustrated in the
+    \caption{Longest chain recency proof. Block $B'$ is illustrated in the
              earliest possible position.
     }
-   \label{fig:longest-chain-freshness-proof}
+   \label{fig:longest-chain-recency-proof}
   \end{figure}
 
   On the other hand, by Inequality~\ref{eq:bitcoin-r-bound}, $r - (r' + 2) \geq w - 1 \geq s$ and
   we can apply Chain Growth between rounds $r' + 2$ and $r$
   with parameters $s, \tau$ to obtain
-  $|\TChain[][P][r]| - |\HChain[][P][r' + 2]| \geq \tau(r - (r' + 2)) \geq \tau (w - 1) =  k + \ell$,
+  $|\TChain[][P][r]| - |\HChain[][P][r' + 2]| \geq \tau(r - (r' + 2)) \geq \tau (w - 1) \geq  k + \ell$,
   which is a contradiction because of Inequality~(\ref{eq:bitcoin-contradiction}).
-  \Qed
-\end{proof}
-
-\begin{theorem}[Longest Chain Freshness]\label{thm.longest-chain-freshness}
-  Temporal Blockchains with consistent recorded rounds and recency($w$) are fresh($w$).
-\end{theorem}
-\begin{proof}
-  Let $P$ be any honest party, $r$ be any round, and
-  $B^*$ be the tip of confirmed chain $\Chain[][P][r]$ with recorded round $r^*$.
-  From recency, there is a block $B' \in \Chain[][P][r]$ which was
-  honestly produced at round $r' \geq r - w$.
-  Because of consistent recorded rounds, its recorded round is also $r'$.
-  It follows that $r^* \geq r' \geq r - w$.
   \Qed
 \end{proof}
 
@@ -138,7 +117,18 @@ Furthermore, it has consistent recorded rounds.
   \label{fig.temporal-backbone}
 \end{figure}
 
-We observe that for all longest chain protocols, chain safety follows from the
-Common Prefix property. Hence, from the above and Theorem~\ref{thm:freshness-to-timeliness},
-it follows that Temporal Bitcoin and
-Ouroboros are timely with parameter $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
+\begin{corollary}[Bitcoin and Ouroboros Timeliness]
+  A typical execution of Temporal Bitcoin or Ouroboros is timely with parameter
+  $v = \max(s, \frac{k + \ell}{\tau}) + 1$.
+\end{corollary}
+\begin{proof}
+  Safety follows from Chain safety, which follows from Common Prefix~\cite[Theorem 15]{backbone}~\cite[Theorem 4.31]{ouroboros}.
+  From Chain Quality($\mu,\ell$)~\cite[Theorem 16]{backbone}~\cite[Lemma 4.19]{ouroboros},
+  Chain Growth($\tau, s$)~\cite[Theorem 12]{backbone}~\cite[Lemma 4.22]{ouroboros}, and Theorem~\ref{thm.longest-chain-recency},
+  the execution is recent($\max(s, \frac{k + \ell}{\tau}) + 1$).
+  From recorded round consistency and Theorem~\ref{thm.recency-to-freshness}, it is
+  fresh($\max(s, \frac{k + \ell}{\tau}) + 1$).
+  From this, safety, recorded round consistency and Theorem~\ref{thm:freshness-to-timeliness},
+  timeliness($\max(s, \frac{k + \ell}{\tau}) + 1$) follows.
+  \Qed
+\end{proof}
