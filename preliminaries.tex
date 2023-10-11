@@ -41,8 +41,8 @@ execution round. We work in two network settings: Synchrony and Partial Synchron
 
 \begin{definition}[Synchrony]
   A network is \emph{synchronous} when
-  all honestly produced messages are delivered with a delay of $\Delta$ rounds
-  (messages sent during round $r$ arrive at the beginning of round $r + \Delta$).
+  all honestly produced messages are delivered with a delay of at most $\Delta$ rounds
+  (messages sent during round $r$ arrive by the beginning of round $r + \Delta$).
 \end{definition}
 
 \begin{definition}[Partial Synchrony]

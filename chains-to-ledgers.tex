@@ -100,6 +100,29 @@ of any confirmed chain tip cannot be too old.
   \Qed
 \end{proof}
 
+The following property suffices to show freshness and
+will be easier to prove.
+
+\begin{definition}[Recency]
+  A blockchain protocol execution is \emph{recent}($w$)
+  when for any round, each honestly adopted chain
+  contains a block that was produced by an honest party
+  at most $w$ rounds ago.
+\end{definition}
+
+\begin{theorem}[Recency to Freshness]\label{thm.recency-to-freshness}
+  Temporal Blockchains with consistent recorded rounds and recency($w$) are fresh($w$).
+\end{theorem}
+\begin{proof}
+  Let $P$ be any honest party, $r$ be any round, and
+  $r^*$ be the recorded round of the tip $\Chain[][P][r][-1]$.
+  From recency, there is a block $B' \in \Chain[][P][r]$
+  honestly produced at round $r' \geq r - w$.
+  Because of consistent recorded rounds, its recorded round is also $r'$.
+  It follows that $r^* \geq r' \geq r - w$.
+  \Qed
+\end{proof}
+
 In the next subsections, we express Streamlet, Bitcoin and Ouroboros
 as chain-based temporal ledger protocols (with the above properties) to
 prove them timely.
