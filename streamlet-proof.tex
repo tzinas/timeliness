@@ -7,17 +7,16 @@ in particular assuming a PKI.
 
 First, we turn Streamlet into a temporal blockchain protocol.
 \emph{Temporal Streamlet} is the Streamlet protocol with the
-following additions: No future epoch blocks are accepted. In each block, honest block producers
-record the current round as the recorded round.
-Temporal Streamlet remains safe ---in their language \emph{consistent}--- and live($u$)
-for $\frac{t}{n} < \frac{1}{3}$. Furthermore, it has consistent recorded rounds.
+following additions: No future epoch blocks are accepted. In each honestly produced block, the block producer
+records the current round as the recorded round.
+Temporal Streamlet remains safe---in the language of \cite{streamlet}, \emph{consistent}---and live($u$) for some $u$
+if $\frac{t}{n} < \frac{1}{3}$. Furthermore, it has consistent recorded rounds (non-decreasing rounds is already enforced in Streamlet).
 
 Honest party $P$, at the beginning of round $r$, and
 before performing any other action, checks the network and
 outputs the longest confirmed chain $\Chain[][P][r]$.
-Let $G(e)$ be the predicate indicating that epochs $e-3,e-2,e-1,e,e+1$ have honest leaders.
-Before proving freshness, we first show the maximum interval between two consecutive fully
-honest epoch quintuples is bounded.
+Let $G(e)$ be the predicate indicating that epochs $e-3,e-2,e-1,e,e+1$ have honest leaders (this predicate is used to prove liveness in \cite{streamlet}).
+Before proving freshness, we first show the maximum interval between two epochs satisfying $G(e)$ is bounded.
 
 \begin{definition}[Temporal Streamlet Typical Execution]
   Consider an execution of the Temporal Streamlet protocol with duration
@@ -27,6 +26,8 @@ honest epoch quintuples is bounded.
   $d \geq 5\frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{n - t}{n}\right)^5\right)}$:
   $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq d$.
 \end{definition}
+
+\textcolor{red}{Strictly speaking, typical should be parameterized by $\kappa$.}
 
 \begin{lemma}[Temporal Streamlet Typicality] \label{lem:honest-quintuple}
   A Temporal Streamlet execution is typical, except with negligible probability in $\kappa$.

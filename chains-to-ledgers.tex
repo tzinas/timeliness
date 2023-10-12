@@ -1,5 +1,6 @@
 \subsection{From Chains to Ledgers}
 
+Blockchain protocols are a type of distributed ledger protocols which includes the three flavors of protocols that we consider.
 We first define temporal blockchain protocols,
 a subset of blockchain protocols~\cite{rethinking-consensus}
 which keep track of time.
@@ -18,10 +19,10 @@ In blockchain protocols, honest parties at every round output a chain
 based on their confirmation rule\footnote{
   In longest chain protocols, the output is the longest observed chain without the last $k$ blocks.
   In Streamlet, the output is the longest chain ending in the second of three consecutive notarized
-  blocks.
+  blocks with consecutive epoch numbers.
 } (we also call these \emph{confirmed chains}).
-We use $\Chain[][P][r]$ to denote the chain outputted
-of party $P$ at the end of round $r$.
+We use $\Chain[][P][r]$ to denote the chain output
+by party $P$ at the end of round $r$.
 
 \begin{definition}[Chain Safety]
   A blockchain protocol execution is \emph{safe} if for
@@ -34,11 +35,13 @@ of party $P$ at the end of round $r$.
 \textbf{From Temporal Blockchains to Temporal Ledgers.}
 Any temporal blockchain protocol can be transformed into a
 temporal ledger protocol using the following construction:
-When \rread is invoked on party $P$ at the end of round $r$, each transaction of
-$\Chain[][P][r]$ is reported to $\Ledger[][P][r]$ with the same order, and with
+When \rread is invoked on party $P$ at the end of round $r$, each transaction in
+$\Chain[][P][r]$ is reported to $\Ledger[][P][r]$ in the same order as in $\Chain[][P][r]$, and with
 the recorded round of the block in which it is included.
 We call these protocols \emph{chain-based temporal ledger protocols}.
+Note that an execution of the temporal blockchain protocol corresponds to an execution of the chain-based temporal ledger protocol.
 Ledger protocols based on safe blockchains are safe.
+\textcolor{red}{Why only safety and not liveness?}
 
 We now introduce two intermediate properties of temporal blockchains
 that will help us prove timeliness of
@@ -49,13 +52,13 @@ chain-based temporal ledger protocols.
   when for all honest parties $P$ and rounds $r$,
   the recorded rounds in $\Chain[][P][r]$ are non-decreasing and not
   in the future.
-  Additionally, honestly generated blocks\footnote{
-    Abstractly, an honestly generated block is a block that was first
+  Additionally, honestly produced blocks\footnote{
+    Abstractly, an honestly produced block is a block that was first
     sent to the network during a broadcast by an honest party. Concretely, in proof-of-work
     and proof-of-stake, these correspond to honestly mined and honestly
-    proposed blocks respectively. Genesis is considered honestly generated.
+    proposed blocks respectively. Genesis is considered honestly produced.
   } record the round during which
-  they were generated.
+  they were produced.
 \end{definition}
 
 \begin{definition}[Freshness] \label{def:tip-freshness}
@@ -105,7 +108,7 @@ will be easier to prove.
 
 \begin{definition}[Recency]
   A blockchain protocol execution is \emph{recent}($w$)
-  when for any round, each honestly adopted chain
+  when for any round $r$ and honest party $P$, $\Chain[][P][r]$
   contains a block that was produced by an honest party
   at most $w$ rounds ago.
 \end{definition}
@@ -124,5 +127,5 @@ will be easier to prove.
 \end{proof}
 
 In the next subsections, we express Streamlet, Bitcoin and Ouroboros
-as chain-based temporal ledger protocols (with the above properties) to
+as chain-based temporal ledger protocols with recency to
 prove them timely.

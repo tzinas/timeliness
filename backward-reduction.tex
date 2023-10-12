@@ -55,7 +55,7 @@ However, since $\Pi$ is not temporal, the client does not see any recorded round
 associated with the transactions. Additionally, since the recorded rounds depend
 on past ledger append times, the client cannot deduce them on its own.
 
-To enable clients, we make a small addition to the protocol:
+To enable client support, we make a small addition to the protocol:
 Each node runs an \emph{additional} instance of the internal
 ledger protocol $\Pi$
 to facilitate the booting of clients.
@@ -79,13 +79,14 @@ The protocol is illustrated in Figure~\ref{fig:client-support}.
 A late-joining client first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
 of the peers. Once synchronized, the recorded rounds of new
 transactions appearing in $\Ledger[1]$ are continuously monitored and stored.
+\textcolor{red}{What is the role of the previous sentence?}
 Due to safety, liveness and the validity rule of $\Pi_2$,
 the client can read ledger $\Ledger[2]$ to find out the
 recorded rounds of past transactions.
 Eventually, all past transaction recorded rounds are included in $\Ledger[2]$
 and the client can construct the correct temporal ledger $\Ledger[*]$.
 At this point we say the client is fully booted and can continue
-operating as a full online node without $\Pi_2$.
+operating as a full online node without $\Pi_2$, i.e., it outputs the ledger $\Ledger[*]$.
 From this point on, the client is perfectly timely and supersafe.
 
 \begin{figure}

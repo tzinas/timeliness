@@ -25,7 +25,7 @@ We use $\kappa$ to denote the security parameter.
 
 \noindent
 \textbf{Model.}
-Execution commences in discrete rounds $1, 2, \ldots$, of polynomial duration in the
+Execution occurs in discrete rounds $1, 2, \ldots$, of polynomial number in the
 security parameter $\kappa$.
 The protocol is executed by
 parties of two types: $n$ \emph{nodes} and an unlimited number of \emph{clients}.
@@ -37,7 +37,7 @@ In each round, the environment invokes \execute
 on all honest parties and also triggers the adversary.
 We assume all parties have a \emph{global clock}, meaning
 they can use the environment function \now to get the current
-execution round. We work in two network settings: Synchrony and Partial Synchrony.
+execution round. We work in two network settings: synchrony and partial synchrony.
 
 \begin{definition}[Synchrony]
   A network is \emph{synchronous} when
@@ -59,13 +59,13 @@ We now turn our attention to distributed ledger protocols.
 
 \begin{definition}[Distributed Ledger Protocol]
   A \emph{distributed ledger protocol} is an
-  Interactive Turing Machine which exposes the following
-  methods:
+  interactive Turing machine which exposes the following
+  methods on each party:
   \begin{itemize}
-    \item \execute: Executes a single round of the protocol, during
+    \item \execute: executes a single round of the protocol, during
       which the machine can communicate with the network.
-    \item $\wwrite(\tx)$: Takes transaction $\tx$ as input.
-    \item $\rread()$: Outputs a ledger.
+    \item $\wwrite(\tx)$: takes transaction $\tx$ as input.
+    \item $\rread()$: outputs a ledger.
   \end{itemize}
 \end{definition}
 

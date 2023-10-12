@@ -1,17 +1,17 @@
 \section{Definitions}\label{sec:defs}
 
 In this work we are concerned with ledgers that
-record a round with every transaction.
+record a round with every transaction indicating the time at which
+the transaction in question is recorded on the ledger.
 
 \begin{definition}[Temporal Ledger]
   A \emph{temporal ledger} is a finite sequence of pairs $(r, \tx)$ where $\tx$ is
-  a transaction, and $r$ is a \emph{round} indicating the time at which
-  the transaction in question is recorded on the ledger.
+  a transaction, and $r$ is a \emph{round}.
 \end{definition}
 
 \begin{definition}[Distributed Temporal Ledger Protocol]
   A \emph{distributed temporal ledger protocol} is a distributed ledger protocol
-  that when \rread is invoked, honest parties output temporal ledgers instead of traditional ledgers.
+  in which when \rread is invoked, honest parties output temporal ledgers instead of traditional ledgers.
 \end{definition}
 
 The following property of temporal ledgers is central to this work.
@@ -45,4 +45,4 @@ of the three properties.
   $\Ledger[][P_1][r] = \Ledger[][P_2][r]$.
 \end{definition}
 
-All supersafe protocols are safe.
+All supersafe protocol executions are safe.

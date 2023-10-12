@@ -40,7 +40,7 @@ Before proving protocol $\Pi^*$ is supersafe, we present
 the following lemma\footnote{
   A variant of this auxiliary lemma was introduced and proven in earlier work~\cite{rollerblade}.
 }, which allows us to argue that all
-protocol $\Pi$ parties share a common view of sufficiently old transactions.
+parties in protocol $\Pi$ share a common view of sufficiently old transactions.
 
 %TODO: Add figure for Past Perfect lemma
 %TODO: Clean up network activity: as at least one new honest transaction $\tx'$
@@ -57,6 +57,7 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   it holds that $(r^*, \tx) \in \Ledger[P_2][][r_2]$,
   as long as at least one new honest transaction $\tx'$ appears in the
   network at any round $r_3$, where $r_1 < r_3 \leq R - u$.
+  \textcolor{red}{Check the upper bound on $r_3$. Should it be $r_2 - u$? Also, do we then need a condition that $v \geq u$?}
 \end{lemma}
 \begin{proof}
   Consider an execution as in the statement and suppose, towards a contradiction,
@@ -83,7 +84,7 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   and live($u + v$), if the execution of
   $\Pi$ is safe, live($u$) and timely$(v)$
   as long as at least one new honest transaction appears in the
-  network at all rounds before $R - u$.
+  network at each round before $R - u$.
 \end{theorem}
 \begin{proof}
   Consider any honest parties $P_1,P_2$, any round $r$, and any
@@ -102,6 +103,7 @@ protocol $\Pi$ parties share a common view of sufficiently old transactions.
   \Qed
 \end{proof}
 
+Note that a new transaction in every round is required for the purpose of the reduction and is not required for building a supersafe protocol in practice.
 We note that the above theorem also applies to late-joining clients.
 
 % \atnote{Add: The above theorem holds for already booted clients.}
