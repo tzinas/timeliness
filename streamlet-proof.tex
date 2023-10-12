@@ -6,11 +6,12 @@ We work in the same model as the Streamlet paper~\cite{streamlet},
 in particular assuming a PKI.
 
 First, we turn Streamlet into a temporal blockchain protocol.
+Recall Streamlet proceeds in epochs of duration $2\Delta$ rounds.
 \emph{Temporal Streamlet} is the Streamlet protocol with the
-following additions: No future epoch blocks are accepted. In each honestly produced block, the block producer
-records the current round as the recorded round.
+following additions: Honest block producers record the first round of the current epoch as the block's recorded round.
+Blocks with decreasing recorded rounds or recorded rounds in the future are not accepted.
 Temporal Streamlet remains safe---in the language of \cite{streamlet}, \emph{consistent}---and live($u$) for some $u$
-if $\frac{t}{n} < \frac{1}{3}$. Furthermore, it has consistent recorded rounds (non-decreasing rounds is already enforced in Streamlet).
+if $\frac{t}{n} < \frac{1}{3}$. Furthermore, it has consistent recorded rounds.
 
 Honest party $P$, at the beginning of round $r$, and
 before performing any other action, checks the network and
