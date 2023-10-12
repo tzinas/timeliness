@@ -103,8 +103,9 @@ of any confirmed chain tip cannot be too old.
   \Qed
 \end{proof}
 
-The following property suffices to show freshness and
-will be easier to prove.
+The following property of recency suffices to show freshness\footnote{
+  In addition to freshness, recency suffices to also show liveness.
+} and will be easier to prove.
 
 \begin{definition}[Recency]
   A blockchain protocol execution is \emph{recent}($w$)
