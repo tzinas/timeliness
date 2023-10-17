@@ -23,15 +23,15 @@ Before proving freshness, we first show the maximum interval between two epochs 
   Consider an execution of the Temporal Streamlet protocol with duration
   of $E$ epochs, $n$ total number of parties and $t$ number of corrupt parties.
   Let $J = \{0,E\} \cup \{0 < e < E: G(e)\}$.
-  The execution is \emph{typical} if for all
+  The execution is \emph{$\kappa$-typical} if for all
   $d \geq 5\frac{\kappa + \lg \floor*{\frac{E}{5}}}{- \lg \left(1 - \left(\frac{n - t}{n}\right)^5\right)}$:
   $\max_{e \in J}(\min_{\substack{e' > e \\ e' \in J}}(e' - e)) \leq d$.
 \end{definition}
 
-\textcolor{red}{Strictly speaking, typical should be parameterized by $\kappa$.}
+\textcolor{red}{Srivatsan: Strictly speaking, typical should be parameterized by $\kappa$. I added that notation.}
 
 \begin{lemma}[Temporal Streamlet Typicality] \label{lem:honest-quintuple}
-  A Temporal Streamlet execution is typical, except with negligible probability in $\kappa$.
+  A Temporal Streamlet execution is $\kappa$-typical, except with negligible probability in $\kappa$.
 \end{lemma}
 \begin{proof}
   We let $K = \{0, E\} \cup \{e \in \{5, 10, 15, \ldots, 5\floor*{\frac{E}{5}}\}: G(e)\}$.
@@ -56,7 +56,7 @@ Before proving freshness, we first show the maximum interval between two epochs 
 \end{proof}
 
 \begin{theorem}[Streamlet Recency] \label{thm.streamlet-recency}
-  A typical execution of Temporal Streamlet is recent with parameter $w = 2\Delta (d + 1) - 1$.
+  A $\kappa$-typical execution of Temporal Streamlet is recent with parameter $w = 2\Delta (d + 1) - 1$.
 \end{theorem}
 \begin{proof}
   Let $r$ be the current round of the current epoch $e$.
@@ -71,7 +71,7 @@ Before proving freshness, we first show the maximum interval between two epochs 
 \end{proof}
 
 \begin{corollary}[Streamlet Timeliness]
-  A typical execution of Temporal Streamlet is timely with parameter $v = 2\Delta (d + 1) - 1$.
+  A $\kappa$-typical execution of Temporal Streamlet is timely with parameter $v = 2\Delta (d + 1) - 1$.
 \end{corollary}
 \begin{proof}
   From Theorems~\ref{thm.streamlet-recency} and~\ref{thm.recency-to-freshness},
