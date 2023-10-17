@@ -48,9 +48,8 @@ parties in protocol $\Pi$ share a common view of sufficiently old transactions.
 
 
 \begin{lemma}[Past Perfect]\label{lem:past-perfect}
-  Consider a temporal ledger protocol $\Pi$'s
-  execution with duration $R$ rounds in which $\Pi$ is
-  safe, live($u$), and timely($v$).
+  Consider a safe, live($u$), and timely($v$) temporal ledger protocol
+  execution with duration $R$ rounds.
   If for some honest party $P_1$ and some round $r_1$ it holds that
   $(r^*, \tx) \in \Ledger[P_1][][r_1]$, then
   for all honest parties $P_2$ and for all rounds $r_2 \geq r^* + v$
