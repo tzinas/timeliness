@@ -114,18 +114,22 @@ in the blockchain literature.
 In the variable difficulty Bitcoin Backbone paper~\cite{varbackbone},
 it is shown that the different honest parties performing target recalculation on different chains
 must arrive at roughly the same result, relying on roughly synchronized timestamps.
+In GearBox~\cite{gearbox}, a sharding protocol, shards timestamp messages on a ``control chain'' and such timestamps are used to determine whether a shard is live.
+To do this, the authors of \cite{gearbox} define the notion of a timed ledger (same as our notion of a temporal ledger), and argue that Hotstuff, Bitcoin, and Ouroboros are timely. We prove this fact.
+In Babylon~\cite{babylon}, Bitcoin is used as a secure timestamping service to provide additional security to proof-of-stake blockchains.
 In the Ouroboros protocol~\cite{ouroboros},
 the randomness production from epoch-to-epoch requires chopping off a suitable number of \emph{slots},
-achieving a form of supersafety. The blockchain itself has also been used~\cite{klepsydra,chronos}
+achieving a form of supersafety.
+We posit that the abstraction of timeliness and supersafety
+into stand-alone properties can aid in simplifying the security proofs
+of existing and future protocols.
+The blockchain itself has also been used~\cite{klepsydra,chronos}
 as a mechanism for clock synchronization among parties with desynchronized and drifting clocks,
 a long-standing problem~\cite{lamport-synchronizing-clocks}.
 In our work, we show that, if the clocks of honest parties are already synchronized,
 on-chain reported timestamps roughly correspond to real-world time.
-\textcolor{red}{Logical clocks versus real-world time? How are their techniques related to ours and could they be used to derive timeliness or any additional properties?}
-We posit that the abstraction of timeliness and supersafety
-into stand-alone properties can aid in simplifying the security proofs
-of existing and future protocols.
-\textcolor{red}{TODO: Comparison and reference to GearBox.}
+% \textcolor{red}{Logical clocks versus real-world time? How are their techniques related to ours and could they be used to derive timeliness or any additional properties?}
+% \textcolor{red}{TODO: Comparison and reference to GearBox.}
 
 Previously, the community was confused about whether on-chain timestamps are accurate.
 In some discussions, it was incorrectly
