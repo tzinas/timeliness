@@ -31,8 +31,19 @@ static difficulty/stake and synchronous setting with $\Delta = 1$.
 \end{definition}
 
 For the notation definitions ($\mu, \ell, \tau, s$)
-in the following lemma, refer to the original Bitcoin
-Backbone paper~\cite{backbone-new}.
+in the following lemma, refer to Figure~\ref{fig.backbone-variables}
+and the original Bitcoin Backbone paper~\cite{backbone-new}.
+
+\begin{figure}
+  \begin{mdframed}
+    $\mu$: Chain Quality parameter (ratio of honest blocks in a chain)\\
+    $\ell$: Number of blocks for Chain Quality to apply\\
+    $\tau$: Chain Growth parameter (block production rate per round)\\
+    $s$: Number of rounds for Chain Growth to apply
+  \end{mdframed}
+  \caption{Overview of definitions ($\mu, \ell, \tau, s$).}
+  \label{fig.backbone-variables}
+\end{figure}
 
 \begin{lemma}[Longest Chain Recency]\label{thm.longest-chain-recency}
   Blockchain protocols following the longest chain rule,
