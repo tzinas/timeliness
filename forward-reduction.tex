@@ -51,28 +51,28 @@ parties in protocol $\Pi$ share a common view of sufficiently old transactions.
   Consider a safe, live($u$), and timely($v$) temporal ledger protocol
   execution with duration $R$ rounds.
   If for some honest party $P_1$ and some round $r_1$ it holds that
-  $(r^*, \tx) \in \Ledger[P_1][][r_1]$, then
+  $(r^*, \tx) \in \Ledger[][P_1][r_1]$, then
   for all honest parties $P_2$ and for all rounds $r_2 \geq r^* + v$
-  it holds that $(r^*, \tx) \in \Ledger[P_2][][r_2]$,
+  it holds that $(r^*, \tx) \in \Ledger[][P_2][r_2]$,
   as long as at least one new honest transaction $\tx'$ appears in the
   network at any round $r_3$, where $r_1 < r_3 \leq R - u$.
   \textcolor{red}{Check the upper bound on $r_3$. Should it be $r_2 - u$? Also, do we then need a condition that $v \geq u$?}
 \end{lemma}
 \begin{proof}
   Consider an execution as in the statement and suppose, towards a contradiction,
-  that $(r^*, \tx) = \Ledger[P_1][][r_1][k]$ for some $k \in \mathbb{N}$,
-  but $(r^*, \tx) \not\in \Ledger[P_2][][r_2]$
+  that $(r^*, \tx) = \Ledger[][P_1][r_1][k]$ for some $k \in \mathbb{N}$,
+  but $(r^*, \tx) \not\in \Ledger[][P_2][r_2]$
   with $r_2 \geq r^* + v$.
   From safety,
-  $\Ledger[P_2][][r_2] \prec \Ledger[P_1][][r_1]$ and
-  $|\Ledger[P_2][][r_2]| \leq k < |\Ledger[P_1][][r_1]|$.
-  Due to liveness, $(r', \tx') = \Ledger[P_2][][r_3 + u][k']$,
+  $\Ledger[][P_2][r_2] \prec \Ledger[][P_1][r_1]$ and
+  $|\Ledger[][P_2][r_2]| \leq k < |\Ledger[][P_1][r_1]|$.
+  Due to liveness, $(r', \tx') = \Ledger[][P_2][r_3 + u][k']$,
   for some $r', k' \in \mathbb{N}$.
-  As $\tx'$ is new, it is not in $\Ledger[P_1][][r_1]$.
-  Due to safety, $k' \geq |\Ledger[P_1][][r_1]| > k$, and
-  $\Ledger[P_2][][r_3 + u][k] = (r^*, \tx)$.
+  As $\tx'$ is new, it is not in $\Ledger[][P_1][r_1]$.
+  Due to safety, $k' \geq |\Ledger[][P_1][r_1]| > k$, and
+  $\Ledger[][P_2][r_3 + u][k] = (r^*, \tx)$.
   Therefore,
-  $(r^*, \tx) \in \Ledger[P_2][][r_3 + u][|\Ledger[P_2][][r_2]|{:}]$.
+  $(r^*, \tx) \in \Ledger[][P_2][r_3 + u][|\Ledger[][P_2][r_2]|{:}]$.
   Since $r^* \leq r_2 - v$, this contradicts the timeliness with parameter $v$.\Qed
 \end{proof}
 
