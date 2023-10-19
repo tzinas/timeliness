@@ -67,8 +67,14 @@ chain-based temporal ledger protocols.
   satisfies $r - r^* \leq w$.
 \end{definition}
 
-The notion of freshness tells us that the recorded round
-of any confirmed chain tip cannot be too old.
+The notion of \emph{freshness} tells us that the recorded round
+of any confirmed chain tip cannot be more than $w$ rounds old.
+Freshness is a \emph{chain} protocol property.
+On the other hand, \emph{timeliness} is a \emph{distributed ledger} protocol property,
+which tells us that newly appearing transactions
+do not have recorded rounds more than $v$ rounds old.
+When a ledger protocol is constructed using a chain,
+these two notions are related through the following theorem.
 
 \begin{theorem}[Freshness to Timeliness] \label{thm:freshness-to-timeliness}
   An execution of a temporal ledger protocol based on
@@ -112,6 +118,8 @@ The following chain property, \emph{recency}, suffices to show freshness\footnot
   contains a block that was produced by an honest party
   at most $w$ rounds ago.
 \end{definition}
+
+Recency directly yields freshness by the following theorem.
 
 \begin{theorem}[Recency to Freshness]\label{thm.recency-to-freshness}
   Temporal Blockchains with consistent recorded rounds and recency($w$) are fresh($w$).

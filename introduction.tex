@@ -69,13 +69,12 @@ arguments from the abstraction of the supersafety property.
   \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
   \caption{Paper overview. Bitcoin and Ouroboros attain the abstract chain virtues
   of Common Prefix, Chain Quality, and Chain Growth (top)~\cite{backbone,ouroboros}.
-  We show that CQ and CG imply the intermediate property of freshness
-  (Theorem~\ref{thm:longest-chain-freshness}, middle). This property is also achieved by Streamlet
-  (Theorem~\ref{thm:streamlet-freshness}), which is different from the other two longest-chain protocols. This property, together with safety,
-  is sufficient to prove timeliness
+  We show that CQ and CG imply the intermediate property of recency (Lemma~\ref{lem.longest-chain-recency}, middle).
+  Recency is also achieved by Streamlet (Theorem~\ref{thm.streamlet-recency}, middle) and is sufficient
+  to prove freshness (Theorem~\ref{thm.recency-to-freshness}, middle).
+  Freshness, together with safety, is sufficient to prove timeliness
   (Theorem~\ref{thm:freshness-to-timeliness}). In safe and live protocols, from timeliness we can achieve supersafety
   and vice versa (Theorems~\ref{thm:timeliness-to-supersafety}-\ref{thm:backward-reduction}, bottom).
-  \textcolor{red}{Broken references. What should these point to?}
   }
  \label{fig:overview}
 \end{figure}
