@@ -79,6 +79,8 @@ invoked on party $P$ at the end of round $r$.
   it holds that $\Ledger[][P][r_1] \preccurlyeq \Ledger[][P][r_2]$.
 \end{definition}
 
+%TODO: Stickiness is probably unused in the proofs. Remove if this is indeed the case.
+%      Chain safety is required in the proofs.
 \begin{definition}[Safety]
   A distributed ledger protocol execution is \emph{safe} if it is sticky and
   for any honest parties $P_1, P_2$ and any rounds $r_1, r_2$, it holds that
