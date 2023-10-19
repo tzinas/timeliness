@@ -101,7 +101,7 @@ In this reduction, we delay the reported ledger until all
 transactions have timestamps enough into the past to ensure all other parties have seen them.
 This allows us to achieve a remarkable property: All honest parties report the
 exact same ledgers at the exact same time.
-In this reduction, parties who desire supersafety for their application can individually choose to obtain supersafety at the cost of additional confirmation delay, while other parties continue to have faster confirmation and standard safety. 
+In this reduction, parties who desire supersafety for their application can individually choose to obtain supersafety at the cost of additional confirmation delay, while other parties continue to have faster confirmation and standard safety.
 The second reduction is from supersafety back to (perfect) timeliness (Section~\ref{sec:backward-reduction}).
 To do this, every online node reports the new transactions they see with
 their current timestamp, and due to supersafety, these are the same.

@@ -26,7 +26,7 @@ static difficulty/stake and synchronous setting with $\Delta = 1$.
   % TODO: define this more precisely; what is an unstable chain?
   confirmed chain $\Chain[][P][r] = \TChain[][P][r][{:}{-k}]$.
   Whenever an honest party generates a block, it extends
-  its adopted unstable chain. This new chain is broadcasted and
+  its adopted unstable chain. This new chain is broadcast and
   guaranteed to be valid.
 \end{definition}
 
@@ -71,13 +71,13 @@ and the original Bitcoin Backbone paper~\cite{backbone-new}.
   round $r'$ (this will be the empty chain if $B'$ is genesis).
   Party $P'$ extends $\TChain[][P'][r']$, at round $r'$, with block $B'$,
   creating a chain of length $|\TChain[][P][r']| + 1$.
-  This newly generated chain is broadcasted to the network and
+  This newly generated chain is broadcast to the network and
   received by party $P$ at the beginning of round $r' + 1$.
   Let $\HChain[][P][r' + 2]$ be the chain
   that $P$ \emph{has} at round $r' + 2$.
   We observe that, at round $r' + 2$, due to the
   longest chain rule, party $P$ \emph{has} a chain of greater or equal
-  length to the one broadcasted by party $P'$. Hence,
+  length to the one broadcast by party $P'$. Hence,
   $|\HChain[][P][r' + 2]| \geq |\TChain[][P'][r']| + 1$. Therefore
 
   \begin{equation}
@@ -134,7 +134,7 @@ Furthermore, it has consistent recorded rounds.
 \begin{proof}
   Safety follows from Chain safety, which follows from Common Prefix~\cite[Theorem 15]{backbone}~\cite[Theorem 4.31]{ouroboros}.
   From Chain Quality($\mu,\ell$)~\cite[Theorem 16]{backbone}~\cite[Lemma 4.19]{ouroboros},
-  Chain Growth($\tau, s$)~\cite[Theorem 12]{backbone}~\cite[Lemma 4.22]{ouroboros}, and Theorem~\ref{thm.longest-chain-recency},
+  Chain Growth($\tau, s$)~\cite[Theorem 12]{backbone}~\cite[Lemma 4.22]{ouroboros}, and Theorem~\ref{lem.longest-chain-recency},
   the execution is recent($\max(s, \frac{k + \ell}{\tau}) + 1$).
   From recorded round consistency and Theorem~\ref{thm.recency-to-freshness}, it is
   fresh($\max(s, \frac{k + \ell}{\tau}) + 1$).
