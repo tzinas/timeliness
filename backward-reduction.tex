@@ -70,10 +70,17 @@ recover them.
 Let $\Ledger[1]$ and $\Ledger[2]$ be the output ledgers
 of $\Pi_1$ and $\Pi_2$ respectively.
 The instance $\Pi_2$ is used as follows:
-In every round $r$, all honest nodes $P$ introduce a transaction
-which contains the whole ledger $\Ledger[*][P][r]$ as its payload.
+In every round $r$,
+whenever new transactions appear in $\Ledger[*][][r]$,
+honest nodes introduce one transaction $\tx'$ in $\Pi_2$
+for each newly appearing transaction $\tx$ of $\Ledger[*][][r]$.
+The payload of $\tx'$ contains the pair $\left<\tx, r\right>$
+(and note that, here, $r$ is part of the transaction $\tx'$ payload,
+as $\Pi_2$ is not a temporal ledger).
 We parameterize $\Pi_2$ with the following transaction validity language:
-Valid transactions contain any ledger $\hat \Ledger \preccurlyeq \Ledger[*][P][r]$.
+Valid transactions $\tx'$ must take the form $\left<\tx, r\right>$,
+where $\tx$ first appeared in $\Ledger[*][][]$ at round $r$.
+Otherwise, the transaction is rejected as invalid.
 The protocol is illustrated in Figure~\ref{fig:client-support}.
 
 A late-joining client first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
@@ -96,8 +103,8 @@ From this point on, the client is perfectly timely and supersafe.
 \end{figure}
 
 Lastly, to make this protocol efficient, we observe that the payload of
-$\Pi_2$ transactions does not need to include whole ledgers, but can simply
-include only the additional transactions that have since appeared on $\Ledger[1]$.
+$\Pi_2$ transactions does not need to include the whole $\Pi_1$ transaction, but
+it is sufficient to include the transaction id only.
 Lastly, the two instances of $\Pi$ can be combined into one by coloring
 transactions appropriately: A normal transaction $\tx$, colored \emph{black}, enters into the
 $\Pi^*$ protocol and is recorded on $\Pi$ as usual. When it stabilizes and its round
