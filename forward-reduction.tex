@@ -56,7 +56,6 @@ parties in protocol $\Pi$ share a common view of sufficiently old transactions.
   it holds that $(r^*, \tx) \in \Ledger[][P_2][r_2]$,
   as long as at least one new honest transaction $\tx'$ appears in the
   network at any round $r_3$, where $r_1 < r_3 \leq R - u$.
-  \textcolor{red}{Check the upper bound on $r_3$. Should it be $r_2 - u$? Also, do we then need a condition that $v \geq u$?}
 \end{lemma}
 \begin{proof}
   Consider an execution as in the statement and suppose, towards a contradiction,
@@ -73,6 +72,7 @@ parties in protocol $\Pi$ share a common view of sufficiently old transactions.
   $\Ledger[][P_2][r_3 + u][k] = (r^*, \tx)$.
   Therefore,
   $(r^*, \tx) \in \Ledger[][P_2][r_3 + u][|\Ledger[][P_2][r_2]|{:}]$.
+  From liveness, it must hold that $r_2 < r_3 + u$.
   Since $r^* \leq r_2 - v$, this contradicts the timeliness with parameter $v$.\Qed
 \end{proof}
 
