@@ -36,12 +36,12 @@ and the original Bitcoin Backbone paper~\cite{backbone-new}.
 
 \begin{figure}
   \begin{mdframed}
-    $\mu$: Chain Quality parameter (ratio of honest blocks in a chain)\\
-    $\ell$: Number of blocks for Chain Quality to apply\\
-    $\tau$: Chain Growth parameter (block production rate per round)\\
-    $s$: Number of rounds for Chain Growth to apply
+    $\mu$: Chain Quality parameter (ratio of honest-to-total blocks in a chain).\\
+    $\ell$: Number of blocks in a chunk for Chain Quality to apply.\\
+    $\tau$: Chain Growth parameter (how much the chain grows, in blocks per round).\\
+    $s$: Number of rounds for Chain Growth to apply.
   \end{mdframed}
-  \caption{Overview of definitions ($\mu, \ell, \tau, s$).}
+  \caption{Overview of Bitcoin Backbone / Ouroboros variables $\mu, \ell, \tau, s$.}
   \label{fig.backbone-variables}
 \end{figure}
 
