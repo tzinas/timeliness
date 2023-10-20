@@ -38,7 +38,13 @@ to party $P$ in Line~\ref{line.reduction-t-s-write}.
 
 Before proving protocol $\Pi^*$ is supersafe, we present
 the following lemma\footnote{
-  A variant of this auxiliary lemma was introduced and proven in earlier work~\cite{rollerblade}.
+  A variant of this auxiliary lemma was introduced and proven in earlier work~%
+  \ifanonymous%
+  \cite{rollerblade-anonymous}%
+  \else%
+  \cite{rollerblade}%
+  \fi%
+  .
 }, which allows us to argue that all
 parties in protocol $\Pi$ share a common view of sufficiently old transactions.
 
