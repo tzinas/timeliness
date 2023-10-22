@@ -66,7 +66,82 @@ arguments from the abstraction of the supersafety property.
 
 \begin{figure}
   \centering
-  \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
+  % \includegraphics[width=1.0\columnwidth,keepaspectratio]{figures/timeliness-overview.pdf}
+  \definecolor{myblue}{HTML}{cfe2f3}
+  \definecolor{mylavender}{HTML}{c27ba1}
+  \begin{tikzpicture}[
+    block/.style={draw, thick, align=center, minimum width=3cm, minimum height=1cm},
+    arrow/.style={-Latex, thick},
+    lavender/.style={fill=mylavender},
+    lightblue/.style={fill=myblue}
+  ]
+
+    % Main blocks
+    \node[block, lavender] (bitcoin) {Bitcoin\\(proof-of-work)};
+    % \node[block, minimum width=3.6cm, minimum height=0.5cm, right=1cm of bitcoin.north east, anchor=north west] (abcv) {Abstract chain virtues};
+    % \node[block, minimum width=1.18cm, minimum height=0.5cm, below=0cm of abcv.south west, anchor=north west] (cq) {CQ};
+    % \node[block, minimum width=1.18cm, minimum height=0.5cm, right=0cm of cq.east, anchor=west] (cg) {CG};
+    % \node[block, minimum width=1.18cm, minimum height=0.5cm, right=0cm of cg.east, anchor=west] (cp) {CP};
+    \node[block, lightblue, minimum width=3.6cm, right=1cm of bitcoin, align=center] (abcv) {Abstract chain virtues\\CQ \quad CG \quad CP};
+    %
+    % \def\abcvWidth{3.6cm}
+    % % abcv node without border
+    % \node[minimum width=\abcvWidth, minimum height=0.5cm, right=1cm of bitcoin.north east, anchor=north west, inner sep=0pt] (abcv) {};
+
+    % % Text for abcv
+    % \node[anchor=north] at (abcv.north) {Abstract chain virtues};
+
+    % % Nodes inside abcv with calculated widths
+    % \node[block, minimum width=\abcvWidth/3, minimum height=0.5cm, below=0cm of abcv.south west, anchor=north west] (cq) {CQ};
+    % \node[block, minimum width=\abcvWidth/3, minimum height=0.5cm, right=0cm of cq.east, anchor=west] (cg) {CG};
+    % \node[block, minimum width=\abcvWidth/3, minimum height=0.5cm, right=0cm of cg.east, anchor=west] (cp) {CP};
+
+    \node[block, lavender, right=1cm of abcv.north east, anchor=north west] (ouroboros) {Ouroboros\\(proof-of-stake)};
+    \node[block, lavender, below=0.5cm of bitcoin] (streamlet) {Streamlet\\(proof-of-stake)};
+    \node[block, lightblue, right=1cm of streamlet, anchor=west, minimum width=2cm] (recency) {Recency};
+    \node[block, lightblue, below=of recency.south west, anchor=west, minimum width=2cm] (freshness) {Freshness};
+    \node[block, lightblue, below=2.5cm of abcv.south east, anchor=east, minimum width=1cm] (safety) {Safety};
+    \node[block, lightblue, below=of freshness.south west, anchor=west, minimum width=3.6cm] (timeliness) {Timeliness};
+    \node[block, lightblue, left=1cm of timeliness, minimum width=3cm] (supersafety) {Supersafety};
+
+    %   % Arrows
+    \draw[arrow] (bitcoin.east) -- (abcv.west) node[pos=0.5, below, font=\footnotesize] {\cite{backbone}};
+
+    \draw[arrow] (ouroboros.west) -- (abcv.east) node[pos=0.5, below, font=\footnotesize] {\cite{ouroboros}};
+
+    \draw[decorate, decoration={brace, amplitude=5pt, mirror}, thin] (abcv.south west) -- ++(2.4cm,0);
+    % Define midpoint of the curly brace
+    \coordinate (braceMid) at ($(abcv.south west)!0.33!(abcv.south east)$);
+    \draw[arrow] (braceMid) + (0,-5pt) -- (braceMid |- recency.north) node [pos=0.5, left, font=\footnotesize] {Lem~\ref{lem.longest-chain-recency}};
+    
+    \coordinate (recencyMid) at ($(recency.south west)+(1.2cm,0)$);
+    \draw[arrow] (recencyMid) -- (recencyMid |- freshness.north) node [left, pos=0.5, font=\footnotesize] {Thm~\ref{thm.recency-to-freshness}};
+
+    \coordinate (abcvcp) at ($(abcv.south west)!0.83!(abcv.south east)$);
+    \draw[arrow] (abcvcp) -- (abcvcp |- safety.north) node [right, pos=0.5, font=\footnotesize] {\cite{backbone}};
+
+    \draw[decorate, decoration={brace, amplitude=5pt, mirror}, thin] (freshness.south west) -- (safety.south east);
+    % Define midpoint of the curly brace
+    \coordinate (brace2Mid) at ($(freshness.south west)!0.5!(safety.south east)$);
+    \draw[arrow] (brace2Mid) + (0,-5pt) -- (brace2Mid |- timeliness.north) node [pos=0.5, right, font=\footnotesize] (timelythm) {Thm~\ref{thm:freshness-to-timeliness}};
+
+    \draw[arrow] ($(timeliness.north west)!0.33!(timeliness.south west)$) -- ($(supersafety.north east)!0.33!(supersafety.south east)$) node[pos=0.5, above, font=\footnotesize] {Thm~\ref{thm:timeliness-to-supersafety}};
+
+    \draw[arrow] ($(timeliness.north west)!0.67!(timeliness.south west)$) -- ($(supersafety.north east)!0.67!(supersafety.south east)$) node[pos=0.5, below, font=\footnotesize, align=center] {Thm~\ref{thm:backward-reduction}\\($\nu=0$)};
+
+    % Dotted lines
+    % Compute the points for the dashed line
+    \coordinate (leftmost) at ($(bitcoin.west |- brace2Mid) + (0,-0.25cm)$);
+    \coordinate (rightmost) at ($(ouroboros.east |- brace2Mid) + (0,-0.25cm)$);
+
+    % Draw the dashed line
+    \draw[dashed] (leftmost) -- (leftmost -|timelythm.west);
+    \draw[dashed] (rightmost -| timelythm.east) -- (rightmost);
+
+    \node[anchor=south east, yshift=2pt] at (rightmost) {Chain abstraction};
+    \node[anchor=north east,yshift=-2pt] at (rightmost) {Ledger abstraction};
+
+  \end{tikzpicture}
   \caption{Paper overview. Bitcoin and Ouroboros attain the abstract chain virtues
   of Common Prefix, Chain Quality, and Chain Growth (top)~\cite{backbone,ouroboros}.
   We show that CQ and CG imply the intermediate property of recency (Lemma~\ref{lem.longest-chain-recency}, middle).
@@ -75,7 +150,6 @@ arguments from the abstraction of the supersafety property.
   Freshness, together with safety, is sufficient to prove timeliness
   (Theorem~\ref{thm:freshness-to-timeliness}). In safe and live protocols, from timeliness we can achieve supersafety
   and vice versa (Theorems~\ref{thm:timeliness-to-supersafety}-\ref{thm:backward-reduction}, bottom).
-  {\color{red}Make into tikz !!!!!!!!!!!}
   }
  \label{fig:overview}
 \end{figure}
