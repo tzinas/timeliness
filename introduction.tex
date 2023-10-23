@@ -78,10 +78,10 @@ arguments from the abstraction of the supersafety property.
 
     % Main blocks
     \node[block, lavender] (bitcoin) {Bitcoin\\(proof-of-work)};
-    \node[block, minimum width=3.6cm, minimum height=0.5cm, right=1cm of bitcoin.north east, anchor=north west] (abcv) {Abstract chain virtues};
-    \node[block, minimum width=1.2cm, minimum height=0.5cm, below=0cm of abcv.south west, anchor=north west] (cq) {CQ};
-    \node[block, minimum width=1.2cm, minimum height=0.5cm, right=0cm of cq.east, anchor=west] (cg) {CG};
-    \node[block, minimum width=1.2cm, minimum height=0.5cm, right=0cm of cg.east, anchor=west] (cp) {CP};
+    \node[block, lightblue, minimum width=3.6cm, minimum height=0.5cm, right=1cm of bitcoin.north east, anchor=north west] (abcv) {Abstract chain virtues};
+    \node[block, lightblue, minimum width=1.2cm, minimum height=0.5cm, below=0cm of abcv.south west, anchor=north west] (cq) {CQ};
+    \node[block, lightblue, minimum width=1.2cm, minimum height=0.5cm, right=0cm of cq.east, anchor=west] (cg) {CG};
+    \node[block, lightblue, minimum width=1.2cm, minimum height=0.5cm, right=0cm of cg.east, anchor=west] (cp) {CP};
 
     \node[block, lavender, right=1cm of abcv.north east, anchor=north west] (ouroboros) {Ouroboros\\(proof-of-stake)};
     \node[block, lavender, below=0.5cm of bitcoin] (streamlet) {Streamlet\\(proof-of-stake)};
