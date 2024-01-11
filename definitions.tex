@@ -29,11 +29,20 @@ The following property of temporal ledgers is central to this work.
 \end{definition}
 
 Timeliness is orthogonal to safety and liveness. Protocols can have any
-combination\footnote{A live, timely, but not safe protocol includes all transactions
+combination\footnote{A live, timely, but not safe protocol may include all transactions
 received from the network with the current round.
-A live, safe, but not timely protocol always records round $1$ for all transactions.
-A safe, timely, but not live protocol always reports empty ledgers.}
+A live, safe, but not timely protocol may record round $1$ for all transactions.
+A safe, timely, but not live protocol may always report empty ledgers.}
 of the three properties.
+
+If a temporal ledger protocol is timely and live, then the recorded timestamp of a transaction does not deviate much from the time at which the transaction was written to honest parties.
+
+\begin{lemma}
+  In a distributed temporal ledger protocol execution that is timely$(v)$ and live$(u)$, if a transaction $\tx$ is written to an honest party at round $r$, then the round recorded for $\tx$ in any honest party's ledger is $r'$ such that $r - v \leq r' \leq r + u$.
+\end{lemma}
+\begin{proof}
+  The round in which $\tx$ is recorded in any honest party's ledger is between $r$ and $r + u$ by liveness. The claim follows from timeliness.
+\end{proof}
 
 \begin{definition}[Perfectly Timely]
   We call a protocol execution \emph{perfectly timely} if it is timely with parameter $v = 0$.
