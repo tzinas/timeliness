@@ -29,10 +29,10 @@ The following property of temporal ledgers is central to this work.
 \end{definition}
 
 Timeliness is orthogonal to safety and liveness. Protocols can have any
-combination\footnote{A live, timely, but not safe protocol may include all transactions
+combination\footnote{One live, timely, but not safe protocol includes all transactions
 received from the network with the current round.
-A live, safe, but not timely protocol may record round $1$ for all transactions.
-A safe, timely, but not live protocol may always report empty ledgers.}
+One live, safe, but not timely protocol records round $1$ for all transactions.
+One safe, timely, but not live protocol always reports empty ledgers.}
 of the three properties.
 
 If a temporal ledger protocol is timely and live, then the recorded timestamp of a transaction does not deviate much from the time at which the transaction was written to honest parties.
