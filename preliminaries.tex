@@ -59,7 +59,11 @@ We now turn our attention to distributed ledger protocols, of which blockchain p
 
 \begin{definition}[Distributed Ledger Protocol]
   A \emph{distributed ledger protocol} is an
-  interactive Turing machine which exposes the following
+  interactive Turing machine\footnote{%
+The ITM captures the behavior (code) of an honest party in the protocol, and
+an \emph{execution} contains multiple honest Interactive Turing Machine Instances (ITIs)
+all running the same code~\cite{uc}.}
+  which exposes the following
   methods on each party:
   \begin{itemize}
     \item $\execute()$: executes a single round of the protocol, during
