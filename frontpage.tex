@@ -1,5 +1,7 @@
 \import{./}{title.tex}
+\iflncs
 \maketitle
+\fi
 
 \iftoday
 \noindent
@@ -8,3 +10,6 @@
 \fi
 
 \import{./}{abstract.tex}
+\ifccs
+\maketitle
+\fi

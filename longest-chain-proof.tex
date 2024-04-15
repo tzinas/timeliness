@@ -88,14 +88,19 @@ and the original Bitcoin Backbone paper~\cite{backbone-new}.
 
   For the second inequality, refer to Figure~\ref{fig:longest-chain-recency-proof}.
 
-  \begin{figure}
+  \begin{figure*}
     \centering
-    \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/longest-chain-proof.pdf}
+    \iflncs
+      \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/longest-chain-proof.pdf}
+    \fi
+    \ifccs
+      \includegraphics[width=0.8\columnwidth,keepaspectratio]{figures/longest-chain-proof.pdf}
+    \fi
     \caption{Longest chain recency proof. Block $B'$ is illustrated in the
              earliest possible position.
     }
    \label{fig:longest-chain-recency-proof}
-  \end{figure}
+  \end{figure*}
 
   On the other hand, by Inequality~\ref{eq:bitcoin-r-bound}, $r - (r' + 2) \geq w - 1 \geq s$ and
   we can apply Chain Growth between rounds $r' + 2$ and $r$

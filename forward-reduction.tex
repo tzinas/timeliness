@@ -16,15 +16,20 @@ with recorded round less than or equal to $r - v$.
 The reduction is illustrated
 in Figure~\ref{fig:reduction-timeliness-supersafety} and Algorithm~\ref{alg:reduction-timeliness-supersafety}.
 
-\begin{figure}
+\begin{figure*}
   \centering
-  \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/forward-reduction.pdf}
+  \iflncs
+    \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/forward-reduction.pdf}
+  \fi
+  \ifccs
+    \includegraphics[width=1.1\columnwidth,keepaspectratio]{figures/forward-reduction.pdf}
+  \fi
   \caption{The reduction from Timeliness
     (the $\Pi$ protocol) to Supersafety (the $\Pi^*$ protocol). A transaction is illustrated
     as a black circle and its recorded round is displayed below.
   }
  \label{fig:reduction-timeliness-supersafety}
-\end{figure}
+\end{figure*}
 
 When the \rread function is invoked, the temporal ledger of party $P$ is acquired
 in Line~\ref{line.reduction-t-s-ledger}.

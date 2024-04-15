@@ -32,6 +32,15 @@ by party $P$ at the end of round $r$.
   Furthermore, $\Chain[][P_1][r_1] \preccurlyeq \Chain[][P_1][r_2]$ (sticky).
 \end{definition}
 
+\ifccs
+  \begin{figure*}
+    \centering
+    \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/freshness-timeliness.pdf}
+    \caption{The chain in the proof of Theorem~\ref{thm:freshness-to-timeliness}.}
+    \label{fig:freshness-to-timeliness}
+  \end{figure*}
+\fi
+
 \noindent
 \textbf{From Temporal Blockchains to Temporal Ledgers.}
 Any temporal blockchain protocol can be transformed into a
@@ -97,12 +106,14 @@ these two notions are related through the following theorem.
   Because of freshness, it holds that $r_1 - r^* \leq w$.
   Therefore, from $r \leq r_1 - v$ it follows that $r - r^* \leq w - v = 0$.
 
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/freshness-timeliness.pdf}
-    \caption{The chain in the proof of Theorem~\ref{thm:freshness-to-timeliness}.}
-    \label{fig:freshness-to-timeliness}
-  \end{figure}
+  \iflncs
+    \begin{figure*}
+      \centering
+      \includegraphics[width=0.5\columnwidth,keepaspectratio]{figures/freshness-timeliness.pdf}
+      \caption{The chain in the proof of Theorem~\ref{thm:freshness-to-timeliness}.}
+      \label{fig:freshness-to-timeliness}
+    \end{figure*}
+  \fi
 
   This is a contradiction because block $B$ extends a chain that contains $B^*$,
   and hence $r > r^*$.
