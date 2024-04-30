@@ -70,17 +70,17 @@ parties in protocol $\Pi$ share a common view of sufficiently old transactions.
 \end{lemma}
 \begin{proof}
   Consider an execution as in the statement and suppose, towards a contradiction,
-  that $(r^*, \tx) = \Ledger[][P_1][r_1][k]$ for some $k \in \mathbb{N}$,
+  that $(r^*, \tx) = \Ledger[][P_1][r_1][i]$ for some $i \in \mathbb{N}$,
   but $(r^*, \tx) \not\in \Ledger[][P_2][r_2]$
   with $r_2 \geq r^* + v$.
   From safety,
   $\Ledger[][P_2][r_2] \prec \Ledger[][P_1][r_1]$ and
-  $|\Ledger[][P_2][r_2]| \leq k < |\Ledger[][P_1][r_1]|$.
-  Due to liveness, $(r', \tx') = \Ledger[][P_2][r_3 + u][k']$,
-  for some $r', k' \in \mathbb{N}$.
+  $|\Ledger[][P_2][r_2]| \leq i < |\Ledger[][P_1][r_1]|$.
+  Due to liveness, $(r', \tx') = \Ledger[][P_2][r_3 + u][i']$,
+  for some $r', i' \in \mathbb{N}$.
   As $\tx'$ is new, it is not in $\Ledger[][P_1][r_1]$.
-  Due to safety, $k' \geq |\Ledger[][P_1][r_1]| > k$, and
-  $\Ledger[][P_2][r_3 + u][k] = (r^*, \tx)$.
+  Due to safety, $i' \geq |\Ledger[][P_1][r_1]| > i$, and
+  $\Ledger[][P_2][r_3 + u][i] = (r^*, \tx)$.
   Therefore,
   $(r^*, \tx) \in \Ledger[][P_2][r_3 + u][|\Ledger[][P_2][r_2]|{:}]$.
   From liveness, it must hold that $r_2 < r_3 + u$.

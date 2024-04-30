@@ -4,7 +4,7 @@ We now construct a perfectly timely protocol $\Pi^*$
 using a black-box reduction from a supersafe, and live($u$) protocol $\Pi$.
 Each honest party $P$, executing the $\Pi^*$ protocol, runs a
 full node of protocol $\Pi$.
-The main idea is that, even though $\Pi$ is not a temporal ledger,
+The main idea is that, even though $\Pi$ is not a temporal ledger protocol,
 since it is supersafe, we can simply
 ascribe to each new transaction the round at which it first appeared on our ledger
 without loss of safety.
@@ -81,7 +81,7 @@ honest nodes introduce one transaction $\tx'$ in $\Pi_2$
 for each newly appearing transaction $\tx$ of $\Ledger[*][][r]$.
 The payload of $\tx'$ contains the pair $\left<\tx, r\right>$
 (and note that, here, $r$ is part of the transaction $\tx'$ payload,
-as $\Pi_2$ is not a temporal ledger).
+as $\Pi_2$ is not a temporal ledger protocol).
 We parameterize $\Pi_2$ with the following transaction validity language:
 Valid transactions $\tx'$ must take the form $\left<\tx, r\right>$,
 where $\tx$ first appeared in $\Ledger[*][][]$ at round $r$.
