@@ -50,111 +50,115 @@ and Algorithm~\ref{alg:backward-reduction}.
   \Qed
 \end{proof}
 
-\subsection{A Perfectly Timely, Supersafe Protocol with Clients}
+In the full version of the paper~\cite{timeliness} we show how this protocol can support clients.
 
-The protocol of the last subsection is perfectly time and supersafe.
-But how about late-joining clients?
-When a client first boots, it obtains all past transactions
-from $\Pi$.
-However, since $\Pi$ is not temporal, the client does not see any recorded rounds
-associated with the transactions. Additionally, since the recorded rounds depend
-on past ledger append times, the client cannot deduce them on its own.
+\ifproceedings
+  \subsection{A Perfectly Timely, Supersafe Protocol with Clients}
 
-To enable client support, we make a small addition to the protocol:
-Each node runs an \emph{additional} instance of the internal
-ledger protocol $\Pi$
-to facilitate the booting of clients.
-We call $\Pi_1$ the first instance of $\Pi$
-(which operates as before),
-and $\Pi_2$ this new instance of $\Pi$.
-The output ledger $\Ledger[*]$ of the nodes remains the same.
-Since the online nodes have observed the rounds with which
-transactions of $\Pi_1$ are reported, they record those
-rounds on the second ledger $\Pi_2$ to help the client
-recover them.
-Let $\Ledger[1]$ and $\Ledger[2]$ be the output ledgers
-of $\Pi_1$ and $\Pi_2$ respectively.
-The instance $\Pi_2$ is used as follows:
-In every round $r$,
-whenever new transactions appear in $\Ledger[*][][r]$,
-honest nodes introduce one transaction $\tx'$ in $\Pi_2$
-for each newly appearing transaction $\tx$ of $\Ledger[*][][r]$.
-The payload of $\tx'$ contains the pair $\left<\tx, r\right>$
-(and note that, here, $r$ is part of the transaction $\tx'$ payload,
-as $\Pi_2$ is not a temporal ledger protocol).
-We parameterize $\Pi_2$ with the following transaction validity language:
-Valid transactions $\tx'$ must take the form $\left<\tx, r\right>$,
-where $\tx$ first appeared in $\Ledger[*][][]$ at round $r$.
-Otherwise, the transaction is rejected as invalid.
-The protocol is illustrated in Figure~\ref{fig:client-support}.
+  The protocol of the last subsection is perfectly time and supersafe.
+  But how about late-joining clients?
+  When a client first boots, it obtains all past transactions
+  from $\Pi$.
+  However, since $\Pi$ is not temporal, the client does not see any recorded rounds
+  associated with the transactions. Additionally, since the recorded rounds depend
+  on past ledger append times, the client cannot deduce them on its own.
 
-\ifccs
-  \begin{figure*}[b]
+  To enable client support, we make a small addition to the protocol:
+  Each node runs an \emph{additional} instance of the internal
+  ledger protocol $\Pi$
+  to facilitate the booting of clients.
+  We call $\Pi_1$ the first instance of $\Pi$
+  (which operates as before),
+  and $\Pi_2$ this new instance of $\Pi$.
+  The output ledger $\Ledger[*]$ of the nodes remains the same.
+  Since the online nodes have observed the rounds with which
+  transactions of $\Pi_1$ are reported, they record those
+  rounds on the second ledger $\Pi_2$ to help the client
+  recover them.
+  Let $\Ledger[1]$ and $\Ledger[2]$ be the output ledgers
+  of $\Pi_1$ and $\Pi_2$ respectively.
+  The instance $\Pi_2$ is used as follows:
+  In every round $r$,
+  whenever new transactions appear in $\Ledger[*][][r]$,
+  honest nodes introduce one transaction $\tx'$ in $\Pi_2$
+  for each newly appearing transaction $\tx$ of $\Ledger[*][][r]$.
+  The payload of $\tx'$ contains the pair $\left<\tx, r\right>$
+  (and note that, here, $r$ is part of the transaction $\tx'$ payload,
+  as $\Pi_2$ is not a temporal ledger protocol).
+  We parameterize $\Pi_2$ with the following transaction validity language:
+  Valid transactions $\tx'$ must take the form $\left<\tx, r\right>$,
+  where $\tx$ first appeared in $\Ledger[*][][]$ at round $r$.
+  Otherwise, the transaction is rejected as invalid.
+  The protocol is illustrated in Figure~\ref{fig:client-support}.
+
+  \ifccs
+    \begin{figure*}[b]
+      \centering
+      \includegraphics[width=1\columnwidth,keepaspectratio]{figures/perfectly-timely-clients.pdf}
+      \caption{Client support for the perfectly timely and supersafe protocol $\Pi*$.
+      }
+    \label{fig:client-support}
+    \end{figure*}
+  \fi
+
+  \ifccs
+    \begin{figure*}[b]
     \centering
-    \includegraphics[width=1\columnwidth,keepaspectratio]{figures/perfectly-timely-clients.pdf}
-    \caption{Client support for the perfectly timely and supersafe protocol $\Pi*$.
-    }
-  \label{fig:client-support}
-  \end{figure*}
-\fi
+    \includegraphics[width=0.75\columnwidth,keepaspectratio]{figures/perfectly-timely-clients-feedback.pdf}
+    \caption{The client-supporting supersafe and perfectly timely protocol $\Pi^*$
+              using only one instance of $\Pi$ for efficiency.
+              Normal transactions and ledgers are shown in solid black lines;
+              auxiliary transactions are shown in dashed
+              orange lines.}
+    \label{fig:client-support-feedback}
+    \end{figure*}
+  \fi
 
-\ifccs
-  \begin{figure*}[b]
-  \centering
-  \includegraphics[width=0.75\columnwidth,keepaspectratio]{figures/perfectly-timely-clients-feedback.pdf}
-  \caption{The client-supporting supersafe and perfectly timely protocol $\Pi^*$
-            using only one instance of $\Pi$ for efficiency.
-            Normal transactions and ledgers are shown in solid black lines;
-            auxiliary transactions are shown in dashed
-            orange lines.}
-  \label{fig:client-support-feedback}
-  \end{figure*}
-\fi
+  A late-joining client first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
+  of the peers.
+  Due to safety, liveness and the validity rule of $\Pi_2$,
+  the client can read ledger $\Ledger[2]$ to find out the
+  recorded rounds of past transactions.
+  Eventually, all past transaction recorded rounds are included in $\Ledger[2]$
+  and the client can construct the correct temporal ledger $\Ledger[*]$.
+  At this point we say the client is fully booted and can continue
+  operating as a full online node without $\Pi_2$, i.e., it outputs the ledger $\Ledger[*]$.
+  From this point on, the client is perfectly timely and supersafe.
 
-A late-joining client first synchronizes $\Pi_1$ and $\Pi_2$ with the rest
-of the peers.
-Due to safety, liveness and the validity rule of $\Pi_2$,
-the client can read ledger $\Ledger[2]$ to find out the
-recorded rounds of past transactions.
-Eventually, all past transaction recorded rounds are included in $\Ledger[2]$
-and the client can construct the correct temporal ledger $\Ledger[*]$.
-At this point we say the client is fully booted and can continue
-operating as a full online node without $\Pi_2$, i.e., it outputs the ledger $\Ledger[*]$.
-From this point on, the client is perfectly timely and supersafe.
+  \iflncs
+    \begin{figure*}
+      \centering
+      \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/perfectly-timely-clients.pdf}
+      \caption{Client support for the perfectly timely and supersafe protocol $\Pi*$.
+      }
+    \label{fig:client-support}
+    \end{figure*}
+  \fi
 
-\iflncs
-  \begin{figure*}
+  Lastly, to make this protocol efficient, we observe that the payload of
+  $\Pi_2$ transactions does not need to include the whole $\Pi_1$ transaction, but
+  it is sufficient to include the transaction id only.
+  Lastly, the two instances of $\Pi$ can be combined into one by coloring
+  transactions appropriately: A normal transaction $\tx$, colored \emph{black}, enters into the
+  $\Pi^*$ protocol and is recorded on $\Pi$ as usual. When it stabilizes and its round
+  has been recorded by an online node, this node wraps the transaction $\tx$ into an
+  \emph{orange} transaction $\tx'$ containing as payload $\tx$ together with its recorded
+  round. The ledger output by $\Pi$ is split into black and orange parts. The black part
+  is reported as the output ledger of $\Pi^*$. The orange part is used to help clients boot,
+  and is ignored by a client after booting has finished. The validity language restrictions
+  only apply to the orange transactions. This final construction is illustrated in
+  Figure~\ref{fig:client-support-feedback}.
+
+  \iflncs
+    \begin{figure*}
     \centering
-    \includegraphics[width=0.7\columnwidth,keepaspectratio]{figures/perfectly-timely-clients.pdf}
-    \caption{Client support for the perfectly timely and supersafe protocol $\Pi*$.
-    }
-  \label{fig:client-support}
-  \end{figure*}
-\fi
-
-Lastly, to make this protocol efficient, we observe that the payload of
-$\Pi_2$ transactions does not need to include the whole $\Pi_1$ transaction, but
-it is sufficient to include the transaction id only.
-Lastly, the two instances of $\Pi$ can be combined into one by coloring
-transactions appropriately: A normal transaction $\tx$, colored \emph{black}, enters into the
-$\Pi^*$ protocol and is recorded on $\Pi$ as usual. When it stabilizes and its round
-has been recorded by an online node, this node wraps the transaction $\tx$ into an
-\emph{orange} transaction $\tx'$ containing as payload $\tx$ together with its recorded
-round. The ledger output by $\Pi$ is split into black and orange parts. The black part
-is reported as the output ledger of $\Pi^*$. The orange part is used to help clients boot,
-and is ignored by a client after booting has finished. The validity language restrictions
-only apply to the orange transactions. This final construction is illustrated in
-Figure~\ref{fig:client-support-feedback}.
-
-\iflncs
-  \begin{figure*}
-  \centering
-  \includegraphics[width=0.55\columnwidth,keepaspectratio]{figures/perfectly-timely-clients-feedback.pdf}
-  \caption{The client-supporting supersafe and perfectly timely protocol $\Pi^*$
-            using only one instance of $\Pi$ for efficiency.
-            Normal transactions and ledgers are shown in solid black lines;
-            auxiliary transactions are shown in dashed
-            orange lines.}
-  \label{fig:client-support-feedback}
-  \end{figure*}
+    \includegraphics[width=0.55\columnwidth,keepaspectratio]{figures/perfectly-timely-clients-feedback.pdf}
+    \caption{The client-supporting supersafe and perfectly timely protocol $\Pi^*$
+              using only one instance of $\Pi$ for efficiency.
+              Normal transactions and ledgers are shown in solid black lines;
+              auxiliary transactions are shown in dashed
+              orange lines.}
+    \label{fig:client-support-feedback}
+    \end{figure*}
+  \fi
 \fi
