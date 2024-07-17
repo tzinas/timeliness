@@ -1,0 +1,29 @@
+\section{Recency $\rightarrow$ Liveness}\label{appendix:recency-liveness}
+
+Liveness and timeliness do not imply each other in general ledger protocols.
+However, in ``reasonable'' chain-based ledger protocols, liveness and
+timeliness are closely related, as they both arise from recency.
+
+\begin{definition}[Unfiltered]
+  A blockchain protocol is \emph{unfiltered} if every honest party $P$,
+  when producing a block extending chain $C$, includes all transactions
+  previously received by $P$ and are not already included in $C$.
+  Furthermore, we assume implicit gossip: All new messages received by honest
+  parties are gossiped.
+\end{definition}
+
+\begin{theorem}
+An execution of a ledger protocol based on an unfiltered and recent($w$)
+blockchain protocol execution is live($w + 1$).
+\end{theorem}
+\begin{proof}
+  Consider a ledger protocol execution as in the statement,
+  and let transaction $\tx$ received by some honest party at round $r$.
+  This transaction is received by all honest parties by round $r + 1$ due
+  to implicit gossip. Consider an arbitrary honest party $P$. Due to recency,
+  the chain $\Chain[][P][r + w + 1]$ contains an honest block $B$ produced at
+  least at round $r + 1$. Because the execution is unfiltered, $\tx$
+  is included in $\Chain[][P][r + w + 1]$, in or before block $B$.
+  Hence, the ledger $\Ledger[][P][r + w + 1]$ contains $\tx$.
+  \Qed
+\end{proof}
